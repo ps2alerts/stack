@@ -1,0 +1,104 @@
+---
+- hosts: localhost
+
+  vars_files:
+    - "{{ playbook_dir }}/../../vars.yml"
+    - "{{ playbook_dir }}/../../vars.local.yml"
+
+  tasks:
+    - name: Install docker on localhost
+      pip:
+        name: docker
+        state: present
+
+    - name: Create docker network
+      docker_network:
+        name: ps2alerts
+        state: present
+
+    - name: Create K8s Database Service
+      k8s:
+        state: present
+        namespace: default
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: "ps2alerts-db"
+            labels:
+              app: ps2alerts
+              tier: database
+          spec:
+            type: ClusterIP
+            selector:
+              app: ps2alerts
+              tier: database
+            ports:
+              - port: 3306
+                targetPort: 3306
+
+    - name: Create K8s Database Persistent Volume Claim
+      k8s:
+        state: present
+        namespace: default
+        definition:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            name: ps2alerts-db-claim
+            labels:
+              app: ps2alerts
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 25Gi
+
+    - name: Create K8s Database Deployment
+      k8s:
+        state: present
+        namespace: default
+        definition:
+          apiVersion: v1
+          kind: Deployment
+          metadata:
+            name: ps2alerts-db
+            labels:
+              app: ps2alerts
+              tier: database
+          spec:
+            replicas: 1
+            revisionHistoryLimit: 1
+            strategy:
+              type: Recreate
+            selector:
+              matchLabels:
+                app: ps2alerts
+                tier: database
+            template:
+              metadata:
+                labels:
+                  app: ps2alerts
+                  tier: database
+              spec:
+                containers:
+                  - image: mariadb:10.5
+                    name: mysql
+                    env:
+                      - name: MYSQL_ROOT_PASSWORD
+                        value: foobar
+                    ports:
+                      - containerPort: 3306
+                        name: mysql
+                    lifecycle:
+                      postStart:
+                        exec:
+                          command: ["bin/sh", "-c", sed -i 's/#bind-address=0.0.0.0/bind-address=0.0.0.0/g' /etc/mysql/my.cnf]
+                    volumeMounts:
+                      - name: ps2alerts-db-volume
+                        mountPath: /var/lib/mysql
+                volumes:
+                  - name: ps2alerts-db-volume
+                    persistentVolumeClaim:
+                      claimName: ps2alerts-db-claim

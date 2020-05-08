@@ -20,3 +20,9 @@ You are **highly** recommended to use a Linux environment. I won't help you with
 * [Docker](https://docs.docker.com/get-docker)
 * A terminal program / PowerShell
 * A good IDE. I recommend PHPStorm / IntelliJ IDEA
+
+## Installation
+
+Run command `ansible-playbook k8/dev/dev.yml` and Ansible will take care of the rest.
+
+Run command `kubectl port-forward service/ps2alerts-db 3307:3306` to gain access to the database. Recommend you alias this.
