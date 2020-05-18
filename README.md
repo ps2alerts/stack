@@ -1,9 +1,11 @@
 # ps2alerts-stack
 Powers the central services required to run the following projects:
  
-* ps2alerts-website 
-* ps2alerts-api
-* ps2alerts-ws
+* ps2alerts/website 
+* ps2alerts/api
+* ps2alerts/ws
+
+THIS PROJECT IS UNDERGOING A VAST RE-REWITE. If you wish to contribute, please join our Discord located at: https://discord.gg/7xF65ap
 
 # Getting Started
 
