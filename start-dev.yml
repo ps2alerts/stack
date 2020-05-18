@@ -1,0 +1,42 @@
+---
+- hosts: localhost
+
+  vars_files:
+    - "{{ playbook_dir }}/../../vars.yml"
+
+  tasks:
+    - name: Install docker on localhost
+      pip:
+        name: docker
+        state: present
+
+    - name: Create docker network
+      docker_network:
+        name: ps2alerts
+        state: present
+
+    - name: Start Database
+      docker_container:
+        name: ps2alerts-db
+        image: mariadb:10.3
+        state: started
+        volumes:
+          - "{{ db_dir }}:/var/lib/mysql"
+        env:
+          MYSQL_ROOT_PASSWORD: foobar
+        ports:
+          - 3306:3306
+        networks:
+          - name: "ps2alerts"
+
+    - name: Start Redis
+      docker_container:
+        name: ps2alerts-api-redis
+        image: redis:5
+        state: started
+        volumes:
+          - "{{ redis_dir }}:/data"
+        ports:
+          - 6379:6379
+        networks:
+          - name: "ps2alerts"

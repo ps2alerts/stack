@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Stop Database
+      docker_container:
+        name: ps2alerts-db
+        state: stopped
+
+    - name: Start Redis
+      docker_container:
+        name: ps2alerts-redis
+        state: stopped

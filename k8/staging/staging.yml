@@ -1,4 +1,6 @@
 ---
+
+# WIP
 - hosts: localhost
 
   vars_files:
@@ -6,16 +8,6 @@
     - "{{ playbook_dir }}/../../vars.local.yml"
 
   tasks:
-    - name: Install docker on localhost
-      pip:
-        name: docker
-        state: present
-
-    - name: Create docker network
-      docker_network:
-        name: ps2alerts
-        state: present
-
     - name: Create K8s Database Service
       k8s:
         state: present

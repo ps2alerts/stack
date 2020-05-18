@@ -23,6 +23,6 @@ You are **highly** recommended to use a Linux environment. I won't help you with
 
 ## Installation
 
-Run command `ansible-playbook k8/dev/dev.yml` and Ansible will take care of the rest.
+Run command `sudo ansible-playbook init.yml` and Ansible will ensure you have the correct commands etc.
 
 Run command `kubectl port-forward service/ps2alerts-db 3307:3306` to gain access to the database. Recommend you alias this.

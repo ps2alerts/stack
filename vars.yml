@@ -1,1 +1,9 @@
 data_dir: "/data"
+db_dir: "/data/ps2alerts/mysql"
+redis_dir: "/data/ps2alerts/redis"
+
+project_dir: "{{ playbook_dir | realpath }}/.."
+api_dir: "{{ project_dir }}/api"
+website_dir: "{{ project_dir }}/website"
+websocket_dir: "{{ project_dir }}/websocket"
+stack_dir: "{{ playbook_dir }}/stack"
