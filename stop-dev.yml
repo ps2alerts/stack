@@ -1,6 +1,11 @@
 ---
 - hosts: localhost
   tasks:
+    - name: Stop Traefik Router
+      docker_container:
+        name: ps2alerts-traefik-router
+        state: stopped
+
     - name: Stop Database
       docker_container:
         name: ps2alerts-db

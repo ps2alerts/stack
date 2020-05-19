@@ -10,8 +10,9 @@
         path: /etc/hosts
         marker: "# {mark} PS2ALERTS ANSIBLE MANAGED BLOCK #"
         block: |
-          127.0.0.1 dev.api.ps2alerts.com
-          127.0.0.1 dev.wss.ps2alerts.com
+          127.0.0.1 api.dev.ps2alerts.com
+          127.0.0.1 wss.dev.ps2alerts.com
+          127.0.0.1 router.dev.ps2alerts.com
           127.0.0.1 dev.ps2alerts.com
 
     - name: Install bash aliases for standardised commands
@@ -41,8 +42,24 @@
 
     - name: Create /data/ps2alerts dir
       file:
-        path: /data/ps2alerts
+        path: /data/ps2alerts/certs
         state: directory
+
+    ## WIP WIP WIP
+    - name: Start mkcert container and generate the certs
+      docker_container:
+        name: ps2alerts-mkcert
+        image: vishnunair/docker-mkcert
+        state: started
+        env:
+          domain: "dev.ps2alerts.com,api.dev.ps2alerts.com,wss.dev.ps2alerts.com"
+        volumes:
+          - /data/ps2alerts/certs:/root/.local/share/mkcert
+        labels:
+          traefik.enable: "false"
+
+    - name: Copy the generated CA to localhost to allow connections on localhost
+      command: sudo cp /data/ps2alerts/certs/*.pem /etc/ssl/certs
 
     - debug:
         msg: "Remember to source your '.bash_aliases' file or restart your terminal!"
