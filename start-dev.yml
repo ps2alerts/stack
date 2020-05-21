@@ -17,18 +17,19 @@
 
     - name: Start Traefik Router
       docker_container:
-        name: ps2alerts-traefik-router
+        name: ps2alerts-router
         image: traefik:v2.2
         state: started
         recreate: yes
         volumes:
+          - ./traefik/logs:/var/log/traefik
+          - ./traefik/config:/config
           - ./traefik/traefik.yml:/etc/traefik/traefik.yml
           - /var/run/docker.sock:/var/run/docker.sock
           - /data/ps2alerts/certs:/etc/certs
         labels:
           traefik.enable: "true"
           traefik.backend: "traefik"
-          traefik.frontend.rule: "Host:router.dev.ps2alerts.com"
           traefik.port: "8080"
         ports:
           - 80:80

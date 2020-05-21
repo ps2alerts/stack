@@ -3,7 +3,7 @@
   tasks:
     - name: Stop Traefik Router
       docker_container:
-        name: ps2alerts-traefik-router
+        name: ps2alerts-router
         state: stopped
 
     - name: Stop Database
