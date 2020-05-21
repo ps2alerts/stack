@@ -53,7 +53,7 @@
 
     - name: Start Redis
       docker_container:
-        name: ps2alerts-api-redis
+        name: ps2alerts-redis
         image: redis:5
         state: started
         volumes:

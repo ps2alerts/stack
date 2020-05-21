@@ -24,14 +24,17 @@
           alias ps2alerts-api-start="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-api-stop="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-api-term="docker exec -it ps2alerts-api bash"
+          alias ps2alerts-api-logs="docker logs -f ps2alerts-api"
           ## Website
           alias ps2alerts-website-start="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-website-stop="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-website-term="docker exec -it ps2alerts-website bash"
+          alias ps2alerts-website-logs="docker logs -f ps2alerts-website"
           ## Websocket
           alias ps2alerts-websocket-start="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-websocket-stop="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-websocket-term="docker exec -it ps2alerts-websocket bash"
+          alias ps2alerts-websocket-logs="docker logs -f ps2alerts-websocket"
           ## Stack
           alias ps2alerts-stack-start="ansible-playbook {{ stack_dir | realpath }}/start-dev.yml"
           alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
@@ -39,6 +42,7 @@
           alias ps2alerts="{{ project_dir | realpath }}"
           alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-websocket-start"
           alias ps2alerts-stop="ps2alerts-stack-stop && ps2alerts-api-stop && ps2alerts-website-stop && ps2alerts-websocket-stop"
+          alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-websocket"
 
     - name: Create /data/ps2alerts dir
       file:
