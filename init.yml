@@ -1,10 +1,34 @@
 ---
 - hosts: localhost
   vars:
-    - USER: "{{ lookup('env', 'HOME') }}"
+    USER: "{{ lookup('env', 'HOME') }}"
+    ca_path_debian: /usr/local/share/ca-certificates
+    ca_path:
+      RedHat:
+        6: /usr/local/share/ca-certificates
+        7: /etc/pki/ca-trust/source/anchors
+      Debian:
+        7: '{{ ca_path_debian }}'
+        8: '{{ ca_path_debian }}'
+        18: '{{ ca_path_debian }}'
+        19: '{{ ca_path_debian }}'
+
   vars_files:
     - vars.yml
   tasks:
+    - name: Install ca-certificates package on RHEL systems
+      yum:
+        name: ca-certificates
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Install ca-certificates package on Debian systems
+      apt:
+        name: ca-certificates
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
     - name: Import hosts into /etc/hosts
       blockinfile:
         path: /etc/hosts
@@ -21,21 +45,25 @@
         marker: "# {mark} PS2ALERTS ANSIBLE MANAGED BLOCK #"
         block: |
           ## API
+          alias ps2alerts-api="cd {{ api_dir | realpath }}"
           alias ps2alerts-api-start="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-api-stop="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-api-term="docker exec -it ps2alerts-api bash"
           alias ps2alerts-api-logs="docker logs -f ps2alerts-api"
           ## Website
+          alias ps2alerts-website="cd {{ website_dir | realpath }}"
           alias ps2alerts-website-start="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-website-stop="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-website-term="docker exec -it ps2alerts-website bash"
           alias ps2alerts-website-logs="docker logs -f ps2alerts-website"
           ## Websocket
+          alias ps2alerts-websocket="cd {{ websocket_dir | realpath }}"
           alias ps2alerts-websocket-start="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-websocket-stop="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-websocket-term="docker exec -it ps2alerts-websocket bash"
           alias ps2alerts-websocket-logs="docker logs -f ps2alerts-websocket"
           ## Stack
+          alias ps2alerts-stack="cd {{ stack_dir | realpath }}"
           alias ps2alerts-stack-start="ansible-playbook {{ stack_dir | realpath }}/start-dev.yml"
           alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
           ## Global Commands
@@ -62,8 +90,36 @@
         labels:
           traefik.enable: "false"
 
-    - name: Copy the generated CA to localhost to allow connections on localhost
-      command: sudo cp /data/ps2alerts/certs/*.pem /etc/ssl/certs
+    - name: Wait for certs to be generated (grab a snickers)
+      wait_for:
+        path: /data/ps2alerts/certs/{{ item }}
+        state: present
+      with_items:
+        - dev.ps2alerts.com.pem
+        - api.dev.ps2alerts.com.pem
+        - wss.dev.ps2alerts.com.pem
+        - rootCA.pem
 
+    - name: Copy certificate authority to trusted ca path of the os
+      copy:
+        src: "{{ item }}"
+        dest: "{{ ca_path[ansible_os_family][ansible_distribution_major_version|int] }}/"
+        owner: root
+        group: root
+        mode: 0644
+      with_fileglob:
+        - /data/ps2alerts/certs/*
+      notify:
+        - update trusted ca debian
+        - update trusted ca redhat
     - debug:
         msg: "Remember to source your '.bash_aliases' file or restart your terminal!"
+
+  handlers:
+    - name: update trusted ca debian
+      shell: /usr/sbin/update-ca-certificates && echo "Certs updated!"
+      when: ansible_os_family == "Debian"
+
+    - name: update trusted ca redhat
+      shell: /bin/update-ca-trust && echo "Certs updated!"
+      when: ansible_os_family == "RedHat"
