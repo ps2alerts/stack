@@ -1,3 +1,0 @@
-[[tls.certificates]]
-    certFile = "/etc/certs/api.dev.ps2alerts.com.pem"
-    keyFile = "/etc/certs/api.dev.ps2alerts.com-key.pem"

@@ -1,5 +1,6 @@
 providers:
-  docker: {}
+  docker:
+    exposedByDefault: false
 
 accessLog:
   filePath: "/var/log/traefik/traefik-access.log"
@@ -11,43 +12,43 @@ log:
 api:
   insecure: true
 
-http:
-  routers:
-    api-router:
-      rule: "Host('api.dev.ps2alerts.com')"
-      entrypoints:
-        - websecure
-      tls:
-        domains:
-          - main: "api.dev.ps2alerts.com"
-
 entryPoints:
+  web:
+    address: ":80"
+    transport:
+      lifeCycle:
+        requestAcceptGraceTimeout: 30
+        graceTimeOut: 30
+      respondingTimeouts:
+        readTimeout: 30
+        writeTimeout: 30
+        idleTimeout: 30
+    forwardedHeaders:
+      trustedIPs:
+        - "127.0.0.1/32"
   websecure:
     address: ":443"
     transport:
       lifeCycle:
-        requestAcceptGraceTimeout: 60
-        graceTimeOut: 60
+        requestAcceptGraceTimeout: 30
+        graceTimeOut: 30
       respondingTimeouts:
-        readTimeout: 60
-        writeTimeout: 60
-        idleTimeout: 60
+        readTimeout: 30
+        writeTimeout: 30
+        idleTimeout: 30
     forwardedHeaders:
       trustedIPs:
         - "127.0.0.1/32"
-tls:
-  stores:
-    default:
-      defaultCertificate:
-        certFile: /etc/certs/api.dev.ps2alerts.com.pem
-        keyFile: /etc/certs/api.dev.ps2alerts.com-key.pem
-  certificates:
-    - certFile: /etc/certs/api.dev.ps2alerts.com.pem
-      keyFile: /etc/certs/api.dev.ps2alerts.com-key.pem
-    - certFile: /etc/certs/dev.ps2alerts.com.pem
-      keyFile: /etc/certs/dev.ps2alerts.com-key.pem
-    - certFile: /etc/certs/wss.dev.ps2alerts.com.pem
-      keyFile: /etc/certs/wss.dev.ps2alerts.com-key.pem
-
-metrics:
-  prometheus: true
+#tls:
+#  stores:
+#    default:
+#      defaultCertificate:
+#        certFile: /etc/certs/api.dev.ps2alerts.com.pem
+#        keyFile: /etc/certs/api.dev.ps2alerts.com-key.pem
+#  certificates:
+#    - certFile: /etc/certs/api.dev.ps2alerts.com.pem
+#      keyFile: /etc/certs/api.dev.ps2alerts.com-key.pem
+#    - certFile: /etc/certs/dev.ps2alerts.com.pem
+#      keyFile: /etc/certs/dev.ps2alerts.com-key.pem
+#    - certFile: /etc/certs/wss.dev.ps2alerts.com.pem
+#      keyFile: /etc/certs/wss.dev.ps2alerts.com-key.pem
