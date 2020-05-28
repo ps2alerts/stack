@@ -11,7 +11,7 @@
         name: ps2alerts-db
         state: stopped
 
-    - name: Start Redis
+    - name: Stop Redis
       docker_container:
         name: ps2alerts-redis
         state: stopped
