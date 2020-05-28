@@ -5,6 +5,9 @@
     - "{{ playbook_dir }}/vars.yml"
 
   tasks:
+    - debug:
+        msg: "========= 🕸️ HOUSTON, WE ARE GO FOR LAUNCH 🕸️ ========="
+
     - name: Install docker on localhost
       pip:
         name: docker
