@@ -114,13 +114,14 @@
       notify:
         - update trusted ca debian
         - update trusted ca redhat
-    - debug:
-        msg: "Remember to source your '.bash_aliases' file or restart your terminal!"
 
     - name: Stop mkcert
       docker_container:
         name: ps2alerts-mkcert
         state: stopped
+
+    - debug:
+        msg: "Remember to source your '.bash_aliases' file or restart your terminal!"
 
   handlers:
     - name: update trusted ca debian
