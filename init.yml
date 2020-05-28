@@ -117,6 +117,11 @@
     - debug:
         msg: "Remember to source your '.bash_aliases' file or restart your terminal!"
 
+    - name: Stop mkcert
+      docker_container:
+        name: ps2alerts-mkcert
+        state: stopped
+
   handlers:
     - name: update trusted ca debian
       shell: /usr/sbin/update-ca-certificates && echo "Certs updated!"
