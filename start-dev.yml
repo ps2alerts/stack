@@ -6,7 +6,7 @@
 
   tasks:
     - debug:
-        msg: "========= 🕸️ HOUSTON, WE ARE GO FOR LAUNCH 🕸️ ========="
+        msg: "========= 🚀 HOUSTON, WE ARE GO FOR LAUNCH 🚀 ========="
 
     - name: Install docker on localhost
       pip:
