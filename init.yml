@@ -59,6 +59,7 @@
           ## Websocket
           alias ps2alerts-websocket="cd {{ websocket_dir | realpath }}"
           alias ps2alerts-websocket-start="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start.yml"
+          alias ps2alerts-websocket-start-full="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start-full.yml"
           alias ps2alerts-websocket-stop="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-websocket-term="docker exec -it ps2alerts-websocket bash"
           alias ps2alerts-websocket-logs="docker logs -f ps2alerts-websocket"
@@ -68,9 +69,10 @@
           alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
           ## Global Commands
           alias ps2alerts="{{ project_dir | realpath }}"
-          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-websocket-start"
+          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-websocket-start-full"
           alias ps2alerts-stop="ps2alerts-stack-stop && ps2alerts-api-stop && ps2alerts-website-stop && ps2alerts-websocket-stop"
           alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-websocket"
+          alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"
 
     - name: Create /data/ps2alerts dir
       file:
