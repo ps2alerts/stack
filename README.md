@@ -9,22 +9,27 @@ THIS PROJECT IS UNDERGOING A VAST RE-REWITE. If you wish to contribute, please j
 
 # Getting Started
 
-The PS2Alerts project utilises Kubernetes for it's deployment and containerisation solution. It matches current infrastructure, and it solves a TON of headaches when it comes to getting code out to the world. Particularly SSL certificates. Fuck SSL certificate management.
+The PS2Alerts project utilises Kubernetes for its deployment and containerisation solution. It matches current infrastructure, and it solves a TON of headaches when it comes to getting code out to the world. Particularly SSL certificates. Fuck SSL certificate management.
 
-You are **highly** recommended to use a Linux environment. I won't help you with issues to do between your environment and this one. It can be done in Windows, but it's a hassle. All the tools we use have a Windows version, thankfully, but it may need some modification to get it to work.
+**Linux Debian** is the only supported operating system for development. I won't help you with issues to do with your environment if you're running anything other than Linux. It can be done in Windows, but it's a hassle. All the tools we use have a Windows version, thankfully, but it may need some modification to get it to work.
 
 ## Requirements
 
 * [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 * [Virtual Box](https://www.virtualbox.org/wiki/Downloads) - Required for Minikube
 * [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube)
-* Ansible - [Ubuntu / Debian](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu) - [Windows (good luck)](https://geekflare.com/ansible-installation-windows/) 
+* [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)
 * [Docker](https://docs.docker.com/get-docker)
-* A terminal program / PowerShell
-* A good IDE. I recommend PHPStorm / IntelliJ IDEA
+* A terminal program / PowerShell. For Linux I recommend [Terminator](https://gnometerminator.blogspot.com/p/introduction.html).
+* A good IDE. I recommend [PHPStorm](https://www.jetbrains.com/phpstorm/) (paid) / [IntelliJ IDEA](https://www.jetbrains.com/idea/) (free).
 
 ## Installation
 
 Run command `sudo ansible-playbook init.yml` and Ansible will ensure you have the correct commands etc.
 
-Run command `kubectl port-forward service/ps2alerts-db 3307:3306` to gain access to the database. Recommend you alias this.
+
+### Houston, we are a go!
+
+Simply execute `ps2alerts-start` in your terminal to begin!
+
+Once the stack has started, if this is for the first time, you'll need to import the database sample. To do this, execute `ps2alerts-dev-db`. 

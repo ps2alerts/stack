@@ -1,0 +1,76 @@
+---
+
+- hosts: localhost
+  vars_files:
+    - "{{ playbook_dir }}/../vars.yml"
+  vars:
+    - dump_path: "{{ playbook_dir }}/temp"
+    - dump_filename: "ps2alerts_sample"
+  vars_prompt:
+    - name: delete_current
+      prompt: "Pull in fresh copies of the data? (y/n)"
+      private: no
+  tasks:
+    - name: Check if prompt has valid input
+      fail:
+        msg: "Please choose either `y` or `n` for the prompt..."
+      when:
+        - delete_current != 'y'
+        - delete_current != 'n'
+
+    - name: Check if the DB is running
+      docker_container_info:
+        name: ps2alerts-db
+      register: result
+
+    - name: Fail if DB container isn't running
+      fail:
+        msg: 'The DB container is not running! Please execute `ps2alerts-start` or `ps2alerts-stack-start` in order to get it running.'
+      when: result.container.State.Running == false
+
+    - name: Check if PS2Alerts Dev Data Sample archive already exists
+      stat:
+        path: "{{ dump_path }}/{{ dump_filename }}.tar.xz"
+      register: exists_result
+
+    - name: Download the PS2Alerts Dev Data Sample archive (grab a snickers if your internet is slow... file is ~150MB)
+      get_url:
+        url: "{{ ps2alerts_public_bucket_url }}/seeds/{{ dump_filename }}.tar.xz"
+        dest: "{{ dump_path }}/{{ dump_filename }}.tar.xz"
+        force: yes
+      when: exists_result.stat.exists == false or delete_current == 'y'
+
+    - name: Extract Data archive (grab a biscuit)
+      unarchive:
+        src: "{{ dump_path }}/{{ dump_filename }}.tar.xz"
+        dest: "{{ dump_path }}"
+
+    - name: Check if Dev Data Sample extracted correctly
+      stat:
+        path: "{{ dump_path }}/{{ dump_filename }}.sql"
+      register: exists_result
+
+    - name: Fail if expected dump file doesn't exist
+      fail:
+        msg: "Dump file extracted from archive doesn't exist. Check what's in the archive and check if it matches the name {{ dump_filename }}.sql"
+      when: exists_result.stat.exists == false
+
+    - name: Copy DB dump to database container
+      command: "docker cp {{ dump_path }}/{{ dump_filename }}.sql ps2alerts-db:/tmp/{{ dump_filename }}.sql"
+
+    - name: Drop ps2alertsWS database if exists
+      command: 'docker exec ps2alerts-db mysql -u root -pfoobar -e "DROP DATABASE IF EXISTS ps2alertsWS"'
+
+    - name: Create ps2alertsWS database
+      command: 'docker exec ps2alerts-db mysql -u root -pfoobar -e "CREATE DATABASE ps2alertsWS"'
+
+    - name: Import DB dump into the database container (grab 2 snickers, tea and digestives, this will take at least 5-10 minutes!)
+      command: "docker exec ps2alerts-db bash -c 'mysql -u root -pfoobar ps2alertsWS < /tmp/{{ dump_filename }}.sql'"
+      register: output
+
+    - name: Delete extracted files
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ dump_path }}/{{ dump_filename }}.sql"

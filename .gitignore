@@ -1,3 +1,4 @@
 .idea
 traefik/certs/*
 traefik/logs/*
+ansible/temp/*

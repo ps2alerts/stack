@@ -7,3 +7,6 @@ api_dir: "{{ project_dir }}/api"
 website_dir: "{{ project_dir }}/website"
 websocket_dir: "{{ project_dir }}/websocket"
 stack_dir: "{{ project_dir }}/stack"
+
+ps2alerts_public_bucket: "ps2alerts-public"
+ps2alerts_public_bucket_url: "https://{{ ps2alerts_public_bucket }}.s3.eu-west-2.amazonaws.com"
