@@ -28,7 +28,7 @@ The PS2Alerts project utilises Kubernetes for its deployment and containerisatio
 Run command `sudo ansible-playbook init.yml` and Ansible will ensure you have the correct commands etc.
 
 
-### Houston, we are a go!
+### Houston, we are a go! :rocket:
 
 Simply execute `ps2alerts-start` in your terminal to begin!
 
