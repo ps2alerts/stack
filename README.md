@@ -25,6 +25,16 @@ The PS2Alerts project utilises Kubernetes for its deployment and containerisatio
 
 ## Installation
 
+Ensure you have git cloned all 4 projects in the organisation down to your local machine. You need to have them all as siblings, e.g:
+
+```
+/path/to/your/code/folder/ps2alerts
+-- api
+-- stack
+-- website
+-- websocket
+```
+
 Run command `sudo ansible-playbook init.yml` and Ansible will ensure you have the correct commands etc.
 
 
