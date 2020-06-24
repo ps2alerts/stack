@@ -16,6 +16,43 @@
   vars_files:
     - vars.yml
   tasks:
+    - name: Install bash aliases for standardised commands
+      blockinfile:
+        path: "{{ USER }}/.bash_aliases"
+        marker: "# {mark} PS2ALERTS ANSIBLE MANAGED BLOCK #"
+        block: |
+          ## API
+          alias ps2alerts-api="cd {{ api_dir | realpath }}"
+          alias ps2alerts-api-start="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/start.yml"
+          alias ps2alerts-api-stop="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/stop.yml"
+          alias ps2alerts-api-term="docker exec -it ps2alerts-api bash"
+          alias ps2alerts-api-logs="docker logs -f ps2alerts-api"
+          ## Website
+          alias ps2alerts-website="cd {{ website_dir | realpath }}"
+          alias ps2alerts-website-start="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/start.yml"
+          alias ps2alerts-website-stop="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/stop.yml"
+          alias ps2alerts-website-term="docker exec -it ps2alerts-website bash"
+          alias ps2alerts-website-logs="docker logs -f ps2alerts-website"
+          ## Websocket
+          alias ps2alerts-websocket="cd {{ websocket_dir | realpath }}"
+          alias ps2alerts-websocket-start="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start.yml"
+          alias ps2alerts-websocket-start-full="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start-full.yml"
+          alias ps2alerts-websocket-stop="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/stop.yml"
+          alias ps2alerts-websocket-dev="cd {{ websocket_dir | realpath }}/app/ && npm start"
+          alias ps2alerts-websocket-term="docker exec -it ps2alerts-websocket bash"
+          alias ps2alerts-websocket-logs="docker logs -f ps2alerts-websocket"
+          ## Stack
+          alias ps2alerts-stack="cd {{ stack_dir | realpath }}"
+          alias ps2alerts-stack-start="ansible-playbook {{ stack_dir | realpath }}/start-dev.yml"
+          alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
+          ## Global Commands
+          alias ps2alerts="{{ project_dir | realpath }}"
+          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-websocket-start-full"
+          alias ps2alerts-stop="ps2alerts-stack-stop && ps2alerts-api-stop && ps2alerts-website-stop && ps2alerts-websocket-stop"
+          alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-websocket"
+          alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"
+          alias ps2alerts-dev-db="ansible-playbook {{ stack_dir | realpath }}/ansible/import-dev-db.yml"
+
     - name: Install ca-certificates package on RHEL systems
       yum:
         name: ca-certificates
@@ -39,41 +76,7 @@
           127.0.0.1 router.dev.ps2alerts.com
           127.0.0.1 dev.ps2alerts.com
 
-    - name: Install bash aliases for standardised commands
-      blockinfile:
-        path: "{{ USER }}/.bash_aliases"
-        marker: "# {mark} PS2ALERTS ANSIBLE MANAGED BLOCK #"
-        block: |
-          ## API
-          alias ps2alerts-api="cd {{ api_dir | realpath }}"
-          alias ps2alerts-api-start="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/start.yml"
-          alias ps2alerts-api-stop="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/stop.yml"
-          alias ps2alerts-api-term="docker exec -it ps2alerts-api bash"
-          alias ps2alerts-api-logs="docker logs -f ps2alerts-api"
-          ## Website
-          alias ps2alerts-website="cd {{ website_dir | realpath }}"
-          alias ps2alerts-website-start="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/start.yml"
-          alias ps2alerts-website-stop="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/stop.yml"
-          alias ps2alerts-website-term="docker exec -it ps2alerts-website bash"
-          alias ps2alerts-website-logs="docker logs -f ps2alerts-website"
-          ## Websocket
-          alias ps2alerts-websocket="cd {{ websocket_dir | realpath }}"
-          alias ps2alerts-websocket-start="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start.yml"
-          alias ps2alerts-websocket-start-full="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start-full.yml"
-          alias ps2alerts-websocket-stop="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/stop.yml"
-          alias ps2alerts-websocket-term="docker exec -it ps2alerts-websocket bash"
-          alias ps2alerts-websocket-logs="docker logs -f ps2alerts-websocket"
-          ## Stack
-          alias ps2alerts-stack="cd {{ stack_dir | realpath }}"
-          alias ps2alerts-stack-start="ansible-playbook {{ stack_dir | realpath }}/start-dev.yml"
-          alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
-          ## Global Commands
-          alias ps2alerts="{{ project_dir | realpath }}"
-          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-websocket-start-full"
-          alias ps2alerts-stop="ps2alerts-stack-stop && ps2alerts-api-stop && ps2alerts-website-stop && ps2alerts-websocket-stop"
-          alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-websocket"
-          alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"
-          alias ps2alerts-dev-db="ansible-playbook {{ stack_dir | realpath }}/ansible/import-dev-db.yml"
+
 
     - name: Create /data/ps2alerts dir
       file:
