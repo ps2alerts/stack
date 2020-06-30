@@ -76,8 +76,6 @@
           127.0.0.1 router.dev.ps2alerts.com
           127.0.0.1 dev.ps2alerts.com
 
-
-
     - name: Create /data/ps2alerts dir
       file:
         path: /data/ps2alerts/certs
