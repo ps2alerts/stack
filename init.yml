@@ -38,7 +38,7 @@
           alias ps2alerts-websocket-start="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-websocket-start-full="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start-full.yml"
           alias ps2alerts-websocket-stop="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/stop.yml"
-          alias ps2alerts-websocket-dev="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/stop.yml && docker logs -f ps2alerts-websocket"
+          alias ps2alerts-websocket-dev="ps2alerts-websocket-stop && ps2alerts-websocket-start && docker logs -f ps2alerts-websocket"
           alias ps2alerts-websocket-term="docker exec -it ps2alerts-websocket bash"
           alias ps2alerts-websocket-logs="docker logs -f ps2alerts-websocket"
           ## Stack
