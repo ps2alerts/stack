@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
   vars_files:
-    - "{{ playbook_dir }}/vars.yml"
+    - "{{playbook_dir}}/vars.yml"
   tasks:
     - debug:
         msg: "========= 🚀 HOUSTON, WE ARE GO FOR LAUNCH 🚀 ========="
@@ -27,7 +27,7 @@
           - ./traefik/config:/config
           - ./traefik/traefik.yml:/etc/traefik/traefik.yml
           - /var/run/docker.sock:/var/run/docker.sock
-          - /data/ps2alerts/certs:/etc/certs
+          - "{{certs_dir}}:/etc/certs"
         labels:
           traefik.enable: "true"
           traefik.backend: "traefik"
@@ -43,7 +43,7 @@
         image: mariadb:10.3
         state: started
         volumes:
-          - "{{ db_dir }}:/var/lib/mysql"
+          - "{{db_dir}}:/var/lib/mysql"
         env:
           MYSQL_ROOT_PASSWORD: foobar
         ports:
@@ -59,7 +59,7 @@
         image: redis:5
         state: started
         volumes:
-          - "{{ redis_dir }}:/data"
+          - "{{redis_dir}}:/data"
         ports:
           - 6379:6379
         networks:
