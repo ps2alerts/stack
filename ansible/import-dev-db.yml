@@ -78,7 +78,7 @@
 
     - name: Fail if expected Supplemental dump file doesn't exist
       fail:
-        msg: "Supplemental Data Dump file extracted from archive doesn't exist. Check what's in the archive and check if it matches the name {{ dump_data_filename }}.sql"
+        msg: "Supplemental Data Dump file extracted from archive doesn't exist. Check if the archive name matches {{ dump_data_filename }}.sql"
       when: not exists_result.stat.exists
 
     - name: Copy DB dumps to database container
