@@ -1,4 +1,4 @@
-# ps2alerts-stack
+#PS2Alerts/Stack
 
 ![Ansible Linter](https://github.com/ps2alerts/stack/workflows/Ansible%20Linter/badge.svg) ![Yaml Linter](https://github.com/ps2alerts/stack/workflows/Yaml%20Lint/badge.svg) 
 
