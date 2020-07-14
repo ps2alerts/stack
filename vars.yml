@@ -1,6 +1,6 @@
 ---
 data_dir: "{{ lookup('env', 'HOME') }}/ps2alerts"
-db_dir: "{{ data_dir }}/mysql"
+db_dir: "{{ data_dir }}/mongo"
 redis_dir: "{{ data_dir }}/redis"
 certs_dir: "{{ data_dir }}/certs"
 
