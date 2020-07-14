@@ -40,14 +40,17 @@
     - name: Start Database
       docker_container:
         name: ps2alerts-db
-        image: mariadb:10.3
+        image: mongo:4.2
         state: started
         volumes:
-          - "{{ db_dir }}:/var/lib/mysql"
+          - ./init-mongo.js:/docker-entrypoint-initdb.d/init-monjo.js
+          - "{{ db_dir }}:/data/db"
         env:
-          MYSQL_ROOT_PASSWORD: foobar
+          MONGO_INITDB_DATABASE: ps2alerts
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: foobar
         ports:
-          - 3306:3306
+          - 27017-27019:27017-27019
         networks:
           - name: "ps2alerts"
         labels:
