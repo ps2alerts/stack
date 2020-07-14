@@ -14,7 +14,7 @@ If you wish to contribute, please join our Discord located at: https://discord.g
 
 The PS2Alerts project utilises Kubernetes for its deployment and containerisation solution. It matches current infrastructure, and it solves a TON of headaches when it comes to getting code out to the world. Particularly SSL certificates. Fuck SSL certificate management.
 
-**Linux Debian** is the only supported operating system for development. I won't help you with issues to do with your environment if you're running anything other than Linux. It can be done in Windows, but it's a hassle. All the tools we use have a Windows version, thankfully, but it may need some modification to get it to work.
+**Linux Debian** is the only supported operating system for development. I won't help you with issues to do with your environment if you're running anything other than Linux. It can be done in Windows, but it's a hassle. Most likely ok on Mac OSX with a few tweaks. All the tools we use have a Windows version, thankfully, but it may need some modification to get it to work.
 
 ## Requirements
 
