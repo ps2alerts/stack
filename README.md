@@ -8,7 +8,7 @@ Powers the central services required to run the following projects:
 * [PS2Alerts/websocket](https://github.com/PS2Alerts/websocket)
 * [PS2Alerts/website](https://github.com/PS2Alerts/website)
 
-THIS PROJECT IS UNDERGOING A VAST RE-REWITE. If you wish to contribute, please join our Discord located at: https://discord.gg/7xF65ap
+If you wish to contribute, please join our Discord located at: https://discord.gg/7xF65ap
 
 # Getting Started
 
@@ -40,7 +40,6 @@ Ensure you have git cloned all 4 projects in the organisation down to your local
 ```
 
 Run command `sudo ansible-playbook init.yml` and Ansible will ensure you have the correct commands etc.
-
 
 ### Houston, we are a go! :rocket:
 
