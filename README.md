@@ -47,3 +47,10 @@ Run command `sudo ansible-playbook init.yml` and Ansible will ensure you have th
 Simply execute `ps2alerts-start` in your terminal to begin!
 
 Once the stack has started, if this is for the first time, you'll need to import the database sample. To do this, execute `ps2alerts-dev-db`. 
+
+
+### Connecting to Mongodb
+
+We are using MongoDB as our data document storage solution. In order to connect to Mongo for local development work, open up the Mongo Compass client and put the following in the connection string:
+
+`mongodb://root:foobar@localhost:27017`
