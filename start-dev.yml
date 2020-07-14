@@ -44,6 +44,7 @@
         state: started
         volumes:
           - ./mongo/init/init-mongo.js:/docker-entrypoint-initdb.d/init-monjo.js
+          - ./mongo/mongod.conf:/etc/mongod.conf
           - ./mongo:/data/mongo-host
           - "{{ db_dir }}:/data/db"
         env:
