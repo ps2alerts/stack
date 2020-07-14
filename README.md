@@ -25,6 +25,7 @@ The PS2Alerts project utilises Kubernetes for its deployment and containerisatio
 * [Docker](https://docs.docker.com/get-docker)
 * A terminal program / PowerShell. For Linux I recommend [Terminator](https://gnometerminator.blogspot.com/p/introduction.html).
 * A good IDE. I recommend [PHPStorm](https://www.jetbrains.com/phpstorm/) (paid) / [IntelliJ IDEA](https://www.jetbrains.com/idea/) (free).
+* [MongoDB Compass](https://www.mongodb.com/products/compass) - if you're going to be interacting with data 
 
 ## Installation
 

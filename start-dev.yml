@@ -43,7 +43,8 @@
         image: mongo:4.2
         state: started
         volumes:
-          - ./init-mongo.js:/docker-entrypoint-initdb.d/init-monjo.js
+          - ./mongo/init/init-mongo.js:/docker-entrypoint-initdb.d/init-monjo.js
+          - ./mongo:/data/mongo-host
           - "{{ db_dir }}:/data/db"
         env:
           MONGO_INITDB_DATABASE: ps2alerts
