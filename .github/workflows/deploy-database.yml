@@ -2,7 +2,8 @@
 name: Deploy Database
 on:
   push:
-    branches: [master, features/10-mongo-db]
+    branches: [master]
+  pull_request:
 jobs:
   deploy-terraform:
     runs-on: ubuntu-latest
