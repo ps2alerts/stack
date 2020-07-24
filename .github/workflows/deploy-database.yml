@@ -38,8 +38,8 @@ jobs:
       - name: Terraform Plan
         run: >
           terraform plan \
-            -var='db_user={{ secrets.DB_USER }}' \
-            -var='db_pass={{ secrets.DB_PASS }}' \
+            -var='db_user=${{ secrets.DB_USER }}' \
+            -var='db_pass=${{ secrets.DB_PASS }}' \
             -target=module.ps2alerts_database -out='.tfout'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
