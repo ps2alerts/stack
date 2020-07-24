@@ -54,7 +54,6 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
     revision_history_limit = 1
     strategy {
       type = "Recreate"
-      rolling_update {}
     }
     selector {
       match_labels = {
