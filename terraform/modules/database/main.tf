@@ -71,12 +71,12 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
           }
           resources {
             limits {
-              cpu = "1000m"
-              memory = "1024Mi"
-            }
-            requests {
               cpu = "500m"
               memory = "512Mi"
+            }
+            requests {
+              cpu = "250m"
+              memory = "256Mi"
             }
           }
           port {
