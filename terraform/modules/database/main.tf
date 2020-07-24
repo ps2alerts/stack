@@ -23,6 +23,7 @@ resource "kubernetes_service" "ps2alerts_database_service" {
 resource "kubernetes_persistent_volume_claim" "ps2alerts_database_volume" {
   metadata {
     name = var.db_identifier
+    namespace = var.namespace
   }
   spec {
     access_modes = ["ReadWriteOnce"]
