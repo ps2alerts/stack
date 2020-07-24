@@ -40,7 +40,7 @@ entryPoints:
     forwardedHeaders:
       trustedIPs:
         - "127.0.0.1/32"
-#tls:
+# tls:
 #  stores:
 #    default:
 #      defaultCertificate:
