@@ -66,7 +66,7 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
           image = "mongo:4.2"
           volume_mount {
             mount_path = "/data"
-            name = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata.name
+            name = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
           }
           resources {
             limits {
@@ -95,9 +95,9 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
           }
         }
         volume {
-          name = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata.name
+          name = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
           persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata.name
+            claim_name = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
           }
         }
       }
