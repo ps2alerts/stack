@@ -34,7 +34,7 @@ jobs:
       - name: Terraform Format
         run: terraform fmt -check
 
-      # Generates an execution plan for Terraform, with the injected SHA
+      # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: >
           terraform plan \
@@ -46,7 +46,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
-      # Apply the terraform plan and inject the SHA
+      # Apply the terraform plan
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve .tfout
