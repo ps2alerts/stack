@@ -52,10 +52,6 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
   spec {
     replicas = 1
     revision_history_limit = 1
-    strategy {
-      type = "Recreate"
-      rolling_update = null
-    }
     selector {
       match_labels = {
         app = var.db_identifier
