@@ -39,7 +39,7 @@ Ensure you have git cloned all 4 projects in the organisation down to your local
 -- websocket
 ```
 
-Run command `sudo ansible-playbook init.yml` and Ansible will ensure you have the correct commands etc.
+Run command `ansible-playbook init.yml -K` and provide your sudo password. Ansible will ensure you have the correct commands etc. 
 
 ### Houston, we are a go! :rocket:
 

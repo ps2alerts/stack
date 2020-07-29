@@ -2,6 +2,7 @@
 - hosts: localhost
   vars:
     HOME: "{{ lookup('env', 'HOME') }}"
+    USER: "{{ lookup('env', 'USER') }}"
     ca_path_debian: /usr/local/share/ca-certificates
     ca_path:
       RedHat:
@@ -20,7 +21,7 @@
         content: ""
         dest: "{{ HOME }}/.bash_aliases"
         force: no
-        owner: "{{ lookup('env', 'USER') }}"
+        owner: "{{ USER }}"
         mode: 0660
 
     - name: Install bash aliases for standardised commands
@@ -82,13 +83,19 @@
           127.0.0.1 wss.dev.ps2alerts.com
           127.0.0.1 router.dev.ps2alerts.com
           127.0.0.1 dev.ps2alerts.com
+      become: yes
 
-    - name: "Create {{data_dir}} dir"
+    - name: "Create {{ data_dir }} dir"
       file:
-        path: "{{data_dir}}"
+        path: "{{ data_dir }}"
         state: directory
 
     ## WIP WIP WIP
+    - name: Make certs dir
+      file:
+        path: "{{ certs_dir }}"
+        state: directory
+
     # - name: Start mkcert container and generate the certs
     #   docker_container:
     #     name: ps2alerts-mkcert
@@ -97,13 +104,13 @@
     #     env:
     #       domain: "dev.ps2alerts.com,api.dev.ps2alerts.com,wss.dev.ps2alerts.com"
     #     volumes:
-    #       - "{{certs_dir}}:/root/.local/share/mkcert"
+    #       - "{{ certs_dir }}:/root/.local/share/mkcert"
     #     labels:
     #       traefik.enable: "false"
 
     # - name: Wait for certs to be generated (grab a snickers)
     #   wait_for:
-    #     path: /data/ps2alerts/certs/{{ item }}
+    #     path: "{{ cert_dir }}/{{ item }}"
     #     state: present
     #   with_items:
     #     - dev.ps2alerts.com.pem
@@ -119,7 +126,7 @@
     #     group: root
     #     mode: 0644
     #   with_fileglob:
-    #     - "{{certs_dir}}*"
+    #     - "{{ certs_dir }}*"
     #   notify:
     #     - update trusted ca debian
     #     - update trusted ca redhat
