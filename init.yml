@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
   vars:
-    USER: "{{ lookup('env', 'HOME') }}"
+    HOME: "{{ lookup('env', 'HOME') }}"
     ca_path_debian: /usr/local/share/ca-certificates
     ca_path:
       RedHat:
@@ -15,9 +15,17 @@
   vars_files:
     - vars.yml
   tasks:
+    - name: Ensure bash aliases file exists
+      copy:
+        content: ""
+        dest: "{{ HOME }}/.bash_aliases"
+        force: no
+        owner: "{{ lookup('env', 'USER') }}"
+        mode: 0660
+
     - name: Install bash aliases for standardised commands
       blockinfile:
-        path: "{{ USER }}/.bash_aliases"
+        path: "{{ HOME }}/.bash_aliases"
         marker: "# {mark} PS2ALERTS ANSIBLE MANAGED BLOCK #"
         block: |
           ## API
@@ -52,18 +60,18 @@
           alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"
           alias ps2alerts-dev-db="ansible-playbook {{ stack_dir | realpath }}/ansible/import-dev-db.yml"
 
-    - name: Install ca-certificates package on RHEL systems
-      yum:
-        name: ca-certificates
-        state: present
-      when: ansible_os_family == "RedHat"
+    # - name: Install ca-certificates package on RHEL systems
+    #   yum:
+    #     name: ca-certificates
+    #     state: present
+    #   when: ansible_os_family == "RedHat"
 
-    - name: Install ca-certificates package on Debian systems
-      apt:
-        name: ca-certificates
-        state: present
-        update_cache: yes
-      when: ansible_os_family == "Debian"
+    # - name: Install ca-certificates package on Debian systems
+    #   apt:
+    #     name: ca-certificates
+    #     state: present
+    #     update_cache: yes
+    #   when: ansible_os_family == "Debian"
 
     - name: Import hosts into /etc/hosts
       blockinfile:
@@ -81,45 +89,45 @@
         state: directory
 
     ## WIP WIP WIP
-    - name: Start mkcert container and generate the certs
-      docker_container:
-        name: ps2alerts-mkcert
-        image: vishnunair/docker-mkcert
-        state: started
-        env:
-          domain: "dev.ps2alerts.com,api.dev.ps2alerts.com,wss.dev.ps2alerts.com"
-        volumes:
-          - "{{certs_dir}}:/root/.local/share/mkcert"
-        labels:
-          traefik.enable: "false"
+    # - name: Start mkcert container and generate the certs
+    #   docker_container:
+    #     name: ps2alerts-mkcert
+    #     image: vishnunair/docker-mkcert
+    #     state: started
+    #     env:
+    #       domain: "dev.ps2alerts.com,api.dev.ps2alerts.com,wss.dev.ps2alerts.com"
+    #     volumes:
+    #       - "{{certs_dir}}:/root/.local/share/mkcert"
+    #     labels:
+    #       traefik.enable: "false"
 
-    - name: Wait for certs to be generated (grab a snickers)
-      wait_for:
-        path: /data/ps2alerts/certs/{{ item }}
-        state: present
-      with_items:
-        - dev.ps2alerts.com.pem
-        - api.dev.ps2alerts.com.pem
-        - wss.dev.ps2alerts.com.pem
-        - rootCA.pem
+    # - name: Wait for certs to be generated (grab a snickers)
+    #   wait_for:
+    #     path: /data/ps2alerts/certs/{{ item }}
+    #     state: present
+    #   with_items:
+    #     - dev.ps2alerts.com.pem
+    #     - api.dev.ps2alerts.com.pem
+    #     - wss.dev.ps2alerts.com.pem
+    #     - rootCA.pem
 
-    - name: Copy certificate authority to trusted ca path of the os
-      copy:
-        src: "{{ item }}"
-        dest: "{{ ca_path[ansible_os_family][ansible_distribution_major_version|int] }}/"
-        owner: root
-        group: root
-        mode: 0644
-      with_fileglob:
-        - "{{certs_dir}}*"
-      notify:
-        - update trusted ca debian
-        - update trusted ca redhat
+    # - name: Copy certificate authority to trusted ca path of the os
+    #   copy:
+    #     src: "{{ item }}"
+    #     dest: "{{ ca_path[ansible_os_family][ansible_distribution_major_version|int] }}/"
+    #     owner: root
+    #     group: root
+    #     mode: 0644
+    #   with_fileglob:
+    #     - "{{certs_dir}}*"
+    #   notify:
+    #     - update trusted ca debian
+    #     - update trusted ca redhat
 
-    - name: Stop mkcert
-      docker_container:
-        name: ps2alerts-mkcert
-        state: stopped
+    # - name: Stop mkcert
+    #   docker_container:
+    #     name: ps2alerts-mkcert
+    #     state: stopped
 
     - debug:
         msg: "Remember to source your '~/.bash_aliases' file or restart your terminal!"
