@@ -18,9 +18,6 @@ The PS2Alerts project utilises Kubernetes for its deployment and containerisatio
 
 ## Requirements
 
-* [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-* [Virtual Box](https://www.virtualbox.org/wiki/Downloads) - Required for Minikube
-* [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube)
 * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)
 * [Docker](https://docs.docker.com/get-docker)
 * A terminal program / PowerShell. For Linux I recommend [Terminator](https://gnometerminator.blogspot.com/p/introduction.html).
