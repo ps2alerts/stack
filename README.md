@@ -12,9 +12,9 @@ If you wish to contribute, please join our Discord located at: https://discord.g
 
 # Getting Started
 
-The PS2Alerts project utilises Kubernetes for its deployment and containerisation solution. It matches current infrastructure, and it solves a TON of headaches when it comes to getting code out to the world. Particularly SSL certificates. Fuck SSL certificate management.
+The PS2Alerts project utilises Kubernetes for its deployment and containerisation solution. It matches current infrastructure, and it solves a TON of headaches when it comes to getting code out to the world. Particularly SSL certificates. Fuck SSL certificate management. Locally however, for the sake of lowering local dev environment complexity and "things doing weird stuff" we're using Ansible to provision and maintain the local development environment. It will install not only the services required to run the application, but also a set of standardized commands shared across all developers.
 
-**Linux Debian** is the only supported operating system for development. I won't help you with issues to do with your environment if you're running anything other than Linux. It can be done in Windows, but it's a hassle. Most likely ok on Mac OSX with a few tweaks. All the tools we use have a Windows version, thankfully, but it may need some modification to get it to work.
+**Linux Debian** is the only supported operating system for development. I won't help you with issues to do with your environment if you're running anything other than Linux. It can be done in Windows, but it's a hassle. Most likely ok on Mac OSX with a few tweaks adding in missing things with `homebrew`. **Windows is not officially supported.**
 
 ## Requirements
 
@@ -42,8 +42,7 @@ Run command `ansible-playbook init.yml -K` and provide your sudo password. Ansib
 
 Simply execute `ps2alerts-start` in your terminal to begin!
 
-Once the stack has started, if this is for the first time, you'll need to import the database sample. To do this, execute `ps2alerts-dev-db`. 
-
+We have designed the websocket project (potentially moved to API) to initialize the database for you, it also triggers an "instance" of your choosing via code so you're able to immediately start tracking data.
 
 ### Connecting to Mongodb
 
