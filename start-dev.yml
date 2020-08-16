@@ -61,7 +61,7 @@
     - name: Start Redis
       docker_container:
         name: ps2alerts-redis
-        image: redis:5
+        image: redis:6
         state: started
         volumes:
           - "{{ redis_dir }}:/data"
@@ -71,3 +71,45 @@
           - name: "ps2alerts"
         labels:
           traefik.enable: "false"
+
+    - name: Start RabbitMQ
+      docker_container:
+        name: ps2alerts-mq
+        image: bitnami/rabbitmq:3.8
+        ports:
+          - 4369:4369
+          - 5672:5672
+          - 25672:25672
+          - 15672:15672
+        volumes:
+          - "{{ mq_dir }}:/bitnami"
+        networks:
+          - name: "ps2alerts"
+        labels:
+          traefik.enable: "false"
+
+    - name: Create RabbitMQ Exchange
+      rabbitmq_exchange:
+        name: ps2alertsExchange
+        login_user: user
+        login_password: "bitnami"
+
+    - name: Create PS2Alerts message queues
+      rabbitmq_queue:
+        name: "{{ item }}"
+        login_user: user
+        login_password: "bitnami"
+      with_items:
+        - apiMessages
+        - websocketAdmin
+
+    - name: Create PS2Alerts exchange -> queue bindings
+      rabbitmq_binding:
+        name: ps2alertsExchange
+        destination: "{{ item }}"
+        type: queue
+        login_user: user
+        login_password: "bitnami"
+      with_items:
+        - apiMessages
+        - websocketAdmin

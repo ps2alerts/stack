@@ -53,3 +53,18 @@ Once the stack has started, if this is for the first time, you'll need to import
 We are using MongoDB as our data document storage solution. In order to connect to Mongo for local development work, open up the Mongo Compass client and put the following in the connection string:
 
 `mongodb://root:foobar@localhost:27017`
+
+### RabbitMQ
+
+The project utilises [RabbitMQ](https://www.rabbitmq.com/) ([MQs 101](https://www.youtube.com/watch?v=oUJbuFMyBDk)) for both storage of incoming data to be consumed by the API, and for administration of the websocket. Once you have started the stack, you can access the dev environment version of RabbitMQ by going to the following URL: 
+
+http://localhost:15672/#/
+
+Using credentials: `user` | `bitnami`
+
+There, you can see the channels and queues created by us, and is provisioned via the Ansible script. We utilize a single exchange - multiple queues system, so we will use the `ps2alertsExchange` and then use keys to route messages correctly.
+
+Below describes our queue topics:
+
+* **websocketAdmin** - Administrative messages manually triggered by developers, e.g. `instance metagame start 10 8` to start a metagame instance on Miller, Esamir.
+* **apiMessages** - Messages to be consumed by the API and persisted.
