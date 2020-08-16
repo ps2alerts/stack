@@ -93,23 +93,3 @@
         name: ps2alertsExchange
         login_user: user
         login_password: "bitnami"
-
-    - name: Create PS2Alerts message queues
-      rabbitmq_queue:
-        name: "{{ item }}"
-        login_user: user
-        login_password: "bitnami"
-      with_items:
-        - apiMessages
-        - websocketAdmin
-
-    - name: Create PS2Alerts exchange -> queue bindings
-      rabbitmq_binding:
-        name: ps2alertsExchange
-        destination: "{{ item }}"
-        type: queue
-        login_user: user
-        login_password: "bitnami"
-      with_items:
-        - apiMessages
-        - websocketAdmin
