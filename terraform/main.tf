@@ -24,3 +24,14 @@ resource "kubernetes_namespace" "ps2alerts" {
     name = "ps2alerts"
   }
 }
+
+module "ps2alerts_database" {
+  source  = "./modules/database"
+  db_user = var.db_user
+  db_pass = var.db_pass
+}
+
+module "ps2alerts_redis" {
+  source  = "./modules/redis"
+  redis_pass = var.redis_pass
+}

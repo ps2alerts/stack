@@ -1,5 +1,5 @@
 ---
-name: Deploy Database
+name: Deploy Stack
 on:
   push:
     branches: [master]
@@ -40,7 +40,8 @@ jobs:
           terraform plan \
             -var='db_user=${{ secrets.DB_USER }}' \
             -var='db_pass=${{ secrets.DB_PASS }}' \
-            -target=module.ps2alerts_database -out='.tfout'
+            -var='REDIS_pass=${{ secrets.REDIS_PASS }}' \
+            -out='.tfout'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
