@@ -40,7 +40,7 @@ jobs:
           terraform plan \
             -var='db_user=${{ secrets.DB_USER }}' \
             -var='db_pass=${{ secrets.DB_PASS }}' \
-            -var='REDIS_pass=${{ secrets.REDIS_PASS }}' \
+            -var='redis_pass=${{ secrets.REDIS_PASS }}' \
             -out='.tfout'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
