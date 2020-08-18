@@ -68,7 +68,7 @@ resource "kubernetes_deployment" "ps2alerts_redis_deployment" {
       spec {
         container {
           name = var.redis_identifier
-          image = "bitbami/redis:6"
+          image = "bitnami/redis:6.0"
           volume_mount {
             mount_path = "/bitnami/redis/data"
             name = kubernetes_persistent_volume_claim.ps2alerts_redis_volume.metadata[0].name

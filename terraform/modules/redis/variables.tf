@@ -11,9 +11,7 @@ variable "environment" {
 }
 
 variable "redis_port" {
-  default = var.redis_port
+  default = 6379
 }
 
-variable "redis_pass" {
-  default = var.redis_pass
-}
+variable "redis_pass" {}
