@@ -57,6 +57,7 @@
       unarchive:
         src: "{{ item }}"
         dest: "{{ dump_path }}"
+        mode: 0644
       with_items:
         - "{{ dump_path }}/{{ dump_filename }}.tar.xz"
         - "{{ dump_path }}/{{ dump_data_filename }}.tar.xz"
