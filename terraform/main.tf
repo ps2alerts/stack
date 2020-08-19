@@ -32,16 +32,16 @@ module "ps2alerts_database" {
 }
 
 module "ps2alerts_datadog" {
-  source  = "./modules/datadog"
+  source          = "./modules/datadog"
   datadog_api_key = var.datadog_api_key
 }
 
 module "ps2alerts_rabbitmq" {
-  source  = "./modules/rabbitmq"
+  source             = "./modules/rabbitmq"
   rabbitmq_auth_pass = var.rabbitmq_pass
 }
 
 module "ps2alerts_redis" {
-  source  = "./modules/redis"
+  source     = "./modules/redis"
   redis_pass = var.redis_pass
 }

@@ -1,20 +1,20 @@
 resource "kubernetes_service" "ps2alerts_database_service" {
   metadata {
-    name = "ps2alerts-db"
+    name      = "ps2alerts-db"
     namespace = var.namespace
     labels = {
-      app = var.db_identifier
+      app         = var.db_identifier
       environment = var.environment
     }
   }
   spec {
     type = "ClusterIP"
     selector = {
-      app = var.db_identifier
+      app         = var.db_identifier
       environment = var.environment
     }
     port {
-      port = var.db_port
+      port        = var.db_port
       target_port = var.db_port
     }
   }
@@ -22,15 +22,15 @@ resource "kubernetes_service" "ps2alerts_database_service" {
 
 resource "kubernetes_persistent_volume_claim" "ps2alerts_database_volume" {
   metadata {
-    name = var.db_identifier
+    name      = var.db_identifier
     namespace = var.namespace
     labels = {
-      app = var.db_identifier
+      app         = var.db_identifier
       environment = var.environment
     }
   }
   spec {
-    access_modes = ["ReadWriteOnce"]
+    access_modes       = ["ReadWriteOnce"]
     storage_class_name = "do-block-storage"
     resources {
       requests = {
@@ -42,44 +42,44 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_database_volume" {
 
 resource "kubernetes_deployment" "ps2alerts_database_deployment" {
   metadata {
-    name = var.db_identifier
+    name      = var.db_identifier
     namespace = var.namespace
     labels = {
-      app = var.db_identifier
+      app         = var.db_identifier
       environment = var.environment
     }
   }
   spec {
-    replicas = 1
+    replicas               = 1
     revision_history_limit = 1
     selector {
       match_labels = {
-        app = var.db_identifier
+        app         = var.db_identifier
         environment = var.environment
       }
     }
     template {
       metadata {
         labels = {
-          app = var.db_identifier
+          app         = var.db_identifier
           environment = var.environment
         }
       }
       spec {
         container {
-          name = var.db_identifier
+          name  = var.db_identifier
           image = "mongo:4.2"
           volume_mount {
             mount_path = "/data"
-            name = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
+            name       = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
           }
           resources {
             limits {
-              cpu = "500m"
+              cpu    = "500m"
               memory = "512Mi"
             }
             requests {
-              cpu = "250m"
+              cpu    = "250m"
               memory = "256Mi"
             }
           }
@@ -87,15 +87,15 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
             container_port = var.db_port
           }
           env {
-            name = "MONGO_INITDB_DATABASE"
+            name  = "MONGO_INITDB_DATABASE"
             value = "ps2alerts"
           }
           env {
-            name = "MONGO_INITDB_ROOT_USERNAME"
+            name  = "MONGO_INITDB_ROOT_USERNAME"
             value = var.db_user
           }
           env {
-            name = "MONGO_INITDB_ROOT_PASSWORD"
+            name  = "MONGO_INITDB_ROOT_PASSWORD"
             value = var.db_pass
           }
         }
