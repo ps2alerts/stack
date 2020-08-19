@@ -19,6 +19,12 @@ provider "kubernetes" {
   )
 }
 
+provider "helm" {
+  kubernetes {
+    load_config_file = false
+  }
+}
+
 resource "kubernetes_namespace" "ps2alerts" {
   metadata {
     name = "ps2alerts"
