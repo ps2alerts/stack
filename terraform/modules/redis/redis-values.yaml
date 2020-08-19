@@ -1,0 +1,136 @@
+global:
+  redis: {}
+image:
+  registry: docker.io
+  repository: bitnami/redis
+  tag: 6.0.6-debian-10-r10
+  pullPolicy: IfNotPresent
+
+cluster:
+  enabled: false
+  slaveCount: 0
+
+sentinel:
+  enabled: false
+
+clusterDomain: cluster.local
+
+networkPolicy:
+  enabled: true
+  ingressNSMatchLabels: {}
+  ingressNSPodMatchLabels: {}
+
+serviceAccount:
+  create: false
+  name:
+
+rbac:
+  create: false
+  role:
+    rules: []
+
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
+
+## Use password authentication
+usePassword: true
+password:
+usePasswordFile: false
+
+## Persist data to a persistent volume (Redis Master) - OVERRIDDEN IN TERRAFORM
+persistence:
+  existingClaim:
+
+redisPort: 6379
+
+tls:
+  enabled: false
+
+master:
+  command: "/run.sh"
+  configmap:
+  ##
+  ## Can be used to specify command line flags, for example:
+  ## extraFlags:
+  ##  - "--maxmemory-policy volatile-ttl"
+  ##  - "--repl-backlog-size 1024mb"
+  extraFlags: []
+  ## Comma-separated list of Redis commands to disable
+  ##
+  ## Can be used to disable Redis commands for security reasons.
+  ## Commands will be completely disabled by renaming each to an empty string.
+  ## ref: https://redis.io/topics/security#disabling-of-specific-commands
+  ##
+  disableCommands:
+    - FLUSHDB
+    - FLUSHALL
+
+  podLabels: {}
+  podAnnotations: {}
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 5
+
+  customLivenessProbe: {}
+  customReadinessProbe: {}
+  affinity: {}
+
+  ## Redis Master Service properties
+  service:
+    ##  Redis Master Service type
+    type: ClusterIP
+    port: 6379
+
+    annotations: {}
+    labels: {}
+    loadBalancerIP:
+  persistence:
+    enabled: true
+    path: /data
+    subPath: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    matchLabels: {}
+    matchExpressions: {}
+  statefulset:
+    updateStrategy: RollingUpdate
+  priorityClassName: {}
+
+metrics:
+  enabled: false
+
+volumePermissions:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: bitnami/minideb
+    tag: buster
+    pullPolicy: Always
+  resources: {}
+
+## Redis config file
+## ref: https://redis.io/topics/config
+##
+configmap: |-
+  # Enable AOF https://redis.io/topics/persistence#append-only-file
+  appendonly yes
+  # Disable RDB persistence, AOF persistence already enabled.
+  save ""

@@ -1,31 +1,9 @@
-resource "kubernetes_service" "ps2alerts_redis_service" {
+resource "kubernetes_persistent_volume_claim" "ps2alerts_database_volume" {
   metadata {
     name = "ps2alerts-redis"
     namespace = var.namespace
     labels = {
-      app = var.redis_identifier
-      environment = var.environment
-    }
-  }
-  spec {
-    type = "ClusterIP"
-    selector = {
-      app = var.redis_identifier
-      environment = var.environment
-    }
-    port {
-      port = var.redis_port
-      target_port = var.redis_port
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "ps2alerts_redis_volume" {
-  metadata {
-    name = var.redis_identifier
-    namespace = var.namespace
-    labels = {
-      app = var.redis_identifier
+      app = "ps2alerts"
       environment = var.environment
     }
   }
@@ -40,64 +18,24 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_redis_volume" {
   }
 }
 
-resource "kubernetes_deployment" "ps2alerts_redis_deployment" {
-  metadata {
-    name = var.redis_identifier
-    namespace = var.namespace
-    labels = {
-      app = var.redis_identifier
-      environment = var.environment
-    }
+resource "helm_release" "ps2alerts_redis" {
+  name = var.redis_identifier
+  repository = "https://charts.bitnami.com/bitnami"
+  chart = "redis"
+  namespace = var.namespace
+  version = "10.7.16"
+
+  values = [
+    file("${path.module}/redis-values.yaml")
+  ]
+
+  set {
+    name = "password"
+    value = var.redis_pass
   }
-  spec {
-    replicas = 1
-    revision_history_limit = 1
-    selector {
-      match_labels = {
-        app = var.redis_identifier
-        environment = var.environment
-      }
-    }
-    template {
-      metadata {
-        labels = {
-          app = var.redis_identifier
-          environment = var.environment
-        }
-      }
-      spec {
-        container {
-          name = var.redis_identifier
-          image = "bitnami/redis:6.0"
-          volume_mount {
-            mount_path = "/bitnami/redis/data"
-            name = kubernetes_persistent_volume_claim.ps2alerts_redis_volume.metadata[0].name
-          }
-          resources {
-            limits {
-              cpu = "100m"
-              memory = "256Mi"
-            }
-            requests {
-              cpu = "50m"
-              memory = "128Mi"
-            }
-          }
-          port {
-            container_port = var.redis_port
-          }
-          env {
-            name = "REDIS_PASSWORD"
-            value = var.redis_pass
-          }
-        }
-        volume {
-          name = kubernetes_persistent_volume_claim.ps2alerts_redis_volume.metadata[0].name
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.ps2alerts_redis_volume.metadata[0].name
-          }
-        }
-      }
-    }
+
+  set {
+    name = "persistence.existingClaim"
+    value = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
   }
 }

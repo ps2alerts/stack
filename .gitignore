@@ -3,3 +3,4 @@ traefik/certs/*
 traefik/logs/*
 ansible/temp/*
 terraform/.terraform
+terraform/.tfout
