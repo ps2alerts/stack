@@ -160,8 +160,10 @@ ingress:
   path: /
   certManager: true
   hostname: rabbit.ps2alerts.com
-  annotations: {}
-  tls: false
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: ps2alerts-rabbitmq
+  tls: true
   secrets: []
 
 metrics:
