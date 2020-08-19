@@ -31,6 +31,11 @@ module "ps2alerts_database" {
   db_pass = var.db_pass
 }
 
+module "ps2alerts_datadog" {
+  source  = "./modules/datadog"
+  datadog_api_key = var.datadog_api_key
+}
+
 module "ps2alerts_redis" {
   source  = "./modules/redis"
   redis_pass = var.redis_pass

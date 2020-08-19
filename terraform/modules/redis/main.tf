@@ -23,7 +23,6 @@ resource "helm_release" "ps2alerts_redis" {
   repository = "https://charts.bitnami.com/bitnami"
   chart = "redis"
   namespace = var.namespace
-  version = "10.7.16"
 
   values = [
     file("${path.module}/redis-values.yaml")
