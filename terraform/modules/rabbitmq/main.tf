@@ -1,4 +1,4 @@
-resource "kubernetes_persistent_volume_claim" "ps2alerts_redis_volume" {
+resource "kubernetes_persistent_volume_claim" "ps2alerts_rabbitmq_volume_claim" {
   metadata {
     name = var.identifier
     namespace = var.namespace
@@ -18,23 +18,23 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_redis_volume" {
   }
 }
 
-resource "helm_release" "ps2alerts_redis" {
+resource "helm_release" "ps2alerts_rabbitmq" {
   name = var.identifier
   repository = "https://charts.bitnami.com/bitnami"
-  chart = "redis"
+  chart = "rabbitmq"
   namespace = var.namespace
 
   values = [
-    file("${path.module}/redis-values.yaml")
+    file("${path.module}/rabbitmq-values.yaml")
   ]
 
   set {
-    name = "password"
-    value = var.redis_pass
+    name = "auth.password"
+    value = var.rabbitmq_auth_pass
   }
 
   set {
     name = "persistence.existingClaim"
-    value = kubernetes_persistent_volume_claim.ps2alerts_redis_volume.metadata[0].name
+    value = kubernetes_persistent_volume_claim.ps2alerts_rabbitmq_volume_claim.metadata[0].name
   }
 }

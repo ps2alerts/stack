@@ -1,0 +1,168 @@
+image:
+  registry: docker.io
+  repository: bitnami/rabbitmq
+  tag: 3.8.7-debian-10-r0
+  debug: false
+  pullPolicy: IfNotPresent
+clusterDomain: cluster.local
+auth:
+  username: admin
+  password: GONNABEREPLACEDYO
+  tls:
+    enabled: false
+logs: '-'
+ulimitNofiles: '65536'
+memoryHighWatermark:
+  enabled: false
+plugins: "rabbitmq_management rabbitmq_peer_discovery_k8s"
+extraPlugins: "rabbitmq_auth_backend_ldap"
+clustering:
+  addressType: hostname
+  rebalance: false
+  forceBoot: false
+loadDefinition:
+  enabled: false
+extraEnvVars: []
+extraContainerPorts: []
+
+## Configuration file content: required cluster configuration
+## Do not override unless you know what you are doing.
+## To add more configuration, use `extraConfiguration` of `advancedConfiguration` instead
+##
+configuration: |-
+  ## Username and password
+  default_user = {{ .Values.auth.username }}
+  default_pass = {{ .Values.auth.password }}
+  ## Clustering
+  cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
+  cluster_formation.k8s.host = kubernetes.default.svc.{{ .Values.clusterDomain }}
+  cluster_formation.node_cleanup.interval = 10
+  cluster_formation.node_cleanup.only_log_warning = true
+  cluster_partition_handling = autoheal
+  # queue master locator
+  queue_master_locator = min-masters
+  # enable guest user
+  loopback_users.guest = false
+  {{ tpl .Values.extraConfiguration . }}
+  {{- if .Values.auth.tls.enabled }}
+  ssl_options.verify = {{ .Values.auth.tls.sslOptionsVerify }}
+  listeners.ssl.default = {{ .Values.service.tlsPort }}
+  ssl_options.fail_if_no_peer_cert = {{ .Values.auth.tls.failIfNoPeerCert }}
+  ssl_options.cacertfile = /opt/bitnami/rabbitmq/certs/ca_certificate.pem
+  ssl_options.certfile = /opt/bitnami/rabbitmq/certs/server_certificate.pem
+  ssl_options.keyfile = /opt/bitnami/rabbitmq/certs/server_key.pem
+  {{- end }}
+  {{- if .Values.ldap.enabled }}
+  auth_backends.1 = rabbit_auth_backend_ldap
+  auth_backends.2 = internal
+  {{- range $index, $server := .Values.ldap.servers }}
+  auth_ldap.servers.{{ add $index 1 }} = {{ $server }}
+  {{- end }}
+  auth_ldap.port = {{ .Values.ldap.port }}
+  auth_ldap.user_dn_pattern = {{ .Values.ldap.user_dn_pattern  }}
+  {{- if .Values.ldap.tls.enabled }}
+  auth_ldap.use_ssl = true
+  {{- end }}
+  {{- end }}
+  {{- if .Values.metrics.enabled }}
+  ## Prometheus metrics
+  prometheus.tcp.port = 9419
+  {{- end }}
+  {{- if .Values.memoryHighWatermark.enabled }}
+  ## Memory Threshold
+  total_memory_available_override_value = {{ include "rabbitmq.toBytes" .Values.resources.limits.memory }}
+  vm_memory_high_watermark.{{ .Values.memoryHighWatermark.type }} = {{ .Values.memoryHighWatermark.value }}
+  {{- end }}
+
+extraConfiguration: |-
+  #default_vhost = {{ .Release.Namespace }}-vhost
+  #disk_free_limit.absolute = 50MB
+  #management.load_definitions = /app/load_definition.json
+
+advancedConfiguration: |-
+
+
+extraVolumeMounts: []
+extraVolumes: []
+extraSecrets: {}
+replicaCount: 1
+podManagementPolicy: OrderedReady
+podLabels: {}
+podAnnotations: {}
+updateStrategyType: RollingUpdate
+priorityClassName: ""
+affinity: {}
+nodeSelector: {}
+tolerations: []
+podSecurityContext:
+  fsGroup: 1001
+  runAsUser: 1001
+containerSecurityContext: {}
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 250m
+    memory: 128Mi
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 120
+  timeoutSeconds: 20
+  periodSeconds: 30
+  failureThreshold: 6
+  successThreshold: 1
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  timeoutSeconds: 20
+  periodSeconds: 30
+  failureThreshold: 3
+  successThreshold: 1
+customLivenessProbe: {}
+customReadinessProbe: {}
+initContainers: {}
+sidecars: {}
+serviceAccount:
+  create: true
+rbac:
+  create: true
+
+persistence:
+  enabled: true
+  selector: {}
+  accessMode: ReadWriteOnce
+  existingClaim: ""
+  size: 1Gi
+
+pdb:
+  create: false
+  minAvailable: 1
+networkPolicy:
+  enabled: true
+  allowExternal: true
+
+service:
+  type: ClusterIP
+  port: 5672
+  tlsPort: 5671
+  distPort: 25672
+  managerPort: 15672
+  metricsPort: 9419
+  extraPorts: {}
+  labels: {}
+  annotations: {}
+
+ingress:
+  enabled: true
+  path: /
+  certManager: true
+  hostname: rabbit.ps2alerts.com
+  annotations: {}
+  tls: false
+  secrets: []
+
+metrics:
+  enabled: false

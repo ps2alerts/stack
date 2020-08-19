@@ -3,15 +3,11 @@ variable "namespace" {
 }
 
 variable "identifier" {
-  default = "ps2alerts-redis"
+  default = "ps2alerts-rabbitmq"
 }
 
 variable "environment" {
   default = "production"
 }
 
-variable "redis_port" {
-  default = 6379
-}
-
-variable "redis_pass" {}
+variable "rabbitmq_auth_pass" {}
