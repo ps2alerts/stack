@@ -770,35 +770,35 @@ agents:
     ## Allowed capabilites
     #
     capabilites:
-    - SYS_ADMIN
-    - SYS_RESOURCE
-    - SYS_PTRACE
-    - NET_ADMIN
-    - NET_BROADCAST
-    - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - SYS_PTRACE
+      - NET_ADMIN
+      - NET_BROADCAST
+      - IPC_LOCK
 
     ## @param volumes - list - optional
     ## Allowed volumes types
     #
     volumes:
-    - configMap
-    - downwardAPI
-    - emptyDir
-    - hostPath
-    - secret
+      - configMap
+      - downwardAPI
+      - emptyDir
+      - hostPath
+      - secret
 
     ## @param seccompProfiles - list - optional
     ## Allowed seccomp profiles
     #
     seccompProfiles:
-    - "runtime/default"
-    - "localhost/system-probe"
+      - "runtime/default"
+      - "localhost/system-probe"
 
     ## @param apparmorProfiles - list - optional
     ## Allowed apparmor profiles
     #
     apparmorProfiles:
-    - "runtime/default"
+      - "runtime/default"
 
   containers:
     agent:
