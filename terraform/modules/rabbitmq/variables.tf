@@ -10,4 +10,5 @@ variable "environment" {
   default = "production"
 }
 
-variable "rabbitmq_auth_pass" {}
+variable "rabbitmq_admin_pass" {}
+variable "rabbitmq_ps2alerts_pass" {}

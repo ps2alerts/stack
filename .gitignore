@@ -4,3 +4,4 @@ traefik/logs/*
 ansible/temp/*
 terraform/.terraform
 terraform/.tfout
+terraform/.auto.tfvars

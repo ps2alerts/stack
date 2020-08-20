@@ -42,7 +42,8 @@ jobs:
             -var='db_pass=${{ secrets.DB_PASS }}' \
             -var='redis_pass=${{ secrets.REDIS_PASS }}' \
             -var='datadog_api_key=${{ secrets.DATADOG_API_KEY }}' \
-            -var='rabbitmq_pass=${{ secrets.RABBITMQ_PASS }}' \
+            -var='rabbitmq_admin_pass=${{ secrets.RABBITMQ_ADMIN_PASS }}' \
+            -var='rabbitmq_ps2alerts_pass=${{ secrets.RABBITMQ_PS2ALERTS_PASS }}' \
             -out='.tfout'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
