@@ -48,8 +48,8 @@ module "ps2alerts_datadog" {
 }
 
 module "ps2alerts_rabbitmq" {
-  source             = "./modules/rabbitmq"
-  rabbitmq_admin_pass = var.rabbitmq_admin_pass
+  source                  = "./modules/rabbitmq"
+  rabbitmq_admin_pass     = var.rabbitmq_admin_pass
   rabbitmq_ps2alerts_pass = var.rabbitmq_ps2alerts_pass
 }
 

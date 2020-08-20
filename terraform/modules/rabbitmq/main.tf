@@ -46,7 +46,7 @@ resource "helm_release" "ps2alerts_rabbitmq" {
 }
 
 resource "rabbitmq_vhost" "ps2alerts" {
-  name     = "ps2alerts"
+  name = "ps2alerts"
 }
 
 resource "rabbitmq_user" "ps2alerts" {
