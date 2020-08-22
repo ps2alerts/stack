@@ -11,6 +11,11 @@
         name: docker
         state: present
 
+#    - name: Install rabbitmqctl package
+#      package:
+#        name: rabbitmqctl
+#        state: present
+
     - name: Create docker network
       docker_network:
         name: ps2alerts
@@ -90,6 +95,7 @@
 
     - name: Create RabbitMQ Exchange
       rabbitmq_exchange:
-        name: ps2alertsExchange
+        name: ps2alerts
+        vhost: /
         login_user: user
         login_password: "bitnami"
