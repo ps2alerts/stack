@@ -45,10 +45,6 @@ resource "helm_release" "ps2alerts_rabbitmq" {
   }
 }
 
-resource "rabbitmq_vhost" "ps2alerts" {
-  name = "ps2alerts"
-}
-
 resource "rabbitmq_user" "ps2alerts" {
   name     = "ps2alerts"
   password = var.rabbitmq_ps2alerts_pass
@@ -57,7 +53,7 @@ resource "rabbitmq_user" "ps2alerts" {
 
 resource "rabbitmq_permissions" "ps2alerts" {
   user  = rabbitmq_user.ps2alerts.name
-  vhost = rabbitmq_vhost.ps2alerts.name
+  vhost = "/"
 
   permissions {
     configure = ".*"
@@ -67,7 +63,7 @@ resource "rabbitmq_permissions" "ps2alerts" {
 }
 resource "rabbitmq_exchange" "ps2alerts" {
   name  = "ps2alerts"
-  vhost = rabbitmq_permissions.ps2alerts.vhost
+  vhost = "/"
 
   settings {
     type        = "direct"
