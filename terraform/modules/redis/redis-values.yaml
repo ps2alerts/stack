@@ -17,6 +17,7 @@ clusterDomain: cluster.local
 
 networkPolicy:
   enabled: true
+  allowExternal: true
   ingressNSMatchLabels: {}
   ingressNSPodMatchLabels: {}
 

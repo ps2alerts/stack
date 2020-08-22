@@ -60,7 +60,7 @@ resource "rabbitmq_permissions" "ps2alerts" {
   vhost = rabbitmq_vhost.ps2alerts.name
 
   permissions {
-    configure = ""
+    configure = ".*"
     write     = ".*"
     read      = ".*"
   }
