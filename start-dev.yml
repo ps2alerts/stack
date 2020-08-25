@@ -84,14 +84,21 @@
         ports:
           - 4369:4369
           - 5672:5672
-          - 25672:25672
           - 15672:15672
+          - 25672:25672
         volumes:
           - "{{ mq_dir }}:/bitnami"
         networks:
           - name: "ps2alerts"
         labels:
           traefik.enable: "false"
+
+    - name: Wait for Rabbit to be fully available...
+      shell: curl --head --silent http://localhost:15672
+      register: result
+      until: result.stdout.find("200 OK") != -1
+      retries: 20
+      delay: 5
 
     - name: Create RabbitMQ Exchange
       rabbitmq_exchange:
