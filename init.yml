@@ -46,7 +46,7 @@
           alias ps2alerts-ws-start="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-ws-start-full="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/start-full.yml"
           alias ps2alerts-ws-stop="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/stop.yml"
-          alias ps2alerts-ws-dev="ps2alerts-ws-stop && ps2alerts-ws-start && docker logs -f ps2alerts-ws"
+          alias ps2alerts-ws-dev="ps2alerts-ws-stop && ps2alerts-ws-start && docker logs -f ps2alerts-websocket"
           alias ps2alerts-ws-msg="ansible-playbook {{ websocket_dir | realpath }}/provisioning/dev/admin-websocket-publish.yml"
 
           alias ps2alerts-ws-term="docker exec -it ps2alerts-websocket bash"
@@ -59,9 +59,8 @@
           alias ps2alerts="cd {{ project_dir | realpath }}"
           alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-ws-start-full"
           alias ps2alerts-stop="ps2alerts-stack-stop && ps2alerts-api-stop && ps2alerts-website-stop && ps2alerts-ws-stop"
-          alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-ws"
+          alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-websocket"
           alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"
-          alias ps2alerts-dev-db="ansible-playbook {{ stack_dir | realpath }}/ansible/import-dev-db.yml"
 
     # - name: Install ca-certificates package on RHEL systems
     #   yum:
