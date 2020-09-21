@@ -5,7 +5,7 @@
 Powers the central services required to run the following projects:
  
 * [PS2Alerts/api](https://github.com/PS2Alerts/api)
-* [PS2Alerts/websocket](https://github.com/PS2Alerts/websocket)
+* [PS2Alerts/aggregator](https://github.com/PS2Alerts/aggregator)
 * [PS2Alerts/website](https://github.com/PS2Alerts/website)
 
 If you wish to contribute, please join our Discord located at: https://discord.gg/7xF65ap
@@ -33,7 +33,7 @@ Ensure you have git cloned all 4 projects in the organisation down to your local
 -- api
 -- stack
 -- website
--- websocket
+-- aggregator
 ```
 
 Run command `ansible-playbook init.yml -K` and provide your sudo password. Ansible will ensure you have the correct commands etc. 
@@ -42,7 +42,7 @@ Run command `ansible-playbook init.yml -K` and provide your sudo password. Ansib
 
 Simply execute `ps2alerts-start` in your terminal to begin!
 
-We have designed the websocket project (potentially moved to API) to initialize the database for you, it also triggers an "instance" of your choosing via code so you're able to immediately start tracking data.
+We have designed the aggregator project (potentially moved to API) to initialize the database for you, it also triggers an "instance" of your choosing via code so you're able to immediately start tracking data.
 
 ### Connecting to Mongodb
 
@@ -52,7 +52,7 @@ We are using MongoDB as our data document storage solution. In order to connect 
 
 ### RabbitMQ
 
-The project utilises [RabbitMQ](https://www.rabbitmq.com/) ([MQs 101](https://www.youtube.com/watch?v=oUJbuFMyBDk)) for both storage of incoming data to be consumed by the API, and for administration of the websocket. Once you have started the stack, you can access the dev environment version of RabbitMQ by going to the following URL: 
+The project utilises [RabbitMQ](https://www.rabbitmq.com/) ([MQs 101](https://www.youtube.com/watch?v=oUJbuFMyBDk)) for both storage of incoming data to be consumed by the API, and for administration of the aggregator. Once you have started the stack, you can access the dev environment version of RabbitMQ by going to the following URL: 
 
 http://localhost:15672/#/
 
@@ -62,5 +62,5 @@ There, you can see the channels and queues created by us, and is provisioned via
 
 Below describes our queue topics:
 
-* **websocketAdmin** - Administrative messages manually triggered by developers, e.g. `instance metagame start 10 8` to start a metagame instance on Miller, Esamir.
+* **aggregatorAdmin** - Administrative messages manually triggered by developers, e.g. `instance metagame start 10 8` to start a metagame instance on Miller, Esamir.
 * **apiMessages** - Messages to be consumed by the API and persisted.
