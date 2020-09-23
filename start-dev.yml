@@ -36,6 +36,8 @@
           - 80:80
           - 443:443
           - 8080:8080
+        networks:
+          - name: "ps2alerts"
 
     - name: Start Database
       docker_container:
