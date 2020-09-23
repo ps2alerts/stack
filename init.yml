@@ -31,8 +31,10 @@
         block: |
           ## API
           alias ps2alerts-api="cd {{ api_dir | realpath }}"
+          alias ps2alerts-api-init="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/init.yml"
           alias ps2alerts-api-start="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-api-stop="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/stop.yml"
+          alias ps2alerts-api-dev="ps2alerts-api-stop && ps2alerts-api-start && docker logs -f ps2alerts-api"
           alias ps2alerts-api-term="docker exec -it ps2alerts-api bash"
           alias ps2alerts-api-logs="docker logs -f ps2alerts-api"
           ## Website
@@ -43,12 +45,11 @@
           alias ps2alerts-website-logs="docker logs -f ps2alerts-website"
           ## Aggregator
           alias ps2alerts-aggregator="cd {{ aggregator_dir | realpath }}"
+          alias ps2alerts-aggregator-init="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/dev/init.yml"
           alias ps2alerts-aggregator-start="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/dev/start.yml"
-          alias ps2alerts-aggregator-start-full="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/dev/start-full.yml"
           alias ps2alerts-aggregator-stop="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-aggregator-dev="ps2alerts-aggregator-stop && ps2alerts-aggregator-start && docker logs -f ps2alerts-aggregator"
           alias ps2alerts-aggregator-msg="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/admin-aggregator-publish.yml"
-
           alias ps2alerts-aggregator-term="docker exec -it ps2alerts-aggregator bash"
           alias ps2alerts-aggregator-logs="docker logs -f ps2alerts-aggregator"
           ## Stack
@@ -57,7 +58,7 @@
           alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
           ## Global Commands
           alias ps2alerts="cd {{ project_dir | realpath }}"
-          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-aggregator-start-full"
+          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-init && ps2alerts-website-start && ps2alerts-aggregator-init"
           alias ps2alerts-stop="ps2alerts-stack-stop && ps2alerts-api-stop && ps2alerts-website-stop && ps2alerts-aggregator-stop"
           alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-aggregator"
           alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"
@@ -80,8 +81,8 @@
         path: /etc/hosts
         marker: "# {mark} PS2ALERTS ANSIBLE MANAGED BLOCK #"
         block: |
-          127.0.0.1 api.dev.ps2alerts.com
-          127.0.0.1 router.dev.ps2alerts.com
+          127.0.0.1 dev.api.ps2alerts.com
+          127.0.0.1 dev.router.ps2alerts.com
           127.0.0.1 dev.ps2alerts.com
       become: yes
 
@@ -136,7 +137,7 @@
     #     state: stopped
 
     - debug:
-        msg: "Remember to source your '~/.bash_aliases' file or restart your terminal!"
+        msg: "👉 Remember to source your '~/.bash_aliases' file or restart your terminal!"
 
   handlers:
     - name: update trusted ca debian

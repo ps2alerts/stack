@@ -11,11 +11,6 @@
         name: docker
         state: present
 
-#    - name: Install rabbitmqctl package
-#      package:
-#        name: rabbitmqctl
-#        state: present
-
     - name: Create docker network
       docker_network:
         name: ps2alerts
