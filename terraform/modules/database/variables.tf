@@ -14,10 +14,6 @@ variable "db_port" {
   default = 27017
 }
 
-variable "db_user" {
-  default = "foo"
-}
+variable "db_user" {}
 
-variable "db_pass" {
-  default = "foo"
-}
+variable "db_pass" {}
