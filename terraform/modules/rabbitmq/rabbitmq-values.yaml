@@ -81,7 +81,6 @@ extraConfiguration: |-
 
 advancedConfiguration: |-
 
-
 extraVolumeMounts: []
 extraVolumes: []
 extraSecrets: {}
@@ -100,12 +99,12 @@ podSecurityContext:
 containerSecurityContext: {}
 
 resources:
-  limits:
-    cpu: 500m
-    memory: 256Mi
   requests:
     cpu: 250m
-    memory: 128Mi
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
 
 livenessProbe:
   enabled: true
