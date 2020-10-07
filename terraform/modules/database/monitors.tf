@@ -5,8 +5,8 @@ resource datadog_monitor "mongodb_high_mem" {
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Mongo", description: "high memory"})
 
   thresholds = {
-    critical = 94999978 # 1GB
-    warning = 90599111 # 950MB
+    critical = 996147000 # 1GB
+    warning = 943718000 # 950MB
   }
 
   notify_no_data = true

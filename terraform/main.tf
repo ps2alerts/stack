@@ -30,6 +30,12 @@ provider "helm" {
   }
 }
 
+provider "datadog" {
+  api_key = var.datadog_api_key
+  app_key = var.datadog_app_key
+  api_url = "https://api.datadoghq.eu/"
+}
+
 resource "kubernetes_namespace" "ps2alerts" {
   metadata {
     name = "ps2alerts"

@@ -6,6 +6,12 @@ terraform {
     kubernetes = {
       source = "hashicorp/kubernetes"
     }
+    datadog = {
+      source = "datadog/datadog"
+    }
+    helm = {
+      source = "hashicorp/helm"
+    }
   }
   required_version = ">= 0.13"
 }
