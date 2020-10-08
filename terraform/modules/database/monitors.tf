@@ -23,8 +23,8 @@ resource datadog_monitor "mongodb_high_cpu" {
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Mongo", description: "high CPU"})
 
   thresholds = {
-    critical = 1500000000 #1.5 cores
-    warning = 1300000000 #1.3 cores
+    critical = 1400000000 # 1.4 cores
+    warning = 1300000000 # 1.3 cores
   }
 
   notify_no_data = true
