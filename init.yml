@@ -31,7 +31,7 @@
         block: |
           ## Aggregator
           alias ps2alerts-aggregator="cd {{ aggregator_dir | realpath }}"
-          alias ps2alerts-aggregator-init="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/dev/init.yml"
+          alias ps2alerts-aggregator-init="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/dev/init.yml && ps2alerts-aggregator-dev"
           alias ps2alerts-aggregator-start="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-aggregator-stop="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-aggregator-dev="ps2alerts-aggregator-stop && ps2alerts-aggregator-start && ps2alerts-aggregator-logs"
@@ -40,19 +40,20 @@
           alias ps2alerts-aggregator-logs="docker logs -f ps2alerts-aggregator"
           ## API
           alias ps2alerts-api="cd {{ api_dir | realpath }}"
-          alias ps2alerts-api-init="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/init.yml"
+          alias ps2alerts-api-init="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/init.yml && ps2alerts-api-dev"
           alias ps2alerts-api-start="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-api-stop="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/stop.yml"
-          alias ps2alerts-api-dev="ps2alerts-api-stop && ps2alerts-api-start && docker logs -f ps2alerts-api"
+          alias ps2alerts-api-dev="ps2alerts-api-stop && ps2alerts-api-start && ps2alerts-api-logs"
           alias ps2alerts-api-term="docker exec -it ps2alerts-api bash"
           alias ps2alerts-api-logs="docker logs -f ps2alerts-api"
           ## Website
           alias ps2alerts-website="cd {{ website_dir | realpath }}"
-          alias ps2alerts-website-init="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/init.yml"
+          alias ps2alerts-website-init="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/init.yml && ps2alerts-website-dev"
           alias ps2alerts-website-start="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/start.yml"
           alias ps2alerts-website-stop="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-website-dev="ps2alerts-website-stop && ps2alerts-website-start && ps2alerts-website-logs"
           alias ps2alerts-website-term="docker exec -it ps2alerts-website bash"
+          alias ps2alerts-website-logs="docker logs -f ps2alerts-website"
           ## Stack
           alias ps2alerts-stack="cd {{ stack_dir | realpath }}"
           alias ps2alerts-stack-start="ansible-playbook {{ stack_dir | realpath }}/start-dev.yml"
