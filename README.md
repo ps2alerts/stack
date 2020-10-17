@@ -30,10 +30,10 @@ Ensure you have git cloned all 4 projects in the organisation down to your local
 
 ```
 /path/to/your/code/folder/ps2alerts
+-- aggregator
 -- api
 -- stack
 -- website
--- aggregator
 ```
 
 Run command `ansible-playbook init.yml -K` and provide your sudo password. Ansible will ensure you have the correct commands etc. 
