@@ -50,7 +50,7 @@ We have designed the aggregator project (potentially moved to API) to initialize
 2) `ps2alerts-aggregator-msg`
 3) Choose an open continent etc
 4) Open rabbit or run `ps2alerts-aggregator-msg` and see it doing things
-5) Now you have data! :slight_smile:
+5) Now you have data!
 
 ### Connecting to Mongodb
 
