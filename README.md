@@ -19,7 +19,7 @@ The PS2Alerts project utilises Kubernetes for its deployment and containerisatio
 ## Requirements
 
 * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)
-* [Docker](https://docs.docker.com/get-docker)
+* [Docker](https://docs.docker.com/get-docker) (including [post install steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/))
 * A terminal program / PowerShell. For Linux I recommend [Terminator](https://gnometerminator.blogspot.com/p/introduction.html).
 * A good IDE. I recommend [PHPStorm](https://www.jetbrains.com/phpstorm/) (paid) / [IntelliJ IDEA](https://www.jetbrains.com/idea/) (free).
 * [MongoDB Compass](https://www.mongodb.com/products/compass) - if you're going to be interacting with data 
@@ -58,9 +58,9 @@ http://localhost:15672/#/
 
 Using credentials: `user` | `bitnami`
 
-There, you can see the channels and queues created by us, and is provisioned via the Ansible script. We utilize a single exchange - multiple queues system, so we will use the `ps2alertsExchange` and then use keys to route messages correctly.
+There, you can see the channels and queues created by us, and is provisioned via the Ansible script. We are currently creating an exchange (for future purposes) but are directly asserting and binding queues in our applications for now. On local dev, we don't use a vhost, on production we do as it's a shared service.
 
 Below describes our queue topics:
 
-* **aggregatorAdmin** - Administrative messages manually triggered by developers, e.g. `instance metagame start 10 8` to start a metagame instance on Miller, Esamir.
-* **apiMessages** - Messages to be consumed by the API and persisted.
+* **aggregatorAdmin-<env>** - Administrative messages manually triggered by developers, e.g. `instance metagame start 10 8` to start a metagame instance on Miller, Esamir. To inject messages into your local environment, run `ps2alerts-aggregator-msg`.
+* **api-queue-<env>** - Messages to be consumed by the API and persisted, one queue per environment
