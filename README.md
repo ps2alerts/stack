@@ -44,6 +44,14 @@ Simply execute `ps2alerts-start` in your terminal to begin!
 
 We have designed the aggregator project (potentially moved to API) to initialize the database for you, it also triggers an "instance" of your choosing via code so you're able to immediately start tracking data.
 
+# How to get data collection going
+
+1) `ps2alerts-start`
+2) `ps2alerts-aggregator-msg`
+3) Choose an open continent etc
+4) Open rabbit or run `ps2alerts-aggregator-msg` and see it doing things
+5) Now you have data! :slight_smile:
+
 ### Connecting to Mongodb
 
 We are using MongoDB as our data document storage solution. In order to connect to Mongo for local development work, open up the Mongo Compass client and put the following in the connection string:
