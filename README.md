@@ -14,12 +14,12 @@ If you wish to contribute, please join our Discord located at: https://discord.g
 
 The PS2Alerts project utilises Kubernetes for its deployment and containerisation solution. It matches current infrastructure, and it solves a TON of headaches when it comes to getting code out to the world. Particularly SSL certificates. Fuck SSL certificate management. Locally however, for the sake of lowering local dev environment complexity and "things doing weird stuff" we're using Ansible to provision and maintain the local development environment. It will install not only the services required to run the application, but also a set of standardized commands shared across all developers.
 
-**Linux Debian** and **Mac OSX Catalina** are the only supported operating systems for development. It can be done in Windows, but it's a hassle. Most likely ok on Mac OSX with a few tweaks adding in missing things with `homebrew`. **Windows is not officially supported.**
+**Linux Debian** and **Mac OSX Catalina** are the only supported operating systems for development. It can be done in Windows, but it's a hassle. Mac OSX does work with `homebrew` filling some gaps. **Windows is not officially supported.**
 
 ## Requirements
 
 * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)
-* [Docker](https://docs.docker.com/get-docker)
+* [Docker](https://docs.docker.com/get-docker) (including [post install steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/))
 * A terminal program / PowerShell. For Linux I recommend [Terminator](https://gnometerminator.blogspot.com/p/introduction.html).
 * A good IDE. I recommend [PHPStorm](https://www.jetbrains.com/phpstorm/) (paid) / [IntelliJ IDEA](https://www.jetbrains.com/idea/) (free).
 * [MongoDB Compass](https://www.mongodb.com/products/compass) - if you're going to be interacting with data 
@@ -30,10 +30,10 @@ Ensure you have git cloned all 4 projects in the organisation down to your local
 
 ```
 /path/to/your/code/folder/ps2alerts
+-- aggregator
 -- api
 -- stack
 -- website
--- aggregator
 ```
 
 Run command `ansible-playbook init.yml -K` and provide your sudo password. Ansible will ensure you have the correct commands etc. 
@@ -43,6 +43,14 @@ Run command `ansible-playbook init.yml -K` and provide your sudo password. Ansib
 Simply execute `ps2alerts-start` in your terminal to begin!
 
 We have designed the aggregator project (potentially moved to API) to initialize the database for you, it also triggers an "instance" of your choosing via code so you're able to immediately start tracking data.
+
+# How to get data collection going
+
+1) `ps2alerts-start`
+2) `ps2alerts-aggregator-msg`
+3) Choose an open continent etc
+4) Open rabbit or run `ps2alerts-aggregator-msg` and see it doing things
+5) Now you have data!
 
 ### Connecting to Mongodb
 
@@ -58,9 +66,9 @@ http://localhost:15672/#/
 
 Using credentials: `user` | `bitnami`
 
-There, you can see the channels and queues created by us, and is provisioned via the Ansible script. We utilize a single exchange - multiple queues system, so we will use the `ps2alertsExchange` and then use keys to route messages correctly.
+There, you can see the channels and queues created by us, and is provisioned via the Ansible script. We are currently creating an exchange (for future purposes) but are directly asserting and binding queues in our applications for now. On local dev, we don't use a vhost, on production we do as it's a shared service.
 
 Below describes our queue topics:
 
-* **aggregatorAdmin** - Administrative messages manually triggered by developers, e.g. `instance metagame start 10 8` to start a metagame instance on Miller, Esamir.
-* **apiMessages** - Messages to be consumed by the API and persisted.
+* **aggregatorAdmin-<env>** - Administrative messages manually triggered by developers, e.g. `instance metagame start 10 8` to start a metagame instance on Miller, Esamir. To inject messages into your local environment, run `ps2alerts-aggregator-msg`.
+* **api-queue-<env>** - Messages to be consumed by the API and persisted, one queue per environment
