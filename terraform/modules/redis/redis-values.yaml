@@ -72,8 +72,8 @@ master:
   podAnnotations: {}
   resources:
     requests:
-      memory: 256Mi
-      cpu: 100m
+      memory: 64Mi
+      cpu: 25m
   livenessProbe:
     enabled: true
     initialDelaySeconds: 5

@@ -5,7 +5,7 @@
 ## @param nameOverride - string - optional
 ## Override name of app.
 #
-nameOverride: "ps2alerts"
+nameOverride: "mattscluster"
 
 ## @param fullnameOverride - string - optional
 ## Override the full qualified app name.
@@ -420,7 +420,7 @@ clusterAgent:
   ## @param enabled - boolean - required
   ## Set this to true to enable Datadog Cluster Agent
   #
-  enabled: false
+  enabled: true
 
   ## @param image - object - required
   ## Define the Datadog Cluster-Agent image to work with.
@@ -554,11 +554,11 @@ clusterAgent:
   #
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 10m
+      memory: 64Mi
     limits:
-      cpu: 150m
-      memory: 128Mi
+      cpu: 50m
+      memory: 64Mi
 
   ## @param priorityclassName - string - optional
   ## Name of the priorityClass to apply to the Cluster Agent
@@ -825,10 +825,10 @@ agents:
       #
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 128Mi
         limits:
-          cpu: 150m
+          cpu: 100m
           memory: 128Mi
 
       ## @param livenessProbe - object - required
@@ -1272,8 +1272,8 @@ kube-state-metrics:
   #
   resources:
      requests:
-       cpu: 10m
+       cpu: 5m
        memory: 32Mi
      limits:
-       cpu: 50m
+       cpu: 15m
        memory: 32Mi

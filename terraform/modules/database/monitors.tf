@@ -1,12 +1,12 @@
 resource datadog_monitor "mongodb_high_mem" {
   name = "PS2Alerts DB high memory"
   type = "metric alert"
-  query = "avg(last_5m):avg:kubernetes.memory.rss{kube_container_name:ps2alerts-db} > 94999978"
+  query = "avg(last_5m):avg:kubernetes.memory.rss{kube_container_name:ps2alerts-db} > 996147000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Mongo", description: "high memory"})
 
   thresholds = {
-    critical = 996147000 # 1GB
-    warning = 943718000 # 950MB
+    critical = 996147000 # 950MB
+    warning = 943718000 # 900MB
   }
 
   notify_no_data = true
@@ -19,12 +19,11 @@ resource datadog_monitor "mongodb_high_mem" {
 resource datadog_monitor "mongodb_high_cpu" {
   name = "PS2Alerts DB high CPU"
   type = "metric alert"
-  query = "avg(last_5m):avg:kubernetes.cpu.usage.total{kube_container_name:ps2alerts-db} > 1500000000"
+  query = "avg(last_5m):avg:kubernetes.cpu.usage.total{kube_container_name:ps2alerts-db} > 225000000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Mongo", description: "high CPU"})
 
   thresholds = {
-    critical = 1400000000 # 1.4 cores
-    warning = 1300000000 # 1.3 cores
+    critical = 225000000 # 0.225 cores
   }
 
   notify_no_data = true
