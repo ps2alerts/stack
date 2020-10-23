@@ -34,7 +34,7 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_database_volume" {
     storage_class_name = "do-block-storage"
     resources {
       requests = {
-        storage = "5Gi"
+        storage = "10Gi"
       }
     }
   }
@@ -74,14 +74,15 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
             name       = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
           }
           resources {
-            limits {
-              cpu    = "1500m"
-              memory = "1Gi"
-            }
             requests {
-              cpu    = "1000m"
+              cpu    = "150m"
               memory = "1Gi"
             }
+            limits {
+              cpu    = "250m"
+              memory = "1Gi"
+            }
+
           }
           port {
             container_port = var.db_port
