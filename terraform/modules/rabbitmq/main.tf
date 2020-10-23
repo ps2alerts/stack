@@ -65,6 +65,7 @@ resource "rabbitmq_permissions" "ps2alerts" {
     read      = ".*"
   }
 }
+
 resource "rabbitmq_exchange" "ps2alerts" {
   name  = "ps2alerts"
   vhost = rabbitmq_permissions.ps2alerts.vhost
@@ -73,5 +74,21 @@ resource "rabbitmq_exchange" "ps2alerts" {
     type        = "direct"
     durable     = true
     auto_delete = false
+  }
+}
+
+resource "rabbitmq_user" "datadog" {
+  name     = "datadog"
+  password = var.rabbitmq_datadog_pass
+  tags     = ["datadog monitoring"]
+}
+resource "rabbitmq_permissions" "datadog" {
+  user  = rabbitmq_user.datadog.name
+  vhost = rabbitmq_vhost.ps2alerts.name
+
+  permissions {
+    configure = "^aliveness-test$"
+    write     = "^amq\\.default$"
+    read      = ".*"
   }
 }

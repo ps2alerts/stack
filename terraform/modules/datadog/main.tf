@@ -12,4 +12,9 @@ resource "helm_release" "ps2alerts_datadog" {
     name  = "datadog.apiKey"
     value = var.datadog_api_key
   }
+
+  set {
+    name  = "datadog.appKey"
+    value = var.datadog_app_key
+  }
 }

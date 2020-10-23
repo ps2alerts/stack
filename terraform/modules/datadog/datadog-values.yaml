@@ -69,7 +69,7 @@ datadog:
   ## Compared to the rules of GKE, dots are allowed whereas they are not allowed on GKE:
   ## https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1beta1/projects.locations.clusters#Cluster.FIELDS.name
   #
-  clusterName:  # <CLUSTER_NAME>
+  clusterName: matts-cluster
 
   ## @param site - string - optional - default: 'datadoghq.com'
   ## The site of the Datadog intake to send Agent data to.
@@ -102,7 +102,7 @@ datadog:
   ## Autodiscovery via Kube Service annotations is automatically enabled
   #
   clusterChecks:
-    enabled: false
+    enabled: true
 
   ## @param nodeLabelsAsTags - list of key:value strings - optional
   ## Provide a mapping of Kubernetes Node Labels to Datadog Tags.
@@ -283,18 +283,24 @@ datadog:
   ## ref: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles/agent#optional-volumes
   ## ref: https://docs.datadoghq.com/agent/autodiscovery/
   #
-  confd: {}
-  #   redisdb.yaml: |-
-  #     init_config:
-  #     instances:
-  #       - host: "name"
-  #         port: "6379"
-  #   kubernetes_state.yaml: |-
-  #     ad_identifiers:
-  #       - kube-state-metrics
-  #     init_config:
-  #     instances:
-  #       - kube_state_url: http://%%host%%:8080/metrics
+  confd:
+     redisdb.yaml: |-
+       init_config:
+       instances:
+         - host: "ps2alerts-redis"
+           port: "6379"
+     rabbitmq.yaml: |-
+       init_config:
+       instances:
+         - rabbitmq_api_url: "ps2alerts-rabbitmq:15672/api/"
+           username: datadog
+           password: "sdrhsdjsreyseyW$TJRGrjigrirg"
+#     kubernetes_state.yaml: |-
+#       ad_identifiers:
+#         - kube-state-metrics
+#       init_config:
+#       instances:
+#         - kube_state_url: http://%%host%%:8080/metrics
 
   ## @param checksd - list of key:value strings - optional
   ## Provide additional custom checks as python code
@@ -330,7 +336,7 @@ datadog:
     ## Set this to true to enable process collection in process monitoring agent
     ## Requires processAgent.enabled to be set to true to have any effect
     #
-    processCollection: false
+    processCollection: true
 
   ## @param systemProbe - object - required
   ## Enable systemProbe agent and provide custom configs
@@ -548,11 +554,11 @@ clusterAgent:
   #
   resources:
     requests:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 50m
+      memory: 128Mi
     limits:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 150m
+      memory: 128Mi
 
   ## @param priorityclassName - string - optional
   ## Name of the priorityClass to apply to the Cluster Agent
@@ -817,13 +823,13 @@ agents:
       ## @param resources - object - required
       ## Resource requests and limits for the agent container.
       #
-      resources: {}
-      #  requests:
-      #    cpu: 200m
-      #    memory: 256Mi
-      #  limits:
-      #    cpu: 200m
-      #    memory: 256Mi
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 150m
+          memory: 128Mi
 
       ## @param livenessProbe - object - required
       ## Override the agent's liveness probe logic from the default:
@@ -871,13 +877,13 @@ agents:
       ## @param resources - object - required
       ## Resource requests and limits for the process-agent container.
       #
-      resources: {}
-      #  requests:
-      #    cpu: 100m
-      #    memory: 200Mi
-      #  limits:
-      #    cpu: 100m
-      #    memory: 200Mi
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
 
     traceAgent:
       ## @param env - list - required
@@ -1133,7 +1139,7 @@ clusterChecksRunner:
   ## If you want to deploy the clusterChecks agent in HA, keep at least clusterChecksRunner.replicas set to 2.
   ## And increase the clusterChecksRunner.replicas according to the number of Cluster Checks.
   #
-  replicas: 2
+  replicas: 1
 
   ## @param resources - object -required
   ## Datadog clusterchecks-agent resource requests and limits.
@@ -1264,10 +1270,10 @@ kube-state-metrics:
   ## @param resources - object - optional
   ## Resource requests and limits for the kube-state-metrics container.
   #
-  resources: {}
-  #   requests:
-  #     cpu: 200m
-  #     memory: 256Mi
-  #   limits:
-  #     cpu: 200m
-  #     memory: 256Mi
+  resources:
+     requests:
+       cpu: 10m
+       memory: 32Mi
+     limits:
+       cpu: 50m
+       memory: 32Mi
