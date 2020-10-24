@@ -16,7 +16,7 @@ resource datadog_monitor "rabbit_high_cpu" {
 }
 
 resource datadog_monitor "rabbit_high_mem" {
-  name = "PS2Alerts Rabbit high mem"
+  name = "PS2Alerts Rabbit high memory"
   type = "metric alert"
   query = "avg(last_5m):avg:kubernetes.memory.rss{pod_name:ps2alerts-rabbitmq-0} > 996147000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Redis", description: "high memory"})
