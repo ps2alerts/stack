@@ -31,3 +31,20 @@ resource datadog_monitor "mongodb_high_mem" {
 
   tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "PS2Alerts Mongo"}))
 }
+
+resource datadog_monitor "mongodb_online" {
+  name = "PS2Alerts Mongodb online"
+  type = "metric alert"
+  query = "max(last_1m):avg:kubernetes.containers.running{kube_service:ps2alerts-db} < 1"
+  message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Mongodb", description: "service offline"})
+
+  thresholds = {
+    critical = 1
+  }
+
+  notify_no_data = true
+  require_full_window = false
+  no_data_timeframe = 10
+
+  tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "PS2Alerts Mongodb"}))
+}
