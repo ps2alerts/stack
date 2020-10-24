@@ -41,6 +41,7 @@ jobs:
             -var='db_user=${{ secrets.DB_USER }}' \
             -var='db_pass=${{ secrets.DB_PASS }}' \
             -var='redis_pass=${{ secrets.REDIS_PASS }}' \
+            -var='datadog_app_key=${{ secrets.DATADOG_APP_KEY }}' \
             -var='datadog_api_key=${{ secrets.DATADOG_API_KEY }}' \
             -var='rabbitmq_admin_pass=${{ secrets.RABBITMQ_ADMIN_PASS }}' \
             -var='rabbitmq_ps2alerts_pass=${{ secrets.RABBITMQ_PS2ALERTS_PASS }}' \
