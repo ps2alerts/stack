@@ -33,7 +33,7 @@ resource datadog_monitor "redis_high_mem" {
 }
 
 resource datadog_monitor "redis_online" {
-  name = "PS2Alerts Rabbit online"
+  name = "PS2Alerts Redis online"
   type = "metric alert"
   query = "max(last_1m):avg:kubernetes.containers.running{kube_service:ps2alerts-redis-master} < 1"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Redis", description: "service offline"})
