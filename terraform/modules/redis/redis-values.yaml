@@ -74,9 +74,9 @@ master:
     requests:
       memory: 192Mi
       cpu: 30m
-    limits:
-      memory: 192Mi
-      cpu: 50m
+#    limits:
+#      memory: 192Mi
+#      cpu: 50m
   livenessProbe:
     enabled: true
     initialDelaySeconds: 5
