@@ -1,7 +1,7 @@
 resource datadog_monitor "rabbit_high_cpu" {
   name = "PS2Alerts Rabbit high CPU"
   type = "metric alert"
-  query = "avg(last_15m):avg:kubernetes.cpu.usage.total{kube_container_name:ps2alerts-rabbitmq-0} > 500000000"
+  query = "avg(last_15m):avg:kubernetes.cpu.usage.total{pod_name:ps2alerts-rabbitmq-0} > 500000000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Redis", description: "high CPU"})
 
   thresholds = {
@@ -18,7 +18,7 @@ resource datadog_monitor "rabbit_high_cpu" {
 resource datadog_monitor "rabbit_high_mem" {
   name = "PS2Alerts Rabbit high mem"
   type = "metric alert"
-  query = "avg(last_5m):avg:kubernetes.memory.rss{kube_container_name:ps2alerts-rabbitmq-0} > 996147000"
+  query = "avg(last_5m):avg:kubernetes.memory.rss{pod_name:ps2alerts-rabbitmq-0} > 996147000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Redis", description: "high memory"})
 
   thresholds = {
