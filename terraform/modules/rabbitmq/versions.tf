@@ -9,6 +9,9 @@ terraform {
     rabbitmq = {
       source = "terraform-providers/rabbitmq"
     }
+    datadog = {
+      source = "datadog/datadog"
+    }
   }
   required_version = ">= 0.13"
 }

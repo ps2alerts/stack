@@ -1,7 +1,7 @@
 resource datadog_monitor "redis_high_cpu" {
   name = "PS2Alerts Redis high CPU"
   type = "metric alert"
-  query = "avg(last_5m):avg:kubernetes.cpu.usage.total{kube_container_name:ps2alerts-redis-master-0} > 40000000"
+  query = "avg(last_15m):avg:kubernetes.cpu.usage.total{kube_container_name:ps2alerts-redis-master-0} > 40000000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Redis", description: "high CPU"})
 
   thresholds = {
