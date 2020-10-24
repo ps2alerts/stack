@@ -36,7 +36,7 @@ resource datadog_monitor "mongodb_online" {
   name = "PS2Alerts DB online"
   type = "metric alert"
   query = "max(last_1m):avg:kubernetes.containers.running{kube_service:ps2alerts-db} < 1"
-  message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Mongodb", description: "service offline"})
+  message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Mongo", description: "service offline"})
 
   thresholds = {
     critical = 1
