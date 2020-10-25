@@ -75,11 +75,11 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
           }
           resources {
             requests {
-              cpu    = "150m"
+              cpu    = "200m"
               memory = "1Gi"
             }
             limits {
-              cpu    = "250m"
+              cpu    = "400m"
               memory = "1Gi"
             }
 
