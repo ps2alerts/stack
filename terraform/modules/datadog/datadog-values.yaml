@@ -284,17 +284,17 @@ datadog:
   ## ref: https://docs.datadoghq.com/agent/autodiscovery/
   #
   confd:
-     redisdb.yaml: |-
-       init_config:
-       instances:
-         - host: "ps2alerts-redis"
-           port: "6379"
-     rabbitmq.yaml: |-
-       init_config:
-       instances:
-         - rabbitmq_api_url: "ps2alerts-rabbitmq:15672/api/"
-           username: datadog
-           password: "sdrhsdjsreyseyW$TJRGrjigrirg"
+    redisdb.yaml: |-
+      init_config:
+      instances:
+        - host: "ps2alerts-redis"
+          port: "6379"
+    rabbitmq.yaml: |-
+      init_config:
+      instances:
+        - rabbitmq_api_url: "ps2alerts-rabbitmq:15672/api/"
+          username: datadog
+          password: "sdrhsdjsreyseyW$TJRGrjigrirg"
 #     kubernetes_state.yaml: |-
 #       ad_identifiers:
 #         - kube-state-metrics
