@@ -65,7 +65,6 @@ master:
   ## ref: https://redis.io/topics/security#disabling-of-specific-commands
   ##
   disableCommands:
-    - FLUSHDB
     - FLUSHALL
 
   podLabels: {}
