@@ -67,7 +67,7 @@ resource datadog_monitor "mongodb_restarts" {
 }
 
 resource datadog_monitor "mongodb_volume_space" {
-  name = "PS2Alerts DB Volume Space"
+  name = "PS2Alerts DB volume space"
   type = "query alert"
   query = "max(last_5m):avg:kubernetes.kubelet.volume.stats.available_bytes{persistentvolumeclaim:ps2alerts-db} <= 1073740000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {environment: var.environment, application: "PS2Alerts Mongo", description: "restarts"})
