@@ -101,7 +101,7 @@ containerSecurityContext: {}
 
 resources:
   requests:
-    cpu: 500m
+    cpu: 500m # Idle is about 250-350m
     memory: 1Gi
   limits:
     cpu: 1000m
