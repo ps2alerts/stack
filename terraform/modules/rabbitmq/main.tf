@@ -43,6 +43,11 @@ resource "helm_release" "ps2alerts_rabbitmq" {
     name  = "persistence.existingClaim"
     value = kubernetes_persistent_volume_claim.ps2alerts_rabbitmq_volume_claim.metadata[0].name
   }
+
+  set {
+    name  = "auth.erlangCookie"
+    value = var.rabbitmq_erlang_cookie
+  }
 }
 
 resource "rabbitmq_vhost" "ps2alerts" {
@@ -83,7 +88,18 @@ resource "rabbitmq_user" "datadog" {
   tags     = ["datadog monitoring"]
 }
 
-resource "rabbitmq_permissions" "datadog" {
+resource "rabbitmq_permissions" "datadog_default" {
+  user  = rabbitmq_user.datadog.name
+  vhost = "/"
+
+  permissions {
+    configure = "^aliveness-test$"
+    write     = "^amq\\.default$"
+    read      = ".*"
+  }
+}
+
+resource "rabbitmq_permissions" "datadog_ps2alerts" {
   user  = rabbitmq_user.datadog.name
   vhost = rabbitmq_vhost.ps2alerts.name
 

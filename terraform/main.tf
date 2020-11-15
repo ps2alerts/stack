@@ -49,9 +49,10 @@ module "ps2alerts_database" {
 }
 
 module "ps2alerts_datadog" {
-  source          = "./modules/datadog"
-  datadog_api_key = var.datadog_api_key
-  datadog_app_key = var.datadog_app_key
+  source                = "./modules/datadog"
+  datadog_api_key       = var.datadog_api_key
+  datadog_app_key       = var.datadog_app_key
+  rabbitmq_datadog_pass = var.rabbitmq_datadog_pass
 }
 
 module "ps2alerts_rabbitmq" {
@@ -59,6 +60,7 @@ module "ps2alerts_rabbitmq" {
   rabbitmq_admin_pass     = var.rabbitmq_admin_pass
   rabbitmq_ps2alerts_pass = var.rabbitmq_ps2alerts_pass
   rabbitmq_datadog_pass   = var.rabbitmq_datadog_pass
+  rabbitmq_erlang_cookie  = var.rabbitmq_erlang_cookie
 }
 
 module "ps2alerts_redis" {

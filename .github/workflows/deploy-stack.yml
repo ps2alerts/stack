@@ -46,6 +46,7 @@ jobs:
             -var='rabbitmq_admin_pass=${{ secrets.RABBITMQ_ADMIN_PASS }}' \
             -var='rabbitmq_ps2alerts_pass=${{ secrets.RABBITMQ_PS2ALERTS_PASS }}' \
             -var='rabbitmq_datadog_pass=${{ secrets.RABBITMQ_DATADOG_PASS }}' \
+            -var='rabbitmq_erlang_cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}' \
             -out='.tfout'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
