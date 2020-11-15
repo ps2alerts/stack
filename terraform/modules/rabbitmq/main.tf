@@ -82,6 +82,7 @@ resource "rabbitmq_user" "datadog" {
   password = var.rabbitmq_datadog_pass
   tags     = ["datadog monitoring"]
 }
+
 resource "rabbitmq_permissions" "datadog" {
   user  = rabbitmq_user.datadog.name
   vhost = rabbitmq_vhost.ps2alerts.name

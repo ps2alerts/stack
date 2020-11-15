@@ -102,10 +102,10 @@ containerSecurityContext: {}
 resources:
   requests:
     cpu: 250m
-    memory: 1Gi
+    memory: 2Gi
   limits:
     cpu: 400m
-    memory: 1Gi
+    memory: 2Gi
 livenessProbe:
   enabled: true
   initialDelaySeconds: 120
@@ -118,7 +118,7 @@ readinessProbe:
   initialDelaySeconds: 10
   timeoutSeconds: 20
   periodSeconds: 30
-  failureThreshold: 3
+  failureThreshold: 5
   successThreshold: 1
 customLivenessProbe: {}
 customReadinessProbe: {}
