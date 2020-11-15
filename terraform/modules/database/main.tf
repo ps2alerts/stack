@@ -34,7 +34,7 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_database_volume" {
     storage_class_name = "do-block-storage"
     resources {
       requests = {
-        storage = "10Gi"
+        storage = "20Gi"
       }
     }
   }
