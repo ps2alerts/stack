@@ -294,7 +294,7 @@ datadog:
       instances:
         - rabbitmq_api_url: "ps2alerts-rabbitmq:15672/api/"
           username: datadog
-          password: "sdrhsdjsreyseyW$TJRGrjigrirg"
+          password: 12345
 #     kubernetes_state.yaml: |-
 #       ad_identifiers:
 #         - kube-state-metrics
