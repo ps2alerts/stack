@@ -68,9 +68,9 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
       spec {
         container {
           name  = var.db_identifier
-          image = "mongo:4.2"
+          image = "mongo:4.4"
           volume_mount {
-            mount_path = "/data"
+            mount_path = "/data/db"
             name       = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
           }
           resources {

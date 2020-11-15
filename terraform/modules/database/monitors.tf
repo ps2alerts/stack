@@ -65,3 +65,20 @@ resource datadog_monitor "mongo_restarts" {
 
   tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "PS2Alerts Mongo"}))
 }
+
+resource datadog_monitor "mongo_volume_space" {
+  name = "PS2Alerts Mongo Volume Space"
+  type = "query alert"
+  query = "max(last_5m):avg:kubernetes.kubelet.volume.stats.available_bytes{persistentvolumeclaim:ps2alerts-db} <= 1073740000"
+  message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {environment: var.environment, application: "PS2Alerts Mongo", description: "restarts"})
+
+  thresholds = {
+    critical = 1073740000
+  }
+
+  notify_no_data = true
+  require_full_window = false
+  no_data_timeframe = 10
+
+  tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "PS2Alerts Mongo"}))
+}
