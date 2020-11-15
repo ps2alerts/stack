@@ -2,7 +2,7 @@
 image:
   registry: docker.io
   repository: bitnami/rabbitmq
-  tag: 3.8.9-debian-10-r12
+  tag: 3.8.9-debian-10-r40
   debug: false
   pullPolicy: IfNotPresent
 clusterDomain: cluster.local
@@ -14,7 +14,7 @@ auth:
 logs: '-'
 ulimitNofiles: '65536'
 memoryHighWatermark:
-  enabled: false
+  enabled: true
 plugins: "rabbitmq_management rabbitmq_peer_discovery_k8s"
 extraPlugins: "rabbitmq_auth_backend_ldap"
 clustering:
