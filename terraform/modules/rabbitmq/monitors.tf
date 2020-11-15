@@ -18,7 +18,7 @@ resource datadog_monitor "rabbit_high_cpu" {
 resource datadog_monitor "rabbit_high_mem" {
   name = "PS2Alerts Rabbit high memory"
   type = "metric alert"
-  query = "avg(last_5m):avg:kubernetes.memory.rss{pod_name:ps2alerts-rabbitmq-0} > 996147000"
+  query = "max(last_5m):avg:kubernetes.memory.rss{pod_name:ps2alerts-rabbitmq-0} > 996147000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Rabbit", description: "high memory"})
 
   thresholds = {
@@ -52,7 +52,7 @@ resource datadog_monitor "rabbit_online" {
 resource datadog_monitor "rabbit_restarts" {
   name = "PS2Alerts Rabbit restarts [${var.environment}]"
   type = "query alert"
-  query = "change(sum(last_5m),last_5m):avg:kubernetes.containers.restarts{kube_deployment:ps2alerts-rabbitmq} > 0.5"
+  query = "change(sum(last_5m),last_5m):avg:kubernetes.containers.restarts{pod_name:ps2alerts-rabbitmq-0} > 0.5"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {environment: var.environment, application: "PS2Alerts Rabbit", description: "restarts"})
 
   thresholds = {
