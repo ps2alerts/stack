@@ -1,3 +1,4 @@
+---
 ## Default values for Datadog Agent
 ## See Datadog helm documentation to learn more:
 ## https://docs.datadoghq.com/agent/kubernetes/helm/
@@ -879,11 +880,11 @@ agents:
       #
       resources:
         requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
           cpu: 100m
-          memory: 64Mi
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
 
     traceAgent:
       ## @param env - list - required
@@ -1271,9 +1272,9 @@ kube-state-metrics:
   ## Resource requests and limits for the kube-state-metrics container.
   #
   resources:
-     requests:
-       cpu: 5m
-       memory: 32Mi
-     limits:
-       cpu: 15m
-       memory: 32Mi
+    requests:
+      cpu: 5m
+      memory: 32Mi
+    limits:
+      cpu: 15m
+      memory: 32Mi
