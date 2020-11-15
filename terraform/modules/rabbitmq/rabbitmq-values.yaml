@@ -101,10 +101,10 @@ containerSecurityContext: {}
 
 resources:
   requests:
-    cpu: 250m
+    cpu: 350m
     memory: 2Gi
   limits:
-    cpu: 400m
+    cpu: 1000m
     memory: 2Gi
 livenessProbe:
   enabled: true

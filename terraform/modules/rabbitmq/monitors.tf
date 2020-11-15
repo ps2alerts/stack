@@ -1,11 +1,11 @@
 resource datadog_monitor "rabbit_high_cpu" {
   name = "PS2Alerts Rabbit high CPU"
   type = "metric alert"
-  query = "avg(last_15m):avg:kubernetes.cpu.usage.total{pod_name:ps2alerts-rabbitmq-0} > 500000000"
+  query = "avg(last_15m):avg:kubernetes.cpu.usage.total{pod_name:ps2alerts-rabbitmq-0} > 350000000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Rabbit", description: "high CPU"})
 
   thresholds = {
-    critical = 500000000 # 0.5 cores
+    critical = 350000000 # 0.35 cores
   }
 
   notify_no_data = true
