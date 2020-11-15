@@ -46,5 +46,22 @@ resource datadog_monitor "mongodb_online" {
   require_full_window = false
   no_data_timeframe = 10
 
-  tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "PS2Alerts Mongodb"}))
+  tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "PS2Alerts Mongo"}))
+}
+
+resource datadog_monitor "mongo_restarts" {
+  name = "PS2Alerts Mongo restarts"
+  type = "query alert"
+  query = "change(sum(last_5m),last_5m):avg:kubernetes.containers.restarts{deployment_name:ps2alerts-mongo} > 0.5"
+  message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {environment: var.environment, application: "PS2Alerts Mongo", description: "restarts"})
+
+  thresholds = {
+    critical = 0.5
+  }
+
+  notify_no_data = true
+  require_full_window = false
+  no_data_timeframe = 10
+
+  tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "PS2Alerts Mongo"}))
 }

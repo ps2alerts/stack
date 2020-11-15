@@ -50,7 +50,7 @@ resource datadog_monitor "rabbit_online" {
 }
 
 resource datadog_monitor "rabbit_restarts" {
-  name = "PS2Alerts Rabbit restarts [${var.environment}]"
+  name = "PS2Alerts Rabbit restarts"
   type = "query alert"
   query = "change(sum(last_5m),last_5m):avg:kubernetes.containers.restarts{pod_name:ps2alerts-rabbitmq-0} > 0.5"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {environment: var.environment, application: "PS2Alerts Rabbit", description: "restarts"})
