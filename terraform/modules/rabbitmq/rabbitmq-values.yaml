@@ -101,10 +101,10 @@ containerSecurityContext: {}
 
 resources:
   requests:
-    cpu: 500m # Idle is about 250-350m
+    cpu: 250m
     memory: 1Gi
   limits:
-    cpu: 1000m
+    cpu: 400m
     memory: 1Gi
 livenessProbe:
   enabled: true
