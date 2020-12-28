@@ -14,4 +14,6 @@ variable "redis_port" {
   default = 6379
 }
 
-variable "redis_pass" {}
+variable "redis_pass" {
+  sensitive = true
+}

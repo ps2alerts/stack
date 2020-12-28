@@ -12,6 +12,9 @@ terraform {
     helm = {
       source = "hashicorp/helm"
     }
+    rabbitmq = {
+      source = "cyrilgdn/rabbitmq"
+    }
   }
   required_version = ">= 0.13"
 }

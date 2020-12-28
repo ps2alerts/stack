@@ -3,4 +3,6 @@ variable "datadog_app_key" {}
 variable "namespace" {
   default = "ps2alerts"
 }
-variable "rabbitmq_datadog_pass" {}
+variable "rabbitmq_datadog_pass" {
+  sensitive = true
+}

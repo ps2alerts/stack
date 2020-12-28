@@ -14,6 +14,10 @@ variable "db_port" {
   default = 27017
 }
 
-variable "db_user" {}
+variable "db_user" {
+  sensitive = true
+}
 
-variable "db_pass" {}
+variable "db_pass" {
+  sensitive = true
+}

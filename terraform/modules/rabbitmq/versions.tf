@@ -7,7 +7,7 @@ terraform {
       source = "hashicorp/kubernetes"
     }
     rabbitmq = {
-      source = "terraform-providers/rabbitmq"
+      source = "cyrilgdn/rabbitmq"
     }
     datadog = {
       source = "datadog/datadog"
