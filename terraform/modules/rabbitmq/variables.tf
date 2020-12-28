@@ -19,4 +19,6 @@ variable "rabbitmq_ps2alerts_pass" {
 variable "rabbitmq_datadog_pass" {
   sensitive = true
 }
-variable "rabbitmq_erlang_cookie" {}
+variable "rabbitmq_erlang_cookie" {
+  sensitive = true
+}

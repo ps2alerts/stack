@@ -15,6 +15,8 @@ logs: '-'
 ulimitNofiles: '65536'
 memoryHighWatermark:
   enabled: true
+  type: "relative"
+  value: "0.7"
 plugins: "rabbitmq_management rabbitmq_peer_discovery_k8s"
 extraPlugins: "rabbitmq_auth_backend_ldap"
 clustering:
@@ -74,10 +76,10 @@ configuration: |-
   total_memory_available_override_value = {{ include "rabbitmq.toBytes" .Values.resources.limits.memory }}
   vm_memory_high_watermark.{{ .Values.memoryHighWatermark.type }} = {{ .Values.memoryHighWatermark.value }}
   {{- end }}
+  disk_free_limit.absolute = 0.9GB
 
 extraConfiguration: |-
   #default_vhost = {{ .Release.Namespace }}-vhost
-  #disk_free_limit.absolute = 50MB
   #management.load_definitions = /app/load_definition.json
 
 advancedConfiguration: |-
