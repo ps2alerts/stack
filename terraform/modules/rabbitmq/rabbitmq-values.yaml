@@ -76,7 +76,7 @@ configuration: |-
   total_memory_available_override_value = {{ include "rabbitmq.toBytes" .Values.resources.limits.memory }}
   vm_memory_high_watermark.{{ .Values.memoryHighWatermark.type }} = {{ .Values.memoryHighWatermark.value }}
   {{- end }}
-  disk_free_limit.absolute = 0.9GB
+  disk_free_limit.absolute = 50MB
 
 extraConfiguration: |-
   #default_vhost = {{ .Release.Namespace }}-vhost
@@ -103,11 +103,11 @@ containerSecurityContext: {}
 
 resources:
   requests:
-    cpu: 400m
-    memory: 2Gi
+    cpu: 500m
+    memory: 1500Mi
   limits:
     cpu: 1000m
-    memory: 2Gi
+    memory: 1500Mi
 livenessProbe:
   enabled: true
   initialDelaySeconds: 120

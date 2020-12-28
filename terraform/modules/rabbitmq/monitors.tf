@@ -18,11 +18,11 @@ resource datadog_monitor "rabbit_high_cpu" {
 resource datadog_monitor "rabbit_high_mem" {
   name = "PS2Alerts Rabbit high memory"
   type = "metric alert"
-  query = "max(last_5m):avg:kubernetes.memory.rss{pod_name:ps2alerts-rabbitmq-0} > 1930800322"
+  query = "max(last_5m):avg:kubernetes.memory.rss{pod_name:ps2alerts-rabbitmq-0} > 1363149000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Rabbit", description: "high memory"})
 
   thresholds = {
-    critical = 1930800322 # 1.8GB
+    critical = 1363149000 # 1.3GB
   }
 
   notify_no_data = true
@@ -69,11 +69,11 @@ resource datadog_monitor "rabbit_restarts" {
 resource datadog_monitor "rabbit_volume_space" {
   name = "PS2Alerts Rabbit volume space"
   type = "query alert"
-  query = "max(last_5m):avg:kubernetes.kubelet.volume.stats.available_bytes{persistentvolumeclaim:ps2alerts-rabbitmq} <= 838861000"
+  query = "max(last_5m):avg:kubernetes.kubelet.volume.stats.available_bytes{persistentvolumeclaim:ps2alerts-rabbitmq} <= 52428800"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {environment: var.environment, application: "PS2Alerts Rabbit", description: "low disk space"})
 
   thresholds = {
-    critical = 838861000
+    critical = 52428800
   }
 
   notify_no_data = true
