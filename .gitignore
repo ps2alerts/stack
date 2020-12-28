@@ -5,3 +5,4 @@ ansible/temp/*
 terraform/.terraform
 terraform/.tfout
 terraform/.auto.tfvars
+terraform/.terraform.lock.hcl
