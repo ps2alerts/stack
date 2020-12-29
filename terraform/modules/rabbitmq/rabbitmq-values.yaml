@@ -137,7 +137,7 @@ persistence:
   selector: {}
   accessMode: ReadWriteOnce
   existingClaim: ""
-  size: 1Gi
+  size: 2Gi
 
 pdb:
   create: false
