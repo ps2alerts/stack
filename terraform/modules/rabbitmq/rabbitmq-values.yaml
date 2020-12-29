@@ -16,7 +16,7 @@ ulimitNofiles: '65536'
 memoryHighWatermark:
   enabled: true
   type: "relative"
-  value: "0.7"
+  value: "0.9"
 plugins: "rabbitmq_management rabbitmq_peer_discovery_k8s"
 extraPlugins: "rabbitmq_auth_backend_ldap"
 clustering:
@@ -72,13 +72,14 @@ configuration: |-
   prometheus.tcp.port = 9419
   {{- end }}
   {{- if .Values.memoryHighWatermark.enabled }}
-  ## Memory Threshold
+  ## Memory Thresholdyes
   total_memory_available_override_value = {{ include "rabbitmq.toBytes" .Values.resources.limits.memory }}
   vm_memory_high_watermark.{{ .Values.memoryHighWatermark.type }} = {{ .Values.memoryHighWatermark.value }}
   {{- end }}
-  disk_free_limit.absolute = 50MB
 
 extraConfiguration: |-
+  queue_index_embed_msgs_below = 0
+  disk_free_limit.absolute = 50MB
   #default_vhost = {{ .Release.Namespace }}-vhost
   #management.load_definitions = /app/load_definition.json
 
@@ -104,10 +105,10 @@ containerSecurityContext: {}
 resources:
   requests:
     cpu: 500m
-    memory: 1500Mi
+    memory: 2000Mi
   limits:
     cpu: 1000m
-    memory: 1500Mi
+    memory: 2000Mi
 livenessProbe:
   enabled: true
   initialDelaySeconds: 120
