@@ -105,10 +105,10 @@ containerSecurityContext: {}
 resources:
   requests:
     cpu: 500m
-    memory: 2000Mi
+    memory: 1Gi
   limits:
     cpu: 1000m
-    memory: 2000Mi
+    memory: 1Gi
 livenessProbe:
   enabled: true
   initialDelaySeconds: 120
