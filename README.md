@@ -72,3 +72,9 @@ Below describes our queue topics:
 
 * **aggregatorAdmin-<env>** - Administrative messages manually triggered by developers, e.g. `instance metagame start 10 8` to start a metagame instance on Miller, Esamir. To inject messages into your local environment, run `ps2alerts-aggregator-msg`.
 * **api-queue-<env>** - Messages to be consumed by the API and persisted, one queue per environment
+* **api-queue-delay-46min-<env>** - In order to figure out brackets, all GlobalAggregator messages must be delayed until the end of the alert, this is the 46 minute alert version.
+* **api-queue-delay-91min-<env>** - Ditto - 91 minute version
+
+#### Rabbit won't start
+
+Chances are Rabbit is toppling due to a massive message backlog. To fix this, simply wipe the data partition for Rabbit's volume in Docker. On Mac, this is `rm -rf ~/ps2alerts/mq/*`, should be similar for linux.
