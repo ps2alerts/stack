@@ -18,7 +18,7 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_rabbitmq_volume_claim" 
     storage_class_name = "do-block-storage"
     resources {
       requests = {
-        storage = "2Gi"
+        storage = "5Gi"
       }
     }
   }
