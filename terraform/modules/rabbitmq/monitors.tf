@@ -82,3 +82,20 @@ resource datadog_monitor "rabbit_volume_space" {
 
   tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "PS2Alerts Rabbit"}))
 }
+
+resource datadog_monitor "rabbit_high_messages" {
+  name = "PS2Alerts Rabbit high message count"
+  type = "metric alert"
+  query = "avg(last_10m):max:rabbitmq.queue.messages{*} > 1000000"
+  message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {environment: var.environment, application: "PS2Alerts Rabbit", description: "high message count"})
+
+  thresholds = {
+    critical = 1000000
+  }
+
+  notify_no_data = true
+  require_full_window = false
+  no_data_timeframe = 10
+
+  tags = jsondecode(templatefile("${path.module}/../../dd-tags.tmpl", {environment: var.environment, application: "api"}))
+}

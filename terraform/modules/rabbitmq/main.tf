@@ -85,7 +85,7 @@ resource "rabbitmq_exchange" "ps2alerts" {
 resource "rabbitmq_user" "datadog" {
   name     = "datadog"
   password = var.rabbitmq_datadog_pass
-  tags     = ["datadog monitoring"]
+  tags     = ["management"]
 }
 
 resource "rabbitmq_permissions" "datadog_default" {
