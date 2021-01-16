@@ -18,8 +18,8 @@ resource "helm_release" "ps2alerts_datadog" {
     value = var.datadog_app_key
   }
 
-  set {
-    name = "datadog.confd.rabbitmq.yaml.instances[0].password"
-    value = var.rabbitmq_datadog_pass
-  }
+//  set {
+//    name = "datadog.confd.rabbitmq\\.yaml.instances[0].password"
+//    value = var.rabbitmq_datadog_pass
+//  }
 }
