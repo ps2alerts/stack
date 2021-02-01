@@ -73,10 +73,10 @@ master:
   resources:
     requests:
       memory: 192Mi
-      cpu: 100m
+      cpu: 75m
     limits:
       memory: 192Mi
-      cpu: 150m
+      cpu: 100m
   livenessProbe:
     enabled: true
     initialDelaySeconds: 5
