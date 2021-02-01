@@ -1,11 +1,11 @@
 resource datadog_monitor "mongodb_high_cpu" {
   name = "PS2Alerts DB high CPU"
   type = "metric alert"
-  query = "avg(last_30m):avg:kubernetes.cpu.usage.total{kube_container_name:ps2alerts-db} > 550000000"
+  query = "avg(last_30m):avg:kubernetes.cpu.usage.total{kube_container_name:ps2alerts-db} > 600000000"
   message = templatefile("${path.module}/../../dd-monitor-message.tmpl", {application: "PS2Alerts Mongo", description: "high CPU"})
 
   thresholds = {
-    critical = 550000000 # 0.55 cores
+    critical = 600000000 # 0.6 cores
   }
 
   notify_no_data = true
