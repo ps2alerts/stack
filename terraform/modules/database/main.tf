@@ -74,11 +74,11 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
             name       = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
           }
           resources {
-            requests {
+            requests = {
               cpu    = "400m"
               memory = "1.25Gi"
             }
-            limits {
+            limits = {
               cpu    = "1500m"
               memory = "1.25Gi"
             }
