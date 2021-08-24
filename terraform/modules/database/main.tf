@@ -69,6 +69,8 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
         container {
           name  = var.db_identifier
           image = "mongo:4.4"
+          command = ["/bin/sh"]
+          args = ["-c", "while true; do echo hello; sleep 10;done"]
           volume_mount {
             mount_path = "/data/db"
             name       = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name
