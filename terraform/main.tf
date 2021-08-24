@@ -46,12 +46,12 @@ module "ps2alerts_database" {
   db_pass = var.db_pass
 }
 
-module "ps2alerts_datadog" {
-  source                = "./modules/datadog"
-  datadog_api_key       = var.datadog_api_key
-  datadog_app_key       = var.datadog_app_key
-  rabbitmq_datadog_pass = var.rabbitmq_datadog_pass
-}
+//module "ps2alerts_datadog" {
+//  source                = "./modules/datadog"
+//  datadog_api_key       = var.datadog_api_key
+//  datadog_app_key       = var.datadog_app_key
+//  rabbitmq_datadog_pass = var.rabbitmq_datadog_pass
+//}
 
 module "ps2alerts_rabbitmq" {
   source                  = "./modules/rabbitmq"
