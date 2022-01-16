@@ -77,14 +77,14 @@
     - name: Start RabbitMQ
       docker_container:
         name: ps2alerts-mq
-        image: bitnami/rabbitmq:3.8
+        image: rabbitmq:3.8-management
         ports:
           - 4369:4369
           - 5672:5672
           - 15672:15672
           - 25672:25672
         volumes:
-          - "{{ mq_dir }}:/bitnami"
+          - "{{ mq_dir }}:/var/lib/rabbitmq"
         networks:
           - name: "ps2alerts"
         labels:
@@ -101,5 +101,5 @@
       rabbitmq_exchange:
         name: ps2alerts
         vhost: /
-        login_user: user
-        login_password: "bitnami"
+        login_user: guest
+        login_password: "guest"

@@ -9,10 +9,10 @@
         6: /usr/local/share/ca-certificates
         7: /etc/pki/ca-trust/source/anchors
       Debian:
-        7: '{{ ca_path_debian }}'
-        8: '{{ ca_path_debian }}'
-        18: '{{ ca_path_debian }}'
-        19: '{{ ca_path_debian }}'
+        7: "{{ ca_path_debian }}"
+        8: "{{ ca_path_debian }}"
+        18: "{{ ca_path_debian }}"
+        19: "{{ ca_path_debian }}"
   vars_files:
     - vars.yml
   tasks:
@@ -62,7 +62,8 @@
           alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
           ## Global Commands
           alias ps2alerts="cd {{ project_dir | realpath }}"
-          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-init && ps2alerts-website-start && ps2alerts-aggregator-init"
+          alias ps2alerts-init="ps2alerts-stack-start && ps2alerts-api-init && ps2alerts-website-init && ps2alerts-aggregator-init"
+          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-aggregator-start"
           alias ps2alerts-stop="ps2alerts-aggregator-stop && ps2alerts-api-stop && ps2alerts-website-stop && ps2alerts-stack-stop"
           alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-aggregator"
           alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"

@@ -40,9 +40,11 @@ Run command `ansible-playbook init.yml -K` and provide your sudo password. Ansib
 
 ### Houston, we are a go! :rocket:
 
-Simply execute `ps2alerts-start` in your terminal to begin!
+Simply execute `ps2alerts-init` in your terminal to begin! This will go off to each project and install all it's dependencies for each project. Grab a snickers and once it's done, we're good to go.
 
-We have designed the aggregator project (potentially moved to API) to initialize the database for you, it also triggers an "instance" of your choosing via code so you're able to immediately start tracking data.
+Once the project has fully initialized, you can start the project from now on using `ps2alerts-start`!
+
+We have designed the aggregator project (potentially moved to API) to initialize the database for you, it also triggers an "instance" of your choosing via code so you're able to quicky start tracking data. Check it's readme for more information.
 
 # How to get data collection going
 
@@ -64,7 +66,7 @@ The project utilises [RabbitMQ](https://www.rabbitmq.com/) ([MQs 101](https://ww
 
 http://localhost:15672/#/
 
-Using credentials: `user` | `bitnami`
+Using credentials: `guest` | `guest`
 
 There, you can see the channels and queues created by us, and is provisioned via the Ansible script. We are currently creating an exchange (for future purposes) but are directly asserting and binding queues in our applications for now. On local dev, we don't use a vhost, on production we do as it's a shared service.
 
@@ -77,4 +79,4 @@ Below describes our queue topics:
 
 #### Rabbit won't start
 
-Chances are Rabbit is toppling due to a massive message backlog. To fix this, simply wipe the data partition for Rabbit's volume in Docker. On Mac, this is `rm -rf ~/ps2alerts/mq/*`, should be similar for linux.
+Chances are Rabbit is toppling due to a massive message backlog. To fix this, simply wipe the data partition for Rabbit's volume in Docker. On Mac, this is `rm -rf ~/ps2alerts/mq/*`, should be similar for linux. Restart Rabbit.
