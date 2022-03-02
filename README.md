@@ -73,7 +73,9 @@ If you want to access the dev environment over HTTPS (Say, because Chrome forces
    Steps generally referenced from: https://www.section.io/engineering-education/how-to-get-ssl-https-for-localhost/
     - `cd ~/ps2alerts/certs`
     - `openssl genrsa -out CA.key -des3 2048`
-    - `openssl req -x509 -sha256 -new -nodes -days 3650 -key CA.key -out CA.pem`
+    - `openssl req -x509 -sha256 -new -nodes -days 365 -key CA.key -out CA.crt`
+      - Note: Be consistent about the Country code and other details when creating this root certificate and the `ps2alerts_dev.csr` file
+      - Also on Linux you can extend the validity of the cert if you like, but MacOS caps it at 365 days.
     - `touch ps2alerts_dev.ext`
         ```txt    
         # Add the following contents to ~/ps2alerts/certs/ps2alerts_dev.ext:
@@ -94,11 +96,27 @@ If you want to access the dev environment over HTTPS (Say, because Chrome forces
         ```
     - `openssl genrsa -out ps2alerts_dev.key -des3 2048`
     - `openssl req -new -key ps2alerts_dev.key -out ps2alerts_dev.csr`
-    - `openssl x509 -req -in ps2alerts_dev.csr -CA CA.pem -CAkey CA.key -CAcreateserial -days 3650 -sha256 -extfile ps2alerts_dev.ext -out api.dev.ps2alerts.com.pem`
+    - `openssl x509 -req -in ps2alerts_dev.csr -CA CA.crt -CAkey CA.key -CAcreateserial -days 365 -sha256 -extfile ps2alerts_dev.ext -out api.dev.ps2alerts.com.pem`
+      - Should use the same Country code and other details as `CA.crt`
     - `openssl rsa -in ps2alerts_dev.key -out api.dev.ps2alerts.com-key.pem`
     - `cp api.dev.ps2alerts.com-key.pem dev.ps2alerts.com-key.pem && cp api.dev.ps2alerts.com.pem dev.ps2alerts.com.pem`
     - `cp api.dev.ps2alerts.com-key.pem wss.dev.ps2alerts.com-key.pem && cp api.dev.ps2alerts.com.pem wss.dev.ps2alerts.com.pem`
-    - Add ~/ps2alerts/certs/CA.pem as a trusted CA cert to browsers you will be using to connect to dev.ps2alerts.com
+    - Add ~/ps2alerts/certs/CA.crt as a trusted root certificate
+      - For MacOS users:
+        - Open your `dev.ps2alerts.com.pem` file in Finder
+        - Change destination to `system`
+        - Once added, go to the Keychain Access program, then go to `System`
+        - Find your cert, it should be called `dev.ps2alerts.com`. Double click on it to open it
+        - Open up the trust section
+        - Change "when using this certificate" to `Always Trust`
+        - You will be prompted for your touch ID / password
+      - For Chrome on Windows
+        - Navigate to `Settings -> Security and Privacy -> Security -> Manage certificates`
+        - This opens the system cert management tool.
+        - Click `Import...` and navigate to where you saved the `CA.crt` file
+          - (If using WSL2 you'll need to copy it to a windows directory like `/mnt/c/Users/<you>/Documents`)
+        - Click `Next` and change "Certification store" to `Trusted Root Certification Authorities`
+        - Click `Next` and then `Finish`
 3. In `traefik/traefik.yml`, uncomment the following section:
     ```yaml
      # # HTTPS/TLS certificate configuration
