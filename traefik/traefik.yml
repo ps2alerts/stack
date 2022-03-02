@@ -2,6 +2,10 @@
 providers:
   docker:
     exposedByDefault: false
+  # # HTTPS/TLS certificate configuration
+  # file:
+  #  filename:
+  #     /config/config.yml
 
 accessLog:
   filePath: "/var/log/traefik/traefik-access.log"
