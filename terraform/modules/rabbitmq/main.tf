@@ -1,5 +1,9 @@
+locals {
+  hostname = "messages.ps2alerts.com"
+}
+
 provider "rabbitmq" {
-  endpoint = "https://rabbit.ps2alerts.com"
+  endpoint = join("://", ["https", local.hostname])
   username = "admin"
   password = var.rabbitmq_admin_pass
 }
@@ -14,11 +18,11 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_rabbitmq_volume_claim" 
     }
   }
   spec {
-    access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "do-block-storage"
+    access_modes       = ["ReadWriteMany"]
+    storage_class_name = "longhorn"
     resources {
       requests = {
-        storage = "5Gi"
+        storage = "1Gi"
       }
     }
   }
@@ -26,9 +30,10 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_rabbitmq_volume_claim" 
 
 resource "helm_release" "ps2alerts_rabbitmq" {
   name       = var.identifier
+  namespace  = var.namespace
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "rabbitmq"
-  namespace  = var.namespace
+  version    = "8.30.0"
 
   values = [
     file("${path.module}/rabbitmq-values.yaml")
@@ -40,27 +45,40 @@ resource "helm_release" "ps2alerts_rabbitmq" {
   }
 
   set {
+    name  = "auth.erlangCookie"
+    value = var.rabbitmq_erlang_cookie
+  }
+
+  set {
     name  = "persistence.existingClaim"
     value = kubernetes_persistent_volume_claim.ps2alerts_rabbitmq_volume_claim.metadata[0].name
   }
 
   set {
-    name  = "auth.erlangCookie"
-    value = var.rabbitmq_erlang_cookie
+    name = "ingress.hostname"
+    value = local.hostname
   }
+}
+
+resource "time_sleep" "wait" {
+  depends_on = [helm_release.ps2alerts_rabbitmq]
+  create_duration = "10s"
 }
 
 resource "rabbitmq_vhost" "ps2alerts" {
   name = "ps2alerts"
+  depends_on = [time_sleep.wait]
 }
 
 resource "rabbitmq_user" "ps2alerts" {
   name     = "ps2alerts"
+  depends_on = [time_sleep.wait]
   password = var.rabbitmq_ps2alerts_pass
   tags     = ["monitoring"]
 }
 
 resource "rabbitmq_permissions" "ps2alerts" {
+  depends_on = [time_sleep.wait]
   user  = rabbitmq_user.ps2alerts.name
   vhost = rabbitmq_vhost.ps2alerts.name
 
@@ -73,39 +91,12 @@ resource "rabbitmq_permissions" "ps2alerts" {
 
 resource "rabbitmq_exchange" "ps2alerts" {
   name  = "ps2alerts"
+  depends_on = [time_sleep.wait]
   vhost = rabbitmq_permissions.ps2alerts.vhost
 
   settings {
     type        = "direct"
     durable     = true
     auto_delete = false
-  }
-}
-
-resource "rabbitmq_user" "datadog" {
-  name     = "datadog"
-  password = var.rabbitmq_datadog_pass
-  tags     = ["management"]
-}
-
-resource "rabbitmq_permissions" "datadog_default" {
-  user  = rabbitmq_user.datadog.name
-  vhost = "/"
-
-  permissions {
-    configure = "^aliveness-test$"
-    write     = "^amq\\.default$"
-    read      = ".*"
-  }
-}
-
-resource "rabbitmq_permissions" "datadog_ps2alerts" {
-  user  = rabbitmq_user.datadog.name
-  vhost = rabbitmq_vhost.ps2alerts.name
-
-  permissions {
-    configure = "^aliveness-test$"
-    write     = "^amq\\.default$"
-    read      = ".*"
   }
 }

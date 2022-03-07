@@ -5,5 +5,6 @@ ansible/temp/*
 terraform/.terraform
 terraform/.tfout
 terraform/.auto.tfvars
-terraform/.terraform.lock.hcl
+terraform/kube-config
+terraform/tfplan.out
 .DS_Store
