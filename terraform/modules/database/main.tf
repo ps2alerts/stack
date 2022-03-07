@@ -30,11 +30,11 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_database_volume" {
     }
   }
   spec {
-    access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "do-block-storage"
+    access_modes       = ["ReadWriteMany"]
+    storage_class_name = "longhorn"
     resources {
       requests = {
-        storage = "20Gi"
+        storage = "30Gi"
       }
     }
   }
@@ -68,7 +68,7 @@ resource "kubernetes_deployment" "ps2alerts_database_deployment" {
       spec {
         container {
           name  = var.db_identifier
-          image = "mongo:4.4"
+          image = "mongo:4.4.6"
           volume_mount {
             mount_path = "/data/db"
             name       = kubernetes_persistent_volume_claim.ps2alerts_database_volume.metadata[0].name

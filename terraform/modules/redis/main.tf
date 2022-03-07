@@ -8,11 +8,11 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_redis_volume" {
     }
   }
   spec {
-    access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "do-block-storage"
+    access_modes       = ["ReadWriteMany"]
+    storage_class_name = "longhorn"
     resources {
       requests = {
-        storage = "1Gi"
+        storage = "500Mi"
       }
     }
   }
@@ -20,21 +20,22 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_redis_volume" {
 
 resource "helm_release" "ps2alerts_redis" {
   name       = var.identifier
+  namespace  = var.namespace
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "redis"
-  namespace  = var.namespace
+  version    = "16.4.5"
 
   values = [
     file("${path.module}/redis-values.yaml")
   ]
 
   set {
-    name  = "password"
+    name  = "auth.password"
     value = var.redis_pass
   }
 
   set {
-    name  = "persistence.existingClaim"
+    name  = "master.persistence.existingClaim"
     value = kubernetes_persistent_volume_claim.ps2alerts_redis_volume.metadata[0].name
   }
 }

@@ -2,10 +2,10 @@
 providers:
   docker:
     exposedByDefault: false
-  # # HTTPS/TLS certificate configuration
-  # file:
-  #  filename:
-  #     /config/config.yml
+  # HTTPS/TLS certificate configuration. Comment this section out if you don't want to use SSL.
+  file:
+    filename:
+      /config/config.yml
 
 accessLog:
   filePath: "/var/log/traefik/traefik-access.log"
@@ -44,16 +44,3 @@ entryPoints:
     forwardedHeaders:
       trustedIPs:
         - "127.0.0.1/32"
-# tls:
-#  stores:
-#    default:
-#      defaultCertificate:
-#        certFile: /etc/certs/api.dev.ps2alerts.com.pem
-#        keyFile: /etc/certs/api.dev.ps2alerts.com-key.pem
-#  certificates:
-#    - certFile: /etc/certs/api.dev.ps2alerts.com.pem
-#      keyFile: /etc/certs/api.dev.ps2alerts.com-key.pem
-#    - certFile: /etc/certs/dev.ps2alerts.com.pem
-#      keyFile: /etc/certs/dev.ps2alerts.com-key.pem
-#    - certFile: /etc/certs/wss.dev.ps2alerts.com.pem
-#      keyFile: /etc/certs/wss.dev.ps2alerts.com-key.pem

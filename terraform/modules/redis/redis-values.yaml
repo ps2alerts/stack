@@ -1,15 +1,14 @@
 ---
 global:
   redis: {}
+
 image:
   registry: docker.io
   repository: bitnami/redis
-  tag: 6.0.6-debian-10-r10
+  tag: 6.2.6
   pullPolicy: IfNotPresent
 
-cluster:
-  enabled: false
-  slaveCount: 0
+architecture: standalone
 
 sentinel:
   enabled: false
@@ -24,12 +23,6 @@ networkPolicy:
 
 serviceAccount:
   create: false
-  name:
-
-rbac:
-  create: false
-  role:
-    rules: []
 
 securityContext:
   enabled: true
@@ -37,13 +30,18 @@ securityContext:
   runAsUser: 1001
 
 ## Use password authentication
-usePassword: true
-password:
-usePasswordFile: false
+auth:
+  enabled: true
+  password: "foo" # Overridden by Terraform
 
-## Persist data to a persistent volume (Redis Master) - OVERRIDDEN IN TERRAFORM
-persistence:
-  existingClaim:
+## Redis config file
+## ref: https://redis.io/topics/config
+##
+commonConfiguration: |-
+  # Enable AOF https://redis.io/topics/persistence#append-only-file
+  appendonly yes
+  # Disable RDB persistence, AOF persistence already enabled.
+  save ""
 
 redisPort: 6379
 
@@ -51,32 +49,15 @@ tls:
   enabled: false
 
 master:
-  command: "/run.sh"
-  configmap:
-  ##
-  ## Can be used to specify command line flags, for example:
-  ## extraFlags:
-  ##  - "--maxmemory-policy volatile-ttl"
-  ##  - "--repl-backlog-size 1024mb"
-  extraFlags: []
-  ## Comma-separated list of Redis commands to disable
-  ##
-  ## Can be used to disable Redis commands for security reasons.
-  ## Commands will be completely disabled by renaming each to an empty string.
-  ## ref: https://redis.io/topics/security#disabling-of-specific-commands
-  ##
   disableCommands:
     - FLUSHALL
-
-  podLabels: {}
-  podAnnotations: {}
   resources:
     requests:
       memory: 192Mi
-      cpu: 75m
+      cpu: 10m
     limits:
       memory: 192Mi
-      cpu: 100m
+      cpu: 50m
   livenessProbe:
     enabled: true
     initialDelaySeconds: 5
@@ -92,31 +73,21 @@ master:
     successThreshold: 1
     failureThreshold: 5
 
-  customLivenessProbe: {}
-  customReadinessProbe: {}
-  affinity: {}
-
   ## Redis Master Service properties
   service:
     ##  Redis Master Service type
     type: ClusterIP
     port: 6379
-
-    annotations: {}
-    labels: {}
-    loadBalancerIP:
   persistence:
     enabled: true
     path: /data
-    subPath: ""
+    ## Persist data to a persistent volume (Redis Master) - OVERRIDDEN IN TERRAFORM
+    existingClaim: "foo"
     accessModes:
-      - ReadWriteOnce
-    size: 1Gi
-    matchLabels: {}
-    matchExpressions: {}
+      - ReadWriteMany
+    size: 500Mi
   statefulset:
     updateStrategy: RollingUpdate
-  priorityClassName: {}
 
 metrics:
   enabled: false
@@ -129,12 +100,3 @@ volumePermissions:
     tag: buster
     pullPolicy: Always
   resources: {}
-
-## Redis config file
-## ref: https://redis.io/topics/config
-##
-configmap: |-
-  # Enable AOF https://redis.io/topics/persistence#append-only-file
-  appendonly yes
-  # Disable RDB persistence, AOF persistence already enabled.
-  save ""

@@ -3,7 +3,6 @@ name: Deploy Stack
 on:
   push:
     branches: [master]
-  pull_request:
 jobs:
   deploy-terraform:
     runs-on: ubuntu-latest
@@ -14,13 +13,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      # Install the latest version of Terraform CLI and configure the Terraform
-      # CLI configuration file with a Terraform Cloud user API token
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          cli_config_credentials_token: ${{ secrets.TERRAFORM_CLOUD_TOKEN }}
 
       # Initialize a new or existing Terraform working directory by creating initial
       # files, loading any remote state, downloading modules, etc.
@@ -34,24 +26,24 @@ jobs:
       - name: Terraform Format
         run: terraform fmt -check
 
+      - name: Write Kube Config to file for Terraform
+        run: echo ${{ secrets.KUBE_CONFIG }} >> kube-config
+
       # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: >
           terraform plan \
-            -var='db_user=${{ secrets.DB_USER }}' \
-            -var='db_pass=${{ secrets.DB_PASS }}' \
-            -var='redis_pass=${{ secrets.REDIS_PASS }}' \
-            -var='datadog_app_key=${{ secrets.DATADOG_APP_KEY }}' \
-            -var='datadog_api_key=${{ secrets.DATADOG_API_KEY }}' \
-            -var='rabbitmq_admin_pass=${{ secrets.RABBITMQ_ADMIN_PASS }}' \
-            -var='rabbitmq_ps2alerts_pass=${{ secrets.RABBITMQ_PS2ALERTS_PASS }}' \
-            -var='rabbitmq_datadog_pass=${{ secrets.RABBITMQ_DATADOG_PASS }}' \
-            -var='rabbitmq_erlang_cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}' \
+            -var="kube_config_path=kube-config" \
+            -var="db_user=${{ secrets.DB_USER }}" \
+            -var="db_pass=${{ secrets.DB_PASS }}" \
+            -var="redis_pass=${{ secrets.REDIS_PASS }}" \
+            -var="rabbitmq_admin_pass=${{ secrets.RABBITMQ_ADMIN_PASS }}" \
+            -var="rabbitmq_ps2alerts_pass=${{ secrets.RABBITMQ_PS2ALERTS_PASS }}" \
+            -var="rabbitmq_erlang_cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}" \
             -out='.tfout'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
       # Apply the terraform plan
       - name: Terraform Apply
@@ -60,22 +52,3 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-  deploy-rabbitmq-cert-manager:
-    needs:
-      - deploy-terraform
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-
-      - name: Save DO kubeconfig
-        run: doctl kubernetes cluster kubeconfig save my-cluster
-
-      - name: Apply Lets Encrypt cluster issuer manifest
-        run: kubectl apply -f terraform/modules/rabbitmq/cluster-issuer.yml

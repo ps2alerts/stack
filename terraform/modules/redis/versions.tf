@@ -1,8 +1,5 @@
 terraform {
   required_providers {
-    datadog = {
-      source = "datadog/datadog"
-    }
     helm = {
       source = "hashicorp/helm"
     }
@@ -10,5 +7,5 @@ terraform {
       source = "hashicorp/kubernetes"
     }
   }
-  required_version = ">= 0.13"
+  required_version = ">= 1.1.7"
 }
