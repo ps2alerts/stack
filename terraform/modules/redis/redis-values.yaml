@@ -1,37 +1,18 @@
 ---
-global:
-  redis: {}
-
 image:
-  registry: docker.io
-  repository: bitnami/redis
-  tag: 6.2.6
-  pullPolicy: IfNotPresent
+  tag: 6.2.7
 
 architecture: standalone
-
-sentinel:
-  enabled: false
-
-clusterDomain: cluster.local
 
 networkPolicy:
   enabled: true
   allowExternal: true
-  ingressNSMatchLabels: {}
-  ingressNSPodMatchLabels: {}
 
 serviceAccount:
   create: false
 
-securityContext:
-  enabled: true
-  fsGroup: 1001
-  runAsUser: 1001
-
 ## Use password authentication
 auth:
-  enabled: true
   password: "foo" # Overridden by Terraform
 
 ## Redis config file
@@ -45,9 +26,6 @@ commonConfiguration: |-
 
 redisPort: 6379
 
-tls:
-  enabled: false
-
 master:
   disableCommands:
     - FLUSHALL
@@ -58,45 +36,14 @@ master:
     limits:
       memory: 192Mi
       cpu: 50m
-  livenessProbe:
-    enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 5
-    successThreshold: 1
-    failureThreshold: 5
-  readinessProbe:
-    enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 1
-    successThreshold: 1
-    failureThreshold: 5
 
-  ## Redis Master Service properties
-  service:
-    ##  Redis Master Service type
-    type: ClusterIP
-    port: 6379
   persistence:
-    enabled: true
-    path: /data
     ## Persist data to a persistent volume (Redis Master) - OVERRIDDEN IN TERRAFORM
     existingClaim: "foo"
-    accessModes:
-      - ReadWriteMany
-    size: 500Mi
-  statefulset:
-    updateStrategy: RollingUpdate
+    size: 1Gi
 
-metrics:
-  enabled: false
+#metrics:
+#  enabled: false
 
 volumePermissions:
-  enabled: false
-  image:
-    registry: docker.io
-    repository: bitnami/minideb
-    tag: buster
-    pullPolicy: Always
-  resources: {}
+  enabled: true

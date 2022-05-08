@@ -8,11 +8,11 @@ resource "kubernetes_persistent_volume_claim" "ps2alerts_redis_volume" {
     }
   }
   spec {
-    access_modes       = ["ReadWriteMany"]
-    storage_class_name = "longhorn"
+    access_modes       = ["ReadWriteOnce"]
+    storage_class_name = "csi-cinder-classic"
     resources {
       requests = {
-        storage = "500Mi"
+        storage = "1Gi"
       }
     }
   }
@@ -23,7 +23,7 @@ resource "helm_release" "ps2alerts_redis" {
   namespace  = var.namespace
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "redis"
-  version    = "16.4.5"
+  version    = "16.9.0"
 
   values = [
     file("${path.module}/redis-values.yaml")
