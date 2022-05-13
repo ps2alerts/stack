@@ -1,4 +1,5 @@
----
+# https://artifacthub.io/packages/helm/bitnami/redis?modal=values
+
 image:
   tag: 6.2.7
 
@@ -23,6 +24,7 @@ commonConfiguration: |-
   appendonly yes
   # Disable RDB persistence, AOF persistence already enabled.
   save ""
+  maxmemory 90mb
 
 redisPort: 6379
 
@@ -31,19 +33,60 @@ master:
     - FLUSHALL
   resources:
     requests:
-      memory: 192Mi
+      memory: 96Mi
       cpu: 10m
     limits:
-      memory: 192Mi
+      memory: 96Mi
       cpu: 50m
 
   persistence:
-    ## Persist data to a persistent volume (Redis Master) - OVERRIDDEN IN TERRAFORM
-    existingClaim: "foo"
     size: 1Gi
+    storageClass: csi-cinder-classic
 
-#metrics:
-#  enabled: false
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
+    rules:
+      - alert: PS2AlertsRedisServiceNotRunning
+        expr: up{service="{{ template "common.names.fullname" . }}"} == 0 OR absent(up{service="{{ template "common.names.fullname" . }}"}) == 1
+        for: 0m
+        labels:
+          severity: error
+          app: ps2alerts
+        annotations:
+          summary: Redis service is not healthy!
+          description: Redis service is not healthy!
+      - alert: PS2AlertsRedisDown
+        expr: redis_up{service="{{ template "common.names.fullname" . }}-metrics"} == 0
+        for: 0m
+        labels:
+          severity: error
+          app: ps2alerts
+        annotations:
+          summary: Redis instance {{ "{{ $labels.instance }}" }} down
+          description: Redis instance {{ "{{ $labels.instance }}" }} is down
+      - alert: PS2AlertsRedisMemoryHigh
+        expr: redis_memory_used_bytes{service="{{ template "common.names.fullname" . }}-metrics"} * 100 / redis_memory_max_bytes{service="{{ template "common.names.fullname" . }}-metrics"} > 90
+        for: 2m
+        labels:
+          severity: error
+          app: ps2alerts
+        annotations:
+          summary: Redis instance {{ "{{ $labels.instance }}" }} is using too much memory
+          description: Redis instance {{ "{{ $labels.instance }}" }} is using {{ "{{ $value }}" }}% of its available memory.
+#     - alert: RedisKeyEviction
+#       expr: increase(redis_evicted_keys_total{service="{{ template "common.names.fullname" . }}-metrics"}[5m]) > 0
+#       for: 1s
+#       labels:
+#         severity: error
+#         app: ps2alerts
+#       annotations:
+#         summary: Redis instance {{ "{{ $labels.instance }}" }} has evicted keys
+#         description: Redis instance {{ "{{ $labels.instance }}" }} has evicted {{ "{{ $value }}" }} keys in the last 5 minutes.
 
+# Required when we're using csi-cinder-classic due to perms cockups
 volumePermissions:
   enabled: true
