@@ -29,26 +29,26 @@ jobs:
       - name: Write Kube Config to file for Terraform
         run: echo ${{ secrets.KUBE_CONFIG }} >> kube-config
 
-      # Generates an execution plan for Terraform
-      - name: Terraform Plan
-        run: >
-          terraform plan \
-            -var="kube_config_path=kube-config" \
-            -var="db_user=${{ secrets.DB_USER }}" \
-            -var="db_pass=${{ secrets.DB_PASS }}" \
-            -var="redis_pass=${{ secrets.REDIS_PASS }}" \
-            -var="rabbitmq_admin_pass=${{ secrets.RABBITMQ_ADMIN_PASS }}" \
-            -var="rabbitmq_ps2alerts_pass=${{ secrets.RABBITMQ_PS2ALERTS_PASS }}" \
-            -var="rabbitmq_erlang_cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}" \
-            -out='.tfout'
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#      # Generates an execution plan for Terraform
+#      - name: Terraform Plan
+#        run: >
+#          terraform plan \
+#            -var="kube_config_path=kube-config" \
+#            -var="db_user=${{ secrets.DB_USER }}" \
+#            -var="db_pass=${{ secrets.DB_PASS }}" \
+#            -var="redis_pass=${{ secrets.REDIS_PASS }}" \
+#            -var="rabbitmq_admin_pass=${{ secrets.RABBITMQ_ADMIN_PASS }}" \
+#            -var="rabbitmq_ps2alerts_pass=${{ secrets.RABBITMQ_PS2ALERTS_PASS }}" \
+#            -var="rabbitmq_erlang_cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}" \
+#            -out='.tfout'
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # Apply the terraform plan
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve .tfout
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#      # Apply the terraform plan
+#      - name: Terraform Apply
+#        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+#        run: terraform apply -auto-approve .tfout
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
