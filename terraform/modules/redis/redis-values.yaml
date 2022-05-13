@@ -52,7 +52,7 @@ metrics:
     enabled: true
     rules:
       - alert: PS2AlertsRedisServiceNotRunning
-        expr: up{pod="{{ template "common.names.fullname" . }}-master"} == 0 OR absent(up{pod="{{ template "common.names.fullname" . }}-master"}) == 1
+        expr: up{pod="{{ template "common.names.fullname" . }}-master-0"} == 0 OR absent(up{pod="{{ template "common.names.fullname" . }}-master-0"}) == 1
         for: 0m
         labels:
           severity: error
