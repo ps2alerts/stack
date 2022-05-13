@@ -25,6 +25,7 @@ commonConfiguration: |-
   # Disable RDB persistence, AOF persistence already enabled.
   save ""
   maxmemory 90mb
+  maxmemory-policy allkeys-lru
 
 redisPort: 6379
 
@@ -51,7 +52,7 @@ metrics:
     enabled: true
     rules:
       - alert: PS2AlertsRedisServiceNotRunning
-        expr: up{service="{{ template "common.names.fullname" . }}"} == 0 OR absent(up{service="{{ template "common.names.fullname" . }}"}) == 1
+        expr: up{pod="{{ template "common.names.fullname" . }}-master"} == 0 OR absent(up{pod="{{ template "common.names.fullname" . }}-master"}) == 1
         for: 0m
         labels:
           severity: error
@@ -75,17 +76,17 @@ metrics:
           severity: error
           app: ps2alerts
         annotations:
-          summary: Redis instance {{ "{{ $labels.instance }}" }} is using too much memory
-          description: Redis instance {{ "{{ $labels.instance }}" }} is using {{ "{{ $value }}" }}% of its available memory.
-#     - alert: RedisKeyEviction
-#       expr: increase(redis_evicted_keys_total{service="{{ template "common.names.fullname" . }}-metrics"}[5m]) > 0
-#       for: 1s
-#       labels:
-#         severity: error
-#         app: ps2alerts
-#       annotations:
-#         summary: Redis instance {{ "{{ $labels.instance }}" }} has evicted keys
-#         description: Redis instance {{ "{{ $labels.instance }}" }} has evicted {{ "{{ $value }}" }} keys in the last 5 minutes.
+          summary: PS2Alerts Redis instance is using too much memory
+          description: PS2Alerts Redis instance is using {{ "{{ $value }}" }}% of its available memory.
+      - alert: PS2AlertsRedisKeyEviction
+        expr: increase(redis_evicted_keys_total{service="{{ template "common.names.fullname" . }}-metrics"}[5m]) > 0
+        for: 1s
+        labels:
+          severity: error
+          app: ps2alerts
+        annotations:
+          summary: PS2Alerts Redis instance has evicted keys
+          description: PS2Alerts Redis instance has evicted {{ "{{ $value }}" }} keys in the last 5 minutes.
 
 # Required when we're using csi-cinder-classic due to perms cockups
 volumePermissions:
