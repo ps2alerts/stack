@@ -36,6 +36,7 @@ metrics:
   prometheusRule:
     enabled: true
     namespace: ps2alerts
+    interval: 60s
     rules:
       - alert: PS2AlertsMongoServiceNotRunning
         expr: up{service="{{ template "common.names.fullname" . }}-metrics"} == 0 OR absent(up{service="{{ template "common.names.fullname" . }}-metrics"}) == 1
