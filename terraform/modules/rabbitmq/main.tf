@@ -1,31 +1,11 @@
 locals {
-  hostname = "messages.ps2alerts.com"
+  hostname = "queues.ps2alerts.com"
 }
 
 provider "rabbitmq" {
   endpoint = join("://", ["https", local.hostname])
   username = "admin"
   password = var.rabbitmq_admin_pass
-}
-
-resource "kubernetes_persistent_volume_claim" "ps2alerts_rabbitmq_volume_claim" {
-  metadata {
-    name      = var.identifier
-    namespace = var.namespace
-    labels = {
-      app         = "ps2alerts"
-      environment = var.environment
-    }
-  }
-  spec {
-    access_modes       = ["ReadWriteMany"]
-    storage_class_name = "longhorn"
-    resources {
-      requests = {
-        storage = "1Gi"
-      }
-    }
-  }
 }
 
 resource "helm_release" "ps2alerts_rabbitmq" {
@@ -50,11 +30,6 @@ resource "helm_release" "ps2alerts_rabbitmq" {
   }
 
   set {
-    name  = "persistence.existingClaim"
-    value = kubernetes_persistent_volume_claim.ps2alerts_rabbitmq_volume_claim.metadata[0].name
-  }
-
-  set {
     name = "ingress.hostname"
     value = local.hostname
   }
@@ -62,7 +37,7 @@ resource "helm_release" "ps2alerts_rabbitmq" {
 
 resource "time_sleep" "wait" {
   depends_on = [helm_release.ps2alerts_rabbitmq]
-  create_duration = "10s"
+  create_duration = "30s"
 }
 
 resource "rabbitmq_vhost" "ps2alerts" {

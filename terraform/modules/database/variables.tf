@@ -2,7 +2,7 @@ variable "namespace" {
   default = "ps2alerts"
 }
 
-variable "db_identifier" {
+variable "identifier" {
   default = "ps2alerts-db"
 }
 

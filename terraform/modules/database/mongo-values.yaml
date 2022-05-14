@@ -1,0 +1,64 @@
+# https://artifacthub.io/packages/helm/bitnami/mongodb?modal=values
+
+image:
+  tag: 5.0.8-debian-10-r17
+
+auth:
+  rootUser: "foobar"
+  rootPassword: "foobar123"
+
+resources:
+  limits:
+    cpu: "1500m"
+    memory: "1.5Gi"
+  requests:
+    cpu: "500m"
+    memory: "1.5Gi"
+
+persistence:
+  size: 20Gi
+# ReadWriteMany does not work, don't try it.
+
+# This is required to ensure the pods are terminated FIRST before a new one is made otherwise we'll have a PVC lock. This will result in ~30s downtime *but* it will work.
+updateStrategy:
+  type: Recreate
+# Pod has 30 seconds to terminate before they get force terminated
+terminationGracePeriodSeconds: 30
+
+metrics:
+  enabled: true
+  username: foo
+  password: foo
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
+    namespace: ps2alerts
+    rules:
+      - alert: PS2AlertsMongoServiceNotRunning
+        expr: up{service="{{ template "common.names.fullname" . }}-metrics"} == 0 OR absent(up{service="{{ template "common.names.fullname" . }}-metrics"}) == 1
+        for: 0m
+        labels:
+          severity: error
+          app: ps2alerts
+        annotations:
+          summary: PS2Alerts MongoDB service is not healthy!
+          description: PS2Alerts MongoDB is not healthy!
+      - alert: PS2AlertsMongodbDown
+        expr: mongodb_up == 0 OR absent(mongodb_up) == 1
+        for: 0m
+        labels:
+          severity: critical
+          app: ps2alerts
+        annotations:
+          summary: PS2Alerts Mongo is down!
+          description: "PS2Alerts mongo instance is down!"
+#      - alert: PS2AlertsMongodbVirtualMemoryUsage
+#        expr: (sum(mongodb_memory{type="virtual"}) BY (instance) / sum(mongodb_memory{type="mapped"}) BY (instance)) > 3
+#        for: 2m
+#        labels:
+#          severity: warning
+#          app: ps2alerts
+#        annotations:
+#          summary: MongoDB virtual memory usage (instance {{ $labels.instance }})
+#          description: "PS2Alerts DB high memory!"
