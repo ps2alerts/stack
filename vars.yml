@@ -6,10 +6,8 @@ certs_dir: "{{ data_dir }}/certs"
 mq_dir: "{{ data_dir }}/mq"
 
 project_dir: "{{ playbook_dir | realpath }}/.."
-api_dir: "{{ project_dir }}/api"
-website_dir: "{{ project_dir }}/website"
 aggregator_dir: "{{ project_dir }}/aggregator"
+api_dir: "{{ project_dir }}/api"
+collector_dir: "{{ project_dir }}/collector"
 stack_dir: "{{ project_dir }}/stack"
-
-ps2alerts_public_bucket: "ps2alerts-public"
-ps2alerts_public_bucket_url: "https://{{ ps2alerts_public_bucket }}.s3.eu-west-2.amazonaws.com"
+website_dir: "{{ project_dir }}/website"
