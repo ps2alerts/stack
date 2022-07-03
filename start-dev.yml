@@ -110,4 +110,6 @@
         vhost: /
         login_user: guest
         login_password: "guest"
+        exchange_type: fanout
+        durable: no
 
