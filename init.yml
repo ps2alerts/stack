@@ -52,14 +52,8 @@
           ## Collector
           alias ps2alerts-collector="cd {{ collector_dir | realpath }}"
           alias ps2alerts-collector-init="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/init.yml && ps2alerts-collector-dev"
-          alias ps2alerts-collector-start="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/start-multi.yml"
-          alias ps2alerts-collector-start-debug="ansible-playbook -e 'debug=true' {{ collector_dir | realpath }}/provisioning/dev/start.yml"
-          alias ps2alerts-collector-stop="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-collector-dev="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/start.yml && ps2alerts-collector-logs"
-          alias ps2alerts-collector-dev-all="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/start-multi.yml && docker-compose -f {{ collector_dir | realpath }}/provisioning/dev/docker-compose.yml logs -f"
-          alias ps2alerts-collector-dev-debug="ps2alerts-collector-stop && ps2alerts-collector-start-debug && ps2alerts-collector-logs"
-          alias ps2alerts-collector-msg="ansible-playbook {{ collector_dir | realpath }}/provisioning/admin-collector-publish.yml"
-          alias ps2alerts-collector-term="docker exec -it ps2alerts-collector-pc bash"
+          alias ps2alerts-collector-stop="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-collector-logs="docker logs -f ps2alerts-collector-pc"
           ## Website
           alias ps2alerts-website="cd {{ website_dir | realpath }}"

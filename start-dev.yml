@@ -97,9 +97,17 @@
       retries: 20
       delay: 5
 
-    - name: Create RabbitMQ Exchange
+    - name: Create RabbitMQ ps2alerts Exchange
       rabbitmq_exchange:
         name: ps2alerts
         vhost: /
         login_user: guest
         login_password: "guest"
+
+    - name: Create RabbitMQ ps2alerts-census Exchange
+      rabbitmq_exchange:
+        name: ps2alerts-census
+        vhost: /
+        login_user: guest
+        login_password: "guest"
+
