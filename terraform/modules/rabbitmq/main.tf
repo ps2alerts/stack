@@ -75,3 +75,33 @@ resource "rabbitmq_exchange" "ps2alerts" {
     auto_delete = false
   }
 }
+
+resource "rabbitmq_exchange" "ps2alerts_census" {
+  name  = "ps2alerts-census"
+  depends_on = [time_sleep.wait]
+  vhost = rabbitmq_permissions.ps2alerts.vhost
+
+  settings {
+    type        = "fanout"
+    durable     = false
+    auto_delete = false
+  }
+}
+
+resource "rabbitmq_exchange" "ps2alerts_topic" {
+  name  = "ps2alerts-topic"
+  depends_on = [time_sleep.wait]
+  vhost = rabbitmq_permissions.ps2alerts.vhost
+
+  settings {
+    type        = "topic"
+    durable     = true
+    auto_delete = false
+  }
+}
+resource "rabbitmq_binding" "ps2alerts_collector_topic" {
+  source           = rabbitmq_exchange.ps2alerts_census.name
+  vhost            = rabbitmq_permissions.ps2alerts.vhost
+  destination      = rabbitmq_exchange.ps2alerts_topic.name
+  destination_type = "exchange"
+}

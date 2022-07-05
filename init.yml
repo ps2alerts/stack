@@ -53,6 +53,7 @@
           alias ps2alerts-collector="cd {{ collector_dir | realpath }}"
           alias ps2alerts-collector-init="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/init.yml && ps2alerts-collector-dev"
           alias ps2alerts-collector-dev="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/start.yml && ps2alerts-collector-logs"
+          alias ps2alerts-collector-dev-all="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/start-multi.yml && docker-compose -f {{ collector_dir | realpath }}/provisioning/dev/docker-compose.yml logs -f"
           alias ps2alerts-collector-stop="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-collector-logs="docker logs -f ps2alerts-collector-pc"
           ## Website
