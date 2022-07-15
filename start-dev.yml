@@ -113,3 +113,18 @@
         exchange_type: fanout
         durable: no
 
+    - name: Create RabbitMQ ps2alerts-topic Exchange
+      rabbitmq_exchange:
+        name: ps2alerts-topic
+        vhost: /
+        login_user: guest
+        login_password: "guest"
+        exchange_type: topic
+        durable: yes
+
+    - name: Create RabbitMQ census->topic exchange binding
+      rabbitmq_binding:
+        name: ps2alerts-census
+        destination: ps2alerts-topic
+        destination_type: exchange
+
