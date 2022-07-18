@@ -83,7 +83,7 @@ resources:
     memory: 1Gi
 
 persistence:
-  size: 1Gi
+  size: 3Gi
 
 networkPolicy:
   enabled: true
