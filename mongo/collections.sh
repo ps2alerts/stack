@@ -22,7 +22,7 @@ collections=(
     "aggregate_instance_vehicles"
     "aggregate_instance_vehicles_characters"
     "aggregate_instance_weapons"
-    "changelog" # migrations collection
+    "migrations" # migrations collection
     "instance_facility_controls"
     "instance_metagame_territories"
 )
