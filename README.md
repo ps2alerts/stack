@@ -21,72 +21,30 @@ The PS2Alerts project utilises Kubernetes for its deployment and containerisatio
 <details>
 <summary> If you use windows </summary>
 
-  
-
-1. Install using [Powershell](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D?hl=en-gb&gl=GB) with admin rights  enter in:  `wsl --install`
-
-  I Recommend the [windows terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-gb&gl=GB) for having multiple instances open at the same time
-
-  This will go through everything and install WSL2
-
+1. Install using [Powershell](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D?hl=en-gb&gl=GB) with admin rights enter:  `wsl --install`
 2. Restart and ubuntu will be available as an app or in the [windows terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-gb&gl=GB)
-
 3. When you first start ubuntu you will have to choose your username and password(this is your sudo password)
-
 4. To check WSL version type `wsl -l -v` in **powershell**
-
-5. Restart and ubuntu will be available as an app or in the [windows terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-gb&gl=GB)
-
-6. When you first start ubuntu you will have to choose your username and password(this is your sudo password)
-
-7. To check WSL version type `wsl -l -v` in **powershell**
-
-8. For [Docker](https://docs.docker.com/desktop/install/windows-install/) you can install windows version and then have that be integrated with WSL by ticking this checkbox and applying wsl intergration in settings
-
+5. For [Docker](https://docs.docker.com/desktop/install/windows-install/) you can install windows version and then have that be integrated with WSL by ticking this checkbox and applying wsl intergration in settings
 ![WSL image](/WSLimage.png)
-
 Install ansible as given from the requirements and mongodb compass if you are working with data.
-
-9. Then add these to your [hosts file ](c:\Windows\System32\Drivers\etc\hosts)  to get to your markdown paste this `c:\Windows\System32\Drivers\etc\hosts` into explorer
-
+6. Then add these to your [hosts file ](c:\Windows\System32\Drivers\etc\hosts)  to get to your markdown paste this `c:\Windows\System32\Drivers\etc\hosts` into explorer
 ```
-
 127.0.0.1 dev.api.ps2alerts.com
-
 127.0.0.1 dev.router.ps2alerts.com
-
 127.0.0.1 dev.ps2alerts.com
-
 ```
-
-  
-
-10. To ensure that the project will run properly
-
-   [NVM install here](https://tecadmin.net/how-to-install-nvm-on-ubuntu-20-04/) then type `nvm install --lts` for a long term support version of node.js
-
-   Use this to get yarn via `npm install --global yarn`
-
-   Then `yarn install` in all of the repos that you cloned to ensure that you have the files necessary.
-
-   Then in the stack you can run `ps2alerts-init`
-
-   Followed by `ps2alerts-website-init` for the first time
-
-   And then `ps2alerts-website-dev` when you run this project again in the future
-
-11. Checking the site is working
-
- Go to `http://localhost:8080` to check that traefik is showing the services are running properly Then `dev.ps2alerts.com` and you will get a https warning but you can click on advanced on Firefox/edge and continue. Note due to not having ssl you won't have any data but you can see that the site itself is working.
-
-  
-
-12. To get https follow the steps below
-
-  
-
+7. To ensure that the project will run properly
+[NVM install here](https://tecadmin.net/how-to-install-nvm-on-ubuntu-20-04/) then type `nvm install --lts` for a long term support version of node.js
+Use this to get yarn via `npm install --global yarn`
+Then `yarn install` in all of the repos that you cloned to ensure that you have the files necessary.
+Then in the stack you can run `ps2alerts-init`
+Followed by `ps2alerts-website-init` for the first time
+And then `ps2alerts-website-dev` when you run this project again in the future
+8. Checking the site is working
+Go to `http://localhost:8080` to check that traefik is showing the services are running properly Then `dev.ps2alerts.com` and you will get a https warning but you can click on advanced on Firefox/edge and continue. Note due to not having ssl you won't have any data but you can see that the site itself is working.
+9. To get https follow the steps below
 </details>
-
 
 ## Requirements
 
