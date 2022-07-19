@@ -41,6 +41,7 @@
           alias ps2alerts-aggregator-msg="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/admin-aggregator-publish.yml"
           alias ps2alerts-aggregator-term="docker exec -it ps2alerts-aggregator-pc bash"
           alias ps2alerts-aggregator-logs="docker logs -f ps2alerts-aggregator-pc"
+          
           ## API
           alias ps2alerts-api="cd {{ api_dir | realpath }}"
           alias ps2alerts-api-init="ansible-playbook {{ api_dir | realpath }}/provisioning/dev/init.yml && ps2alerts-api-dev"
@@ -49,13 +50,16 @@
           alias ps2alerts-api-dev="ps2alerts-api-stop && ps2alerts-api-start && ps2alerts-api-logs"
           alias ps2alerts-api-term="docker exec -it ps2alerts-api bash"
           alias ps2alerts-api-logs="docker logs -f ps2alerts-api"
+          
           ## Collector
           alias ps2alerts-collector="cd {{ collector_dir | realpath }}"
           alias ps2alerts-collector-init="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/init.yml && ps2alerts-collector-dev"
+          alias ps2alerts-aggregator-start="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/start-multi.yml"
           alias ps2alerts-collector-dev="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/start.yml && ps2alerts-collector-logs"
           alias ps2alerts-collector-dev-all="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/start-multi.yml && docker-compose -f {{ collector_dir | realpath }}/provisioning/dev/docker-compose.yml logs -f"
           alias ps2alerts-collector-stop="ansible-playbook {{ collector_dir | realpath }}/provisioning/dev/stop.yml"
           alias ps2alerts-collector-logs="docker logs -f ps2alerts-collector-pc"
+          
           ## Website
           alias ps2alerts-website="cd {{ website_dir | realpath }}"
           alias ps2alerts-website-init="ansible-playbook {{ website_dir | realpath }}/provisioning/dev/init.yml && ps2alerts-website-dev"
@@ -64,14 +68,16 @@
           alias ps2alerts-website-dev="ps2alerts-website-stop && ps2alerts-website-start && ps2alerts-website-logs"
           alias ps2alerts-website-term="docker exec -it ps2alerts-website bash"
           alias ps2alerts-website-logs="docker logs -f ps2alerts-website"
+          
           ## Stack
           alias ps2alerts-stack="cd {{ stack_dir | realpath }}"
           alias ps2alerts-stack-start="ansible-playbook {{ stack_dir | realpath }}/start-dev.yml"
           alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
+          
           ## Global Commands
           alias ps2alerts="cd {{ project_dir | realpath }}"
           alias ps2alerts-init="ps2alerts-stack-start && ps2alerts-api-init && ps2alerts-website-init && ps2alerts-collector-init ps2alerts-aggregator-init"
-          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-website-start && ps2alerts-collector-start ps2alerts-aggregator-start"
+          alias ps2alerts-start="ps2alerts-stack-start && ps2alerts-api-start && ps2alerts-collector-start ps2alerts-aggregator-start && ps2alerts-website-start"
           alias ps2alerts-stop="ps2alerts-collector-stop && ps2alerts-aggregator-stop && ps2alerts-api-stop && ps2alerts-website-stop && ps2alerts-stack-stop"
           alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-aggregator ps2alerts-collector"
           alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"
