@@ -1,5 +1,11 @@
 locals {
   hostname = "queues.ps2alerts.com"
+  events = toset(["Death", "FacilityControl", "GainExperience", "VehicleDestroy"])
+  arguments = <<EOF
+{
+  "x-message-ttl": 300000
+}
+EOF
 }
 
 provider "rabbitmq" {
@@ -105,3 +111,120 @@ resource "rabbitmq_binding" "ps2alerts_collector_topic" {
   destination      = rabbitmq_exchange.ps2alerts_topic.name
   destination_type = "exchange"
 }
+
+resource "rabbitmq_queue" "ps2alerts_census_world_1_events" {
+  for_each = local.events
+  name = "census-1-${each.key}"
+  vhost = rabbitmq_vhost.ps2alerts.name
+  settings {
+    durable = false
+    arguments_json = "${local.arguments}"
+  }
+}
+resource "rabbitmq_queue" "ps2alerts_census_world_10_events" {
+  for_each = local.events
+  name = "census-10-${each.key}"
+  vhost = rabbitmq_vhost.ps2alerts.name
+  settings {
+    durable = false
+    arguments_json = "${local.arguments}"
+  }
+}
+resource "rabbitmq_queue" "ps2alerts_census_world_13_events" {
+  for_each = local.events
+  name = "census-13-${each.key}"
+  vhost = rabbitmq_vhost.ps2alerts.name
+  settings {
+    durable = false
+    arguments_json = "${local.arguments}"
+  }
+}
+resource "rabbitmq_queue" "ps2alerts_census_world_17_events" {
+  for_each = local.events
+  name = "census-17-${each.key}"
+  vhost = rabbitmq_vhost.ps2alerts.name
+  settings {
+    durable = false
+    arguments_json = "${local.arguments}"
+  }
+}
+resource "rabbitmq_queue" "ps2alerts_census_world_1000_events" {
+  for_each = local.events
+  name = "census-1000-${each.key}"
+  vhost = rabbitmq_vhost.ps2alerts.name
+  settings {
+    durable = false
+    arguments_json = "${local.arguments}"
+  }
+}
+resource "rabbitmq_queue" "ps2alerts_census_world_2000_events" {
+  for_each = local.events
+  name = "census-2000-${each.key}"
+  vhost = rabbitmq_vhost.ps2alerts.name
+  settings {
+    durable = false
+    arguments_json = "${local.arguments}"
+  }
+}
+
+// Bindings
+resource "rabbitmq_binding" "ps2alerts_census_world_1_bindings" {
+  depends_on = [rabbitmq_queue.ps2alerts_census_world_1_events]
+  for_each         = local.events
+  routing_key      = "1.${each.key}.*"
+  destination      = "census-1-${each.key}"
+  destination_type = "queue"
+  source           = rabbitmq_exchange.ps2alerts_topic.name
+  vhost            = rabbitmq_vhost.ps2alerts.name
+}
+
+resource "rabbitmq_binding" "ps2alerts_census_world_10_bindings" {
+  depends_on = [rabbitmq_queue.ps2alerts_census_world_10_events]
+  for_each         = local.events
+  routing_key      = "10.${each.key}.*"
+  destination      = "census-10-${each.key}"
+  destination_type = "queue"
+  source           = rabbitmq_exchange.ps2alerts_topic.name
+  vhost            = rabbitmq_vhost.ps2alerts.name
+}
+
+resource "rabbitmq_binding" "ps2alerts_census_world_13_bindings" {
+  depends_on = [rabbitmq_queue.ps2alerts_census_world_13_events]
+  for_each         = local.events
+  routing_key      = "13.${each.key}.*"
+  destination      = "census-13-${each.key}"
+  destination_type = "queue"
+  source           = rabbitmq_exchange.ps2alerts_topic.name
+  vhost            = rabbitmq_vhost.ps2alerts.name
+}
+
+resource "rabbitmq_binding" "ps2alerts_census_world_17_bindings" {
+  depends_on = [rabbitmq_queue.ps2alerts_census_world_17_events]
+  for_each         = local.events
+  routing_key      = "17.${each.key}.*"
+  destination      = "census-17-${each.key}"
+  destination_type = "queue"
+  source           = rabbitmq_exchange.ps2alerts_topic.name
+  vhost            = rabbitmq_vhost.ps2alerts.name
+}
+
+resource "rabbitmq_binding" "ps2alerts_census_world_1000_bindings" {
+  depends_on = [rabbitmq_queue.ps2alerts_census_world_1000_events]
+  for_each         = local.events
+  routing_key      = "1000.${each.key}.*"
+  destination      = "census-1000-${each.key}"
+  destination_type = "queue"
+  source           = rabbitmq_exchange.ps2alerts_topic.name
+  vhost            = rabbitmq_vhost.ps2alerts.name
+}
+
+resource "rabbitmq_binding" "ps2alerts_census_world_2000_bindings" {
+  depends_on = [rabbitmq_queue.ps2alerts_census_world_2000_events]
+  for_each         = local.events
+  routing_key      = "2000.${each.key}.*"
+  destination      = "census-2000-${each.key}"
+  destination_type = "queue"
+  source           = rabbitmq_exchange.ps2alerts_topic.name
+  vhost            = rabbitmq_vhost.ps2alerts.name
+}
+
