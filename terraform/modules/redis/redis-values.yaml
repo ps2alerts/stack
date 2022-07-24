@@ -34,15 +34,16 @@ master:
     - FLUSHALL
   resources:
     requests:
-      memory: 96Mi
-      cpu: 50m
+      memory: 64Mi
+      cpu: 150m
     limits:
       memory: 96Mi
-      cpu: 200m
-
+      cpu: 300m
   persistence:
     size: 1Gi
     storageClass: csi-cinder-classic
+  nodeSelector:
+    nodepool: perm-pool
 
 metrics:
   enabled: true

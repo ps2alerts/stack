@@ -77,9 +77,9 @@ extraConfiguration: |-
 resources:
   requests:
     cpu: 500m
-    memory: 1Gi
+    memory: 768Mi
   limits:
-    cpu: 1000m
+    cpu: 2000m
     memory: 1Gi
 
 persistence:
@@ -88,6 +88,9 @@ persistence:
 networkPolicy:
   enabled: true
   allowExternal: true
+
+nodeSelector:
+  nodepool: perm-pool
 
 ingress:
   enabled: true

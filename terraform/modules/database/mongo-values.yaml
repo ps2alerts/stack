@@ -26,6 +26,9 @@ updateStrategy:
 # Pod has 30 seconds to terminate before they get force terminated
 terminationGracePeriodSeconds: 30
 
+nodeSelector:
+  nodepool: perm-pool
+
 metrics:
   enabled: true
   username: foo
