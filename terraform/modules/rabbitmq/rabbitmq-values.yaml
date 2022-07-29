@@ -77,9 +77,9 @@ extraConfiguration: |-
 resources:
   requests:
     cpu: 500m
-    memory: 768Mi
+    memory: 600Mi
   limits:
-    cpu: 2000m
+    cpu: 1500m
     memory: 1Gi
 
 persistence:

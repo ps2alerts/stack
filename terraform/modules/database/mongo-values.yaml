@@ -11,10 +11,11 @@ auth:
 
 resources:
   limits:
+    cpu: "3000m"
     memory: "2Gi"
   requests:
     cpu: "1000m"
-    memory: "2Gi"
+    memory: "1.6Gi"
 
 persistence:
   size: 20Gi
