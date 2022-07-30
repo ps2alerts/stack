@@ -148,6 +148,15 @@ resource "rabbitmq_queue" "ps2alerts_census_world_17_events" {
     arguments_json = "${local.arguments}"
   }
 }
+resource "rabbitmq_queue" "ps2alerts_census_world_19_events" {
+  for_each = local.events
+  name = "census-19-${each.key}"
+  vhost = rabbitmq_vhost.ps2alerts.name
+  settings {
+    durable = false
+    arguments_json = "${local.arguments}"
+  }
+}
 resource "rabbitmq_queue" "ps2alerts_census_world_1000_events" {
   for_each = local.events
   name = "census-1000-${each.key}"
@@ -177,7 +186,6 @@ resource "rabbitmq_binding" "ps2alerts_census_world_1_bindings" {
   source           = rabbitmq_exchange.ps2alerts_topic.name
   vhost            = rabbitmq_vhost.ps2alerts.name
 }
-
 resource "rabbitmq_binding" "ps2alerts_census_world_10_bindings" {
   depends_on = [rabbitmq_queue.ps2alerts_census_world_10_events]
   for_each         = local.events
@@ -187,7 +195,6 @@ resource "rabbitmq_binding" "ps2alerts_census_world_10_bindings" {
   source           = rabbitmq_exchange.ps2alerts_topic.name
   vhost            = rabbitmq_vhost.ps2alerts.name
 }
-
 resource "rabbitmq_binding" "ps2alerts_census_world_13_bindings" {
   depends_on = [rabbitmq_queue.ps2alerts_census_world_13_events]
   for_each         = local.events
@@ -197,7 +204,6 @@ resource "rabbitmq_binding" "ps2alerts_census_world_13_bindings" {
   source           = rabbitmq_exchange.ps2alerts_topic.name
   vhost            = rabbitmq_vhost.ps2alerts.name
 }
-
 resource "rabbitmq_binding" "ps2alerts_census_world_17_bindings" {
   depends_on = [rabbitmq_queue.ps2alerts_census_world_17_events]
   for_each         = local.events
@@ -207,7 +213,15 @@ resource "rabbitmq_binding" "ps2alerts_census_world_17_bindings" {
   source           = rabbitmq_exchange.ps2alerts_topic.name
   vhost            = rabbitmq_vhost.ps2alerts.name
 }
-
+resource "rabbitmq_binding" "ps2alerts_census_world_19_bindings" {
+  depends_on = [rabbitmq_queue.ps2alerts_census_world_19_events]
+  for_each         = local.events
+  routing_key      = "19.${each.key}.*"
+  destination      = "census-19-${each.key}"
+  destination_type = "queue"
+  source           = rabbitmq_exchange.ps2alerts_topic.name
+  vhost            = rabbitmq_vhost.ps2alerts.name
+}
 resource "rabbitmq_binding" "ps2alerts_census_world_1000_bindings" {
   depends_on = [rabbitmq_queue.ps2alerts_census_world_1000_events]
   for_each         = local.events
@@ -217,7 +231,6 @@ resource "rabbitmq_binding" "ps2alerts_census_world_1000_bindings" {
   source           = rabbitmq_exchange.ps2alerts_topic.name
   vhost            = rabbitmq_vhost.ps2alerts.name
 }
-
 resource "rabbitmq_binding" "ps2alerts_census_world_2000_bindings" {
   depends_on = [rabbitmq_queue.ps2alerts_census_world_2000_events]
   for_each         = local.events
