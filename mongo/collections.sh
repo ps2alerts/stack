@@ -25,4 +25,7 @@ collections=(
     "migrations" # migrations collection
     "instance_facility_controls"
     "instance_metagame_territories"
+    "instance_outfitwars_2022"
+    "outfitwars_facility_controls"
+    "outfitwars_rankings"
 )

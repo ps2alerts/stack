@@ -1,5 +1,8 @@
 // In this file you can configure migrate-mongo
 
+// For dev, whack this command in your terminal:
+// export DBURL="mongodb://root:foobar@localhost:27017/ps2alerts?authSource=admin&readPreference=primary&directConnection=true&ssl=false"
+
 const config = {
   mongodb: {
     url: process.env.DBURL ? process.env.DBURL : "mongodb://" + process.env.DBUSER + ":" + process.env.DBPASS + "@localhost:27017/" + process.env.DBNAME,
