@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-vol
+  namespace: ps2alerts
+spec:
+  volumes:
+    - name: database
+      persistentVolumeClaim:
+        claimName: ps2alerts-db
+  containers:
+    - name: ubuntu
+      image: ubuntu:latest
+      command: [ "/bin/bash", "-c", "--" ]
+      args: [ "while true; do sleep 30; done;" ]
+      volumeMounts:
+        - mountPath: "/var/database"
+          name: database
