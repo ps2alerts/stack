@@ -20,7 +20,7 @@ const aggregateCollections = [
 ]
 
 module.exports = {
-  async up(db, client) {
+  async up(db) {
     let updateDoc = [{"$set":{"ps2AlertsEventType": 1}}];
 
     console.log(updateDoc);
@@ -32,7 +32,7 @@ module.exports = {
     }
   },
 
-  async down(db, client) {
+  async down(db) {
     let updateDoc = [{"$unset":{"ps2AlertsEventType": 1}}];
     for (const collection of aggregateCollections) {
       await db.collection(collection).updateMany({}, updateDoc);
