@@ -1,0 +1,55 @@
+version: "3"
+services:
+  website:
+    container_name: ps2alerts-website-staging
+    image: maelstromeous/ps2alerts:website-staging-latest
+    restart: unless-stopped
+    ports:
+      - 8001:80
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+  #  api-aggregator:
+  #    container_name: ps2alerts-api-aggregator
+  #    image: maelstromeous/ps2alerts:api-staging-latest
+  #    depends_on:
+  #      - db
+  #      - rabbitmq
+  #      - redis
+  #    env_file: docker-api.env
+  #    restart: unless-stopped
+  #    environment:
+  #      AGGREGATOR_ENABLED: "true"
+  #      RABBITMQ_HOST: ps2alerts-rabbitmq
+  #      RABBITMQ_USER: REDACTED
+  #      RABBITMQ_PASS: "REDACTED"
+  #      RABBITMQ_QUEUE: api-queue-staging
+  #      RABBITMQ_PREFETCH: "100"
+  #      DB_POOL_SIZE: 50
+  #    labels:
+  #      - "com.centurylinklabs.watchtower.enable=true"
+  #    networks:
+  #      - ps2alerts
+  #  api-cron:
+  #    container_name: ps2alerts-api-cron-staging
+  #    image: maelstromeous/ps2alerts:api-staging-latest
+  #    restart: unless-stopped
+  #    env_file: ../docker-api.env
+  #    environment:
+  #      CRON_ENABLED: "true"
+  #    labels:
+  #      - "com.centurylinklabs.watchtower.enable=true"
+  #    networks:
+  #      - ps2alerts
+  api-rest:
+    container_name: ps2alerts-api-rest-staging
+    image: maelstromeous/ps2alerts:api-staging-latest
+    restart: unless-stopped
+    ports:
+      - 8011:3000
+    env_file: ../docker-api.env
+    environment:
+      REST_ENABLED: "true"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - ps2alerts

@@ -1,0 +1,182 @@
+version: "3"
+services:
+  website:
+    container_name: ps2alerts-website-production
+    image: maelstromeous/ps2alerts:website-production-latest
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+  api-aggregator:
+    container_name: ps2alerts-api-aggregator-production
+    image: maelstromeous/ps2alerts:api-production-latest
+    depends_on:
+      - db
+      - rabbitmq
+      - redis
+    env_file: ../docker-api.env
+    restart: unless-stopped
+    environment:
+      AGGREGATOR_ENABLED: "true"
+      RABBITMQ_HOST: ps2alerts-rabbitmq
+      RABBITMQ_USER: REDACTED
+      RABBITMQ_PASS: "REDACTED"
+      RABBITMQ_QUEUE: api-queue-production
+      RABBITMQ_PREFETCH: "100"
+      DB_POOL_SIZE: 50
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - ps2alerts
+  api-cron:
+    container_name: ps2alerts-api-cron-production
+    image: maelstromeous/ps2alerts:api-production-latest
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    env_file: ../docker-api.env
+    environment:
+      CRON_ENABLED: "true"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - ps2alerts
+  api-rest:
+    container_name: ps2alerts-api-rest-production
+    image: maelstromeous/ps2alerts:api-production-latest
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 8010:3000
+    env_file: ../docker-api.env
+    environment:
+      REST_ENABLED: "true"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - ps2alerts
+  collector-pc:
+    container_name: ps2alerts-collector-pc
+    image: ghcr.io/nanite-systems/stream-collector:1.3.2
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+    env_file: ../docker-collector.env
+    environment:
+      PS2_ENVIRONMENT: ps2
+    networks:
+      - ps2alerts
+  collector-ps4eu:
+    container_name: ps2alerts-collector-ps4eu
+    image: ghcr.io/nanite-systems/stream-collector:1.3.2
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+    env_file: ../docker-collector.env
+    environment:
+      PS2_ENVIRONMENT: ps2ps4eu
+    networks:
+      - ps2alerts
+  collector-ps4us:
+    container_name: ps2alerts-collector-ps4us
+    image: ghcr.io/nanite-systems/stream-collector:1.3.2
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+    env_file: ../docker-collector.env
+    environment:
+      PS2_ENVIRONMENT: ps2ps4us
+    networks:
+      - ps2alerts
+  aggregator-pc:
+    container_name: ps2alerts-aggregator-pc
+    image: maelstromeous/ps2alerts:aggregator-production-latest
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - redis
+    env_file: ../docker-aggregator.env
+    environment:
+      CENSUS_ENVIRONMENT: ps2
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - ps2alerts
+  aggregator-ps4eu:
+    container_name: ps2alerts-aggregator-ps4eu
+    image: maelstromeous/ps2alerts:aggregator-production-latest
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - redis
+    env_file: ../docker-aggregator.env
+    environment:
+      CENSUS_ENVIRONMENT: ps2ps4eu
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - ps2alerts
+  aggregator-ps4us:
+    container_name: ps2alerts-aggregator-ps4us
+    image: maelstromeous/ps2alerts:aggregator-production-latest
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - redis
+    env_file: ../docker-aggregator.env
+    environment:
+      CENSUS_ENVIRONMENT: ps2ps4us
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - ps2alerts
+  db:
+    container_name: ps2alerts-db
+    image: bitnami/mongodb:5.0.14-debian-11-r13
+    restart: unless-stopped
+    environment:
+      MONGODB_DATABASE: ps2alerts
+      MONGODB_USERNAME: REDACTED
+      MONGODB_PASSWORD: "REDACTED"
+      MONGODB_ROOT_PASSWORD: "HELLA REDACTED"
+    ports:
+      - 27017:27017
+    volumes:
+      - ./volumes/db:/bitnami
+    networks:
+      - ps2alerts
+  rabbitmq:
+    container_name: ps2alerts-rabbitmq
+    image: bitnami/rabbitmq:3.10.13
+    restart: unless-stopped
+    environment:
+      RABBITMQ_USERNAME: REDACTED
+      RABBITMQ_PASSWORD: "REDACTED"
+      RABBITMQ_ERL_COOKIE: "REDACTED"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./volumes/rabbitmq:/bitnami
+    networks:
+      - ps2alerts
+  redis:
+    container_name: ps2alerts-redis
+    image: bitnami/redis:6.2.8
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: "REDACTED"
+    ports:
+      - 6379:6379
+    volumes:
+      - ./volumes/redis:/bitnami/redis/data
+    networks:
+      - ps2alerts
+
+networks:
+  ps2alerts:
+    external: true

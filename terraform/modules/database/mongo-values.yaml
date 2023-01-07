@@ -3,7 +3,7 @@
 nameOverride: "ps2alerts-db"
 
 image:
-  tag: 5.0.8-debian-10-r17
+  tag: 5.0.14
 
 auth:
   rootUser: "foobar"

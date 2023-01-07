@@ -42,17 +42,13 @@
     - name: Start Database
       docker_container:
         name: ps2alerts-db
-        image: mongo:4.2
+        image: bitnami/mongodb:5.0.14-debian-11-r13
         state: started
         volumes:
-          - ./mongo/init/init-mongo.js:/docker-entrypoint-initdb.d/init-monjo.js
-          - ./mongo/mongod.conf:/etc/mongod.conf
-          - ./mongo:/data/mongo-host
           - "{{ db_dir }}:/data/db"
         env:
-          MONGO_INITDB_DATABASE: ps2alerts
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: foobar
+          MONGODB_DATABASE: ps2alerts
+          MONGODB_ROOT_PASSWORD: "foobar" # Matches API's default
         ports:
           - 27017-27019:27017-27019
         networks:

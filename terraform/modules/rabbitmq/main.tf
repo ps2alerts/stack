@@ -1,5 +1,5 @@
 locals {
-  hostname = "queues.ps2alerts.com"
+  hostname = "queues-temp.ps2alerts.com"
   events = toset(["Death", "FacilityControl", "GainExperience", "VehicleDestroy"])
   arguments = <<EOF
 {

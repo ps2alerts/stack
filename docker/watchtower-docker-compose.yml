@@ -1,0 +1,15 @@
+version: "3"
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=60
+      - WATCHTOWER_NOTIFICATIONS=slack
+      - WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL=REDACTED
+      - WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER=watchtower
+      - WATCHTOWER_NOTIFICATION_SLACK_CHANNEL=#deployments
+      - WATCHTOWER_NOTIFICATIONS_HOSTNAME=ceres
+      - WATCHTOWER_LABEL_ENABLE=true
