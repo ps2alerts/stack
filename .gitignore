@@ -2,9 +2,9 @@
 traefik/certs/*
 traefik/logs/*
 ansible/temp/*
-terraform/.terraform
-terraform/.tfout
-terraform/.auto.tfvars
-terraform/kube-config
-terraform/tfplan.out
+archive/terraform/.terraform
+archive/terraform/.tfout
+archive/terraform/.auto.tfvars
+archive/terraform/kube-config
+archive/terraform/tfplan.out
 .DS_Store
