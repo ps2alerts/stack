@@ -53,3 +53,7 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - ps2alerts
+
+networks:
+  ps2alerts:
+    external: true
