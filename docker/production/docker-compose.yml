@@ -1,6 +1,6 @@
 version: "3"
 services:
-  website:
+  ps2alerts-website:
     container_name: ps2alerts-website-production
     image: maelstromeous/ps2alerts:website-production-latest
     restart: unless-stopped
@@ -12,9 +12,9 @@ services:
     container_name: ps2alerts-api-aggregator-production
     image: maelstromeous/ps2alerts:api-production-latest
     depends_on:
-      - db
-      - rabbitmq
-      - redis
+      - ps2alerts-db
+      - ps2alerts-rabbitmq
+      - ps2alerts-redis
     env_file: ../docker-api.env
     restart: unless-stopped
     environment:
@@ -34,8 +34,8 @@ services:
     image: maelstromeous/ps2alerts:api-production-latest
     restart: unless-stopped
     depends_on:
-      - db
-      - redis
+      - ps2alerts-db
+      - ps2alerts-redis
     env_file: ../docker-api.env
     environment:
       CRON_ENABLED: "true"
@@ -48,8 +48,8 @@ services:
     image: maelstromeous/ps2alerts:api-production-latest
     restart: unless-stopped
     depends_on:
-      - db
-      - redis
+      - ps2alerts-db
+      - ps2alerts-redis
     ports:
       - 8010:3000
     env_file: ../docker-api.env
@@ -59,12 +59,20 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - ps2alerts
+  assets:
+    container_name: ps2alerts-assets
+    image: maelstromeous/ps2alerts:assets-latest
+    restart: unless-stopped
+    ports:
+      - 8020:80
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
   collector-pc:
     container_name: ps2alerts-collector-pc
     image: ghcr.io/nanite-systems/stream-collector:1.3.2
     restart: unless-stopped
     depends_on:
-      - rabbitmq
+      - ps2alerts-rabbitmq
     env_file: ../docker-collector.env
     environment:
       PS2_ENVIRONMENT: ps2
@@ -75,7 +83,7 @@ services:
     image: ghcr.io/nanite-systems/stream-collector:1.3.2
     restart: unless-stopped
     depends_on:
-      - rabbitmq
+      - ps2alerts-rabbitmq
     env_file: ../docker-collector.env
     environment:
       PS2_ENVIRONMENT: ps2ps4eu
@@ -86,7 +94,7 @@ services:
     image: ghcr.io/nanite-systems/stream-collector:1.3.2
     restart: unless-stopped
     depends_on:
-      - rabbitmq
+      - ps2alerts-rabbitmq
     env_file: ../docker-collector.env
     environment:
       PS2_ENVIRONMENT: ps2ps4us
@@ -97,8 +105,8 @@ services:
     image: maelstromeous/ps2alerts:aggregator-production-latest
     restart: unless-stopped
     depends_on:
-      - rabbitmq
-      - redis
+      - ps2alerts-rabbitmq
+      - ps2alerts-redis
     env_file: ../docker-aggregator.env
     environment:
       CENSUS_ENVIRONMENT: ps2
@@ -111,8 +119,8 @@ services:
     image: maelstromeous/ps2alerts:aggregator-production-latest
     restart: unless-stopped
     depends_on:
-      - rabbitmq
-      - redis
+      - ps2alerts-rabbitmq
+      - ps2alerts-redis
     env_file: ../docker-aggregator.env
     environment:
       CENSUS_ENVIRONMENT: ps2ps4eu
@@ -125,8 +133,8 @@ services:
     image: maelstromeous/ps2alerts:aggregator-production-latest
     restart: unless-stopped
     depends_on:
-      - rabbitmq
-      - redis
+      - ps2alerts-rabbitmq
+      - ps2alerts-redis
     env_file: ../docker-aggregator.env
     environment:
       CENSUS_ENVIRONMENT: ps2ps4us
@@ -134,7 +142,7 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - ps2alerts
-  db:
+  ps2alerts-db:
     container_name: ps2alerts-db
     image: bitnami/mongodb:5.0.14-debian-11-r13
     restart: unless-stopped
@@ -149,7 +157,7 @@ services:
       - ./volumes/db:/bitnami
     networks:
       - ps2alerts
-  rabbitmq:
+  ps2alerts-rabbitmq:
     container_name: ps2alerts-rabbitmq
     image: bitnami/rabbitmq:3.10.13
     restart: unless-stopped
@@ -164,7 +172,7 @@ services:
       - ./volumes/rabbitmq:/bitnami
     networks:
       - ps2alerts
-  redis:
+  ps2alerts-redis:
     container_name: ps2alerts-redis
     image: bitnami/redis:6.2.8
     restart: unless-stopped
