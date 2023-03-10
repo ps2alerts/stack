@@ -24,6 +24,8 @@ const config = {
   // The file extension to create migrations and search for in migration dir
   migrationFileExtension: ".js",
 
+  moduleSystem: 'commonjs',
+
   // Enable the algorithm to create a checksum of the file contents and use that in the comparison to determin
   // if the file should be run.  Requires that scripts are coded to be run multiple times.
   useFileHash: false
