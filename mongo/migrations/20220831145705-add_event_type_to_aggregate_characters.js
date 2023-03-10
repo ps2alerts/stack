@@ -5,6 +5,18 @@ const aggregateCollections = [
 
 module.exports = {
   async up(db) {
+    let filter = {"ps2AlertsEventType": {"$exists": true}};
+    for (let i = 0; i < aggregateCollections.length;) {
+      const collection = aggregateCollections[i];
+      const result = await db.collection(collection).findOne(filter);
+      if(result !== null) {
+        const index = aggregateCollections.indexOf(collection);
+        aggregateCollections.splice(index, 1);
+      } else {
+        i++;
+      }
+    }
+    filter = {"ps2AlertsEventType": {"$exists": false}};
     let updateDoc = [{"$set":{"ps2AlertsEventType": 1}}];
 
     console.log(updateDoc);
