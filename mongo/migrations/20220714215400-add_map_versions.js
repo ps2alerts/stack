@@ -20,7 +20,7 @@ module.exports = {
   },
 
   async down(db) {
-    const updateDoc = [{"$unset":{"mapVersion": 1}}];
+    const updateDoc = [{"$unset": "mapVersion"}];
 
     console.log(`Removing mapVersions from all alert instances...\n`);
     const result = await db.collection("instance_metagame_territories").updateMany({}, updateDoc);

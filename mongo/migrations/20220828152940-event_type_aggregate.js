@@ -45,7 +45,7 @@ module.exports = {
   },
 
   async down(db) {
-    let updateDoc = [{"$unset":{"ps2AlertsEventType": 1}}];
+    let updateDoc = [{"$unset": "ps2AlertsEventType"}];
     for (const collection of aggregateCollections) {
       await db.collection(collection).updateMany({}, updateDoc);
     }

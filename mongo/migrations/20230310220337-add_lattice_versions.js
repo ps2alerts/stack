@@ -20,7 +20,7 @@ module.exports = {
   },
 
   async down(db) {
-    const updateDoc = [{"$unset":{"latticeVersion": 1}}];
+    const updateDoc = [{"$unset": "latticeVersion"}];
 
     console.log(`Removing latticeVersions from all alert instances...\n`);
     const result = await db.collection("instance_metagame_territories").updateMany({}, updateDoc);
