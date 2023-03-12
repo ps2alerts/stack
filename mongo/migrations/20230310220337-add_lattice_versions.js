@@ -12,14 +12,15 @@ module.exports = {
       let result = await db.collection(collection).updateMany(filter, updateDoc);
       console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)\n`);
 
-      filter = {"timeStarted": {"$gt": new Date(2022, 10, 17, 14)}, "latticeVersion": {"$exists": false}, "zone": {"$ne": 2}};
-      console.log(`Updating unversioned, non-Indar instances created after the November 17, 2022 Update...`);
+      filter = {"timeStarted": {"$gt": new Date(2022, 10, 17, 14)}, "latticeVersion": {"$exists": false}, "zone": {"$ne": 344}};
+      console.log(`Updating unversioned, non-Oshur instances created after the November 17, 2022 Update...`);
+      updateDoc = [{"$set":{"latticeVersion": "1.1"}}];
       result = await db.collection(collection).updateMany(filter, updateDoc);
       console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)\n`);
 
-      filter = {"timeStarted": {"$gt": new Date(2022, 10, 17, 14)}, "latticeVersion": {"$exists": false}, "zone": 2};
-      console.log(`Updating unversioned Indar instances created after the November 17, 2022 Update...`);
-      updateDoc = [{"$set":{"latticeVersion": "1.1"}}];
+      filter = {"timeStarted": {"$gt": new Date(2022, 10, 17, 14)}, "latticeVersion": {"$exists": false}, "zone": 344};
+      console.log(`Updating unversioned Oshur instances created after the November 17, 2022 Update...`);
+      updateDoc = [{"$set":{"latticeVersion": "1.2"}}];
       result = await db.collection(collection).updateMany(filter, updateDoc);
       console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)\n`);
     }
