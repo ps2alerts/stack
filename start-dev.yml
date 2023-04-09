@@ -82,6 +82,53 @@
         labels:
           traefik.enable: "false"
 
+    - name: Start Prometheus
+      docker_container:
+        name: ps2alerts-prom
+        image: prom/prometheus
+        state: started
+        ports:
+          - 9090:9090
+        volumes:
+          - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+          - "{{ monitoring_dir }}/prometheus:/prometheus"
+        networks:
+          - name: "ps2alerts"
+        labels:
+          traefik.enable: "false"
+
+    - name: Start Alertmanager
+      docker_container:
+        name: ps2alerts-alertmanager
+        image: prom/alertmanager
+        state: started
+        ports:
+          - 9091:9093
+        volumes:
+          - ./monitoring/alertmanager/:/config
+          - "{{ monitoring_dir }}/alertmanager:/data"
+        command: --config.file=/config/alertmanager.yml --storage.path=/data
+        networks:
+          - name: "ps2alerts"
+        labels:
+          traefik.enable: "false"
+
+    - name: Start Grafana
+      docker_container:
+        name: ps2alerts-grafana
+        image: grafana/grafana
+        state: started
+        ports:
+          - 9092:3000
+        volumes:
+          - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+          - "{{ monitoring_dir }}/grafana:/var/lib/grafana"
+        networks:
+          - name: "ps2alerts"
+        labels:
+          traefik.enable: "false"
+
+
     - name: Wait for Rabbit to be fully available...
       shell: curl --head --silent http://localhost:15672
       register: result

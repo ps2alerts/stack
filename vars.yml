@@ -4,6 +4,7 @@ db_dir: "{{ data_dir }}/mongo"
 redis_dir: "{{ data_dir }}/redis"
 certs_dir: "{{ data_dir }}/certs"
 mq_dir: "{{ data_dir }}/mq"
+monitoring_dir: "{{ data_dir }}/monitoring"
 
 project_dir: "{{ playbook_dir | realpath }}/.."
 aggregator_dir: "{{ project_dir }}/aggregator"
