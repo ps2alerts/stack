@@ -20,3 +20,18 @@
       docker_container:
         name: ps2alerts-mq
         state: stopped
+
+    - name: Stop Prometheus
+      docker_container:
+        name: ps2alerts-prom
+        state: stopped
+
+    - name: Stop Grafana
+      docker_container:
+        name: ps2alerts-grafana
+        state: stopped
+
+    - name: Stop Alertmanager
+      docker_container:
+        name: ps2alerts-alertmanager
+        state: stopped
