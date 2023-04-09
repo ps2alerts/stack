@@ -19,23 +19,18 @@
     - name: Start Traefik Router
       docker_container:
         name: ps2alerts-router
-        image: traefik:v2.2
+        image: traefik:v2.9
         state: started
         recreate: yes
-        volumes:
-          - ./traefik/logs:/var/log/traefik
-          - ./traefik/config:/config
-          - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-          - /var/run/docker.sock:/var/run/docker.sock
-          - "{{ certs_dir }}:/etc/certs"
-        labels:
-          traefik.enable: "true"
-          traefik.backend: "traefik"
-          traefik.port: "8080"
         ports:
           - 80:80
           - 443:443
           - 8080:8080
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro
+          - "{{ certs_dir }}:/etc/traefik/certs:ro"
+          - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+          - ./traefik/dynamic_conf.yml:/etc/traefik/dynamic_conf.yml:ro
         networks:
           - name: "ps2alerts"
 

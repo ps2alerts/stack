@@ -73,6 +73,7 @@
           alias ps2alerts-stack="cd {{ stack_dir | realpath }}"
           alias ps2alerts-stack-start="ansible-playbook {{ stack_dir | realpath }}/start-dev.yml"
           alias ps2alerts-stack-stop="ansible-playbook {{ stack_dir | realpath }}/stop-dev.yml"
+          alias ps2alerts-stack-restart="ps2alerts-stack-stop && ps2alerts-stack-start"
           
           ## Global Commands
           alias ps2alerts="cd {{ project_dir | realpath }}"
@@ -82,27 +83,16 @@
           alias ps2alerts-logs-all="docker logs -f ps2alerts-api ps2alerts-website ps2alerts-aggregator ps2alerts-collector"
           alias ps2alerts-reprovision="sudo ansible-playbook {{ stack_dir | realpath }}/init.yml"
 
-    # - name: Install ca-certificates package on RHEL systems
-    #   yum:
-    #     name: ca-certificates
-    #     state: present
-    #   when: ansible_os_family == "RedHat"
-
-    # - name: Install ca-certificates package on Debian systems
-    #   apt:
-    #     name: ca-certificates
-    #     state: present
-    #     update_cache: yes
-    #   when: ansible_os_family == "Debian"
-
     - name: Import hosts into /etc/hosts
       blockinfile:
         path: /etc/hosts
         marker: "# {mark} PS2ALERTS ANSIBLE MANAGED BLOCK #"
         block: |
           127.0.0.1 dev.api.ps2alerts.com
-          127.0.0.1 dev.router.ps2alerts.com
           127.0.0.1 dev.ps2alerts.com
+          127.0.0.1 dev.aggregator.ps2alerts.com
+          127.0.0.1 dev.aggregator-ps4eu.ps2alerts.com
+          127.0.0.1 dev.aggregator-ps4us.ps2alerts.com
       become: yes
 
     - name: "Create {{ data_dir }} dir"
@@ -110,59 +100,10 @@
         path: "{{ data_dir }}"
         state: directory
 
-    ## WIP WIP WIP
     - name: Make certs dir
       file:
         path: "{{ certs_dir }}"
         state: directory
 
-    # - name: Start mkcert container and generate the certs
-    #   docker_container:
-    #     name: ps2alerts-mkcert
-    #     image: vishnunair/docker-mkcert
-    #     state: started
-    #     env:
-    #       domain: "dev.ps2alerts.com,api.dev.ps2alerts.com,wss.dev.ps2alerts.com"
-    #     volumes:
-    #       - "{{ certs_dir }}:/root/.local/share/mkcert"
-    #     labels:
-    #       traefik.enable: "false"
-
-    # - name: Wait for certs to be generated (grab a snickers)
-    #   wait_for:
-    #     path: "{{ cert_dir }}/{{ item }}"
-    #     state: present
-    #   with_items:
-    #     - dev.ps2alerts.com.pem
-    #     - api.dev.ps2alerts.com.pem
-    #     - rootCA.pem
-
-    # - name: Copy certificate authority to trusted ca path of the os
-    #   copy:
-    #     src: "{{ item }}"
-    #     dest: "{{ ca_path[ansible_os_family][ansible_distribution_major_version|int] }}/"
-    #     owner: root
-    #     group: root
-    #     mode: 0644
-    #   with_fileglob:
-    #     - "{{ certs_dir }}*"
-    #   notify:
-    #     - update trusted ca debian
-    #     - update trusted ca redhat
-
-    # - name: Stop mkcert
-    #   docker_container:
-    #     name: ps2alerts-mkcert
-    #     state: stopped
-
     - debug:
-        msg: "👉 Remember to source your '~/.bash_aliases' file or restart your terminal!"
-
-  handlers:
-    - name: update trusted ca debian
-      shell: /usr/sbin/update-ca-certificates && echo "Certs updated!"
-      when: ansible_os_family == "Debian"
-
-    - name: update trusted ca redhat
-      shell: /bin/update-ca-trust && echo "Certs updated!"
-      when: ansible_os_family == "RedHat"
+        msg: "👉 Remember to source your '~/.bash_aliases' file or restart your terminal! If this is your first run you also need to generate your SSL certificates. See readme for more details! 👈"

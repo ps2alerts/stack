@@ -1,0 +1,4 @@
+tls:
+  certificates:
+    - certFile: /etc/traefik/certs/dev.ps2alerts.com.pem
+      keyFile: /etc/traefik/certs/dev.ps2alerts.com-key.pem

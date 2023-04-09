@@ -2,10 +2,11 @@
 providers:
   docker:
     exposedByDefault: false
+    watch: true
   # HTTPS/TLS certificate configuration. Comment this section out if you don't want to use SSL.
   file:
-    filename:
-      /config/config.yml
+    filename: /etc/traefik/dynamic_conf.yml
+    watch: true
 
 accessLog:
   filePath: "/var/log/traefik/traefik-access.log"

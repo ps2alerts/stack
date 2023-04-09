@@ -28,11 +28,14 @@ The PS2Alerts project utilises Kubernetes for its deployment and containerisatio
 5. For [Docker](https://docs.docker.com/desktop/install/windows-install/) you can install windows version and then have that be integrated with WSL by ticking this checkbox and applying wsl intergration in settings
 ![WSL image](/WSLimage.png)
 Install ansible as given from the requirements and mongodb compass if you are working with data.
-6. Then add these to your [hosts file ](c:\Windows\System32\Drivers\etc\hosts)  to get to your markdown paste this `c:\Windows\System32\Drivers\etc\hosts` into explorer
+6. Then add these to your [hosts file ](c:\Windows\System32\Drivers\etc\hosts) to get to your markdown paste this `c:\Windows\System32\Drivers\etc\hosts` into explorer
 ```
 127.0.0.1 dev.api.ps2alerts.com
 127.0.0.1 dev.router.ps2alerts.com
 127.0.0.1 dev.ps2alerts.com
+127.0.0.1 dev.aggregator.ps2alerts.com
+127.0.0.1 dev.aggregator-ps4eu.ps2alerts.com
+127.0.0.1 dev.aggregator-ps4us.ps2alerts.com
 ```
 7. To ensure that the project will run properly
 [NVM install here](https://tecadmin.net/how-to-install-nvm-on-ubuntu-20-04/) then type `nvm install --lts` for a long term support version of node.js
@@ -43,7 +46,7 @@ Followed by `ps2alerts-website-init` for the first time
 And then `ps2alerts-website-dev` when you run this project again in the future
 8. Checking the site is working
 Go to `http://localhost:8080` to check that traefik is showing the services are running properly Then `dev.ps2alerts.com` and you will get a https warning but you can click on advanced on Firefox/edge and continue. Note due to not having ssl you won't have any data but you can see that the site itself is working.
-9. To get https follow the steps below
+9. To get https follow the [Generating SSL Certificates](#adding-certificates-for-local-dev-https-access) steps.
 </details>
 
 ## Requirements
@@ -74,87 +77,22 @@ Simply execute `ps2alerts-init` in your terminal to begin! This will go off to e
 
 Once the project has fully initialized, you can start the project from now on using `ps2alerts-start`!
 
-We have designed the aggregator project (potentially moved to API) to initialize the database for you, it also triggers an "instance" of your choosing via code so you're able to quicky start tracking data. Check it's readme for more information.
-
+We have designed the API project to initialize the database for you. See "How to get data collection going" section below.
 
 ## Adding certificates for local dev HTTPS access
 
-If you want to access the dev environment over HTTPS (Say, because Chrome forces it), you'll need to follow some additional steps:
+If you want to access the dev environment over HTTPS (Say, because Chrome forces it and the main domain uses [HSTS](https://www.acunetix.com/blog/articles/what-is-hsts-why-use-it/)), you'll need to follow some additional steps:
 <details>
-    <summary>Expand certificate instructions...</summary>
+    <summary>Click to expand certificate instructions</summary>
 
-1. The following needs to be added to `traefik/config/config.yml`
-    ```yaml
-    tls:
-      stores:
-        default:
-          defaultCertificate:
-            certFile: /etc/certs/api.dev.ps2alerts.com.pem
-            keyFile: /etc/certs/api.dev.ps2alerts.com-key.pem
-      certificates:
-      - certFile: /etc/certs/api.dev.ps2alerts.com.pem
-        keyFile: /etc/certs/api.dev.ps2alerts.com-key.pem
-      - certFile: /etc/certs/dev.ps2alerts.com.pem
-        keyFile: /etc/certs/dev.ps2alerts.com-key.pem
-      - certFile: /etc/certs/wss.dev.ps2alerts.com.pem
-        keyFile: /etc/certs/wss.dev.ps2alerts.com-key.pem
-    ```
-2. The referenced certificates must be generated and placed in the ~/ps2alerts/certs/ directory. To generate **local** self-signed certs:
-   Steps generally referenced from: https://www.section.io/engineering-education/how-to-get-ssl-https-for-localhost/
+The following instructions are based on Mac (alternatives for Linux are listed). YMMV without Mac.
+
+1. The certificates must be generated and placed in the `~/ps2alerts/certs` directory. To generate **local** self-signed certs, we're going to use `mkcert`. [Visit here for more context](https://www.andrewdixon.co.uk/2020/03/14/using-https-certificates-with-traefik-and-docker-for-a-development-environment/).
     - `cd ~/ps2alerts/certs`
-    - `openssl genrsa -out CA.key -des3 2048`
-    - `openssl req -x509 -sha256 -new -nodes -days 365 -key CA.key -out CA.crt`
-      - Note: Be consistent about the Country code and other details when creating this root certificate and the `ps2alerts_dev.csr` file
-      - Also on Linux you can extend the validity of the cert if you like, but MacOS caps it at 365 days.
-    - `touch ps2alerts_dev.ext`
-        ```txt    
-        # Add the following contents to ~/ps2alerts/certs/ps2alerts_dev.ext:
-        authorityKeyIdentifier = keyid,issuer
-        basicConstraints = CA:FALSE
-        keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-        subjectAltName = @alt_names
-
-        [alt_names]
-        DNS.1 = localhost
-        DNS.2 = dev.ps2alerts.com
-        DNS.3 = dev.api.ps2alerts.com
-        DNS.4 = dev.router.ps2alerts.com
-        IP.1 = 127.0.0.1
-        IP.2 = 127.0.0.1
-        IP.3 = 127.0.0.1
-        IP.4 = 127.0.0.1
-        ```
-    - `openssl genrsa -out ps2alerts_dev.key -des3 2048`
-    - `openssl req -new -key ps2alerts_dev.key -out ps2alerts_dev.csr`
-    - `openssl x509 -req -in ps2alerts_dev.csr -CA CA.crt -CAkey CA.key -CAcreateserial -days 365 -sha256 -extfile ps2alerts_dev.ext -out api.dev.ps2alerts.com.pem`
-      - Should use the same Country code and other details as `CA.crt`
-    - `openssl rsa -in ps2alerts_dev.key -out api.dev.ps2alerts.com-key.pem`
-    - `cp api.dev.ps2alerts.com-key.pem dev.ps2alerts.com-key.pem && cp api.dev.ps2alerts.com.pem dev.ps2alerts.com.pem`
-    - `cp api.dev.ps2alerts.com-key.pem wss.dev.ps2alerts.com-key.pem && cp api.dev.ps2alerts.com.pem wss.dev.ps2alerts.com.pem`
-    - Add ~/ps2alerts/certs/CA.crt as a trusted root certificate
-      - For MacOS users:
-        - Open your `dev.ps2alerts.com.pem` file in Finder
-        - Change destination to `system`
-        - Once added, go to the Keychain Access program, then go to `System`
-        - Find your cert, it should be called `dev.ps2alerts.com`. Double click on it to open it
-        - Open up the trust section
-        - Change "when using this certificate" to `Always Trust`
-        - You will be prompted for your touch ID / password
-      - For Chrome on Windows
-        - Navigate to `Settings -> Security and Privacy -> Security -> Manage certificates`
-        - This opens the system cert management tool.
-        - Click `Import...` and navigate to where you saved the `CA.crt` file
-          - (If using WSL2 you'll need to copy it to a windows directory like `/mnt/c/Users/<you>/Documents`)
-        - Click `Next` and change "Certification store" to `Trusted Root Certification Authorities`
-        - Click `Next` and then `Finish`
-3. In `traefik/traefik.yml`, uncomment the following section:
-    ```yaml
-     # # HTTPS/TLS certificate configuration
-     # file:
-     #  filename:
-     #     /config/config.yml
-    ```
-
+    - `brew install mkcert nss` (nss is for Firefox, you can omit it if you don't use Firefox). [Further install methods](https://github.com/FiloSottile/mkcert)
+    - `mkcert -install` (this will install the root certificate into your system, you will be prompted for your user password)
+    - `mkcert -cert-file dev.ps2alerts.com.pem -key-file dev.ps2alerts.com-key.pem dev.ps2alerts.com dev.api.ps2alerts.com dev.aggregator.ps2alerts.com dev.aggregator-ps4eu.ps2alerts.com dev.aggregator-ps4us.ps2alerts.com`
+2. Restart the stack with `ps2alerts-stack-restart` if you're already running it and start it again with `ps2alerts-stack-start` to apply the rest of the certificate changes.
 </details>
 
 # How to get data collection going
