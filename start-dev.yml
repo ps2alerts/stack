@@ -97,17 +97,15 @@
         labels:
           traefik.enable: "false"
 
-    - name: Start Alertmanager
+    - name: Start Pushgateway
       docker_container:
-        name: ps2alerts-alertmanager
-        image: prom/alertmanager
+        name: ps2alerts-pushgateway
+        image: prom/pushgateway
         state: started
         ports:
-          - 9091:9093
+          - 9091:9091
         volumes:
-          - ./monitoring/alertmanager/:/config
-          - "{{ monitoring_dir }}/alertmanager:/data"
-        command: --config.file=/config/alertmanager.yml --storage.path=/data
+          - "{{ monitoring_dir }}/pushgateway:/pushgateway"
         networks:
           - name: "ps2alerts"
         labels:
@@ -128,6 +126,21 @@
         labels:
           traefik.enable: "false"
 
+    - name: Start Alertmanager
+      docker_container:
+        name: ps2alerts-alertmanager
+        image: prom/alertmanager
+        state: started
+        ports:
+          - 9093:9093
+        volumes:
+          - ./monitoring/alertmanager/:/config
+          - "{{ monitoring_dir }}/alertmanager:/data"
+        command: --config.file=/config/alertmanager.yml --storage.path=/data
+        networks:
+          - name: "ps2alerts"
+        labels:
+          traefik.enable: "false"
 
     - name: Wait for Rabbit to be fully available...
       shell: curl --head --silent http://localhost:15672
