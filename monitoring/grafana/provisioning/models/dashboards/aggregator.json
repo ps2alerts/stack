@@ -2542,7 +2542,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "builder",
-          "expr": "aggregator_cache_gauge{type=~\"unknown_facilities|unknown_items\"}",
+          "expr": "sum by(type) (aggregator_cache_gauge{type=~\"unknown_facilities|unknown_items\"})",
           "legendFormat": "{{type}}",
           "range": true,
           "refId": "A"
@@ -2552,7 +2552,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
@@ -2604,6 +2604,6 @@
   "timezone": "",
   "title": "PS2Alerts - Aggregator",
   "uid": "1v3LFaP4z",
-  "version": 34,
+  "version": 35,
   "weekStart": ""
 }
