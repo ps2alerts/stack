@@ -41,6 +41,7 @@
           alias ps2alerts-aggregator-msg="ansible-playbook {{ aggregator_dir | realpath }}/provisioning/admin-aggregator-publish.yml"
           alias ps2alerts-aggregator-term="docker exec -it ps2alerts-aggregator-pc bash"
           alias ps2alerts-aggregator-logs="docker logs -f ps2alerts-aggregator-pc"
+          alias ps2alerts-aggregator-sync="{{ tools_dir | realpath }}/actives-sync/run.sh"
           
           ## API
           alias ps2alerts-api="cd {{ api_dir | realpath }}"
