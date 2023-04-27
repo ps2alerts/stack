@@ -103,7 +103,7 @@
         image: grafana/grafana
         state: started
         ports:
-          - 9092:3000
+          - 9091:3000
         volumes:
           - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
           - "{{ monitoring_dir }}/grafana:/var/lib/grafana"
