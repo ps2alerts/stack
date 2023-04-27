@@ -1059,6 +1059,198 @@
               "mode": "none"
             },
             "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 30
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 6,
+        "x": 0,
+        "y": 43
+      },
+      "id": 48,
+      "interval": "15s",
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "builder",
+          "expr": "increase(aggregator_cache_hitmiss_count{environment=\"$environment\", result=\"cache_miss\"}[$__rate_interval])",
+          "legendFormat": "{{type}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Cache misses",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.type}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 6,
+        "x": 6,
+        "y": 43
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "builder",
+          "expr": "aggregator_cache_keys_gauge{environment=\"$environment\"}",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Redis Key Length",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
               "mode": "off"
             }
           },
@@ -1171,9 +1363,9 @@
         ]
       },
       "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 0,
+        "h": 10,
+        "w": 6,
+        "x": 12,
         "y": 43
       },
       "id": 6,
@@ -1342,9 +1534,9 @@
         ]
       },
       "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 8,
+        "h": 10,
+        "w": 6,
+        "x": 18,
         "y": 43
       },
       "id": 35,
@@ -1475,106 +1667,12 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "displayName": "${__field.labels.type}",
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 16,
-        "y": 43
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "last"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "builder",
-          "expr": "aggregator_cache_gauge{environment=\"$environment\"}",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Redis Key Length",
-      "type": "timeseries"
-    },
-    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 52
+        "y": 53
       },
       "id": 22,
       "panels": [],
@@ -1643,7 +1741,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 53
+        "y": 54
       },
       "id": 14,
       "interval": "15s",
@@ -1820,7 +1918,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 53
+        "y": 54
       },
       "id": 32,
       "interval": "15s",
@@ -1918,7 +2016,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 61
+        "y": 62
       },
       "id": 31,
       "interval": "15s",
@@ -2012,7 +2110,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 61
+        "y": 62
       },
       "id": 20,
       "interval": "15s",
@@ -2121,7 +2219,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 61
+        "y": 62
       },
       "id": 28,
       "options": {
@@ -2213,7 +2311,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 69
+        "y": 70
       },
       "id": 30,
       "options": {
@@ -2306,7 +2404,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 69
+        "y": 70
       },
       "id": 33,
       "options": {
@@ -2414,7 +2512,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 69
+        "y": 70
       },
       "id": 34,
       "options": {
@@ -2451,7 +2549,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 77
+        "y": 78
       },
       "id": 44,
       "panels": [],
@@ -2520,7 +2618,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 78
+        "y": 79
       },
       "id": 40,
       "options": {
@@ -2542,7 +2640,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "builder",
-          "expr": "sum by(type) (aggregator_cache_gauge{type=~\"unknown_facilities|unknown_items\"})",
+          "expr": "sum by(type) (aggregator_cache_keys_gauge{type=~\"unknown_facilities|unknown_items\"})",
           "legendFormat": "{{type}}",
           "range": true,
           "refId": "A"
@@ -2576,7 +2674,7 @@
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "label_values(aggregator_instances_count, environment)",
+        "definition": "label_values(aggregator_instances_gauge, environment)",
         "description": "Census environment",
         "hide": 0,
         "includeAll": false,
@@ -2585,7 +2683,7 @@
         "name": "environment",
         "options": [],
         "query": {
-          "query": "label_values(aggregator_instances_count, environment)",
+          "query": "label_values(aggregator_instances_gauge, environment)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -2604,6 +2702,6 @@
   "timezone": "",
   "title": "PS2Alerts - Aggregator",
   "uid": "1v3LFaP4z",
-  "version": 35,
+  "version": 39,
   "weekStart": ""
 }
