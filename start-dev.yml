@@ -97,20 +97,6 @@
         labels:
           traefik.enable: "false"
 
-    - name: Start Pushgateway
-      docker_container:
-        name: ps2alerts-pushgateway
-        image: prom/pushgateway
-        state: started
-        ports:
-          - 9091:9091
-        volumes:
-          - "{{ monitoring_dir }}/pushgateway:/pushgateway"
-        networks:
-          - name: "ps2alerts"
-        labels:
-          traefik.enable: "false"
-
     - name: Start Grafana
       docker_container:
         name: ps2alerts-grafana
@@ -121,22 +107,6 @@
         volumes:
           - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
           - "{{ monitoring_dir }}/grafana:/var/lib/grafana"
-        networks:
-          - name: "ps2alerts"
-        labels:
-          traefik.enable: "false"
-
-    - name: Start Alertmanager
-      docker_container:
-        name: ps2alerts-alertmanager
-        image: prom/alertmanager
-        state: started
-        ports:
-          - 9093:9093
-        volumes:
-          - ./monitoring/alertmanager/:/config
-          - "{{ monitoring_dir }}/alertmanager:/data"
-        command: --config.file=/config/alertmanager.yml --storage.path=/data
         networks:
           - name: "ps2alerts"
         labels:
