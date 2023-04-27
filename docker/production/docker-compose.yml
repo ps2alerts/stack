@@ -184,16 +184,30 @@ services:
       - ./volumes/redis:/bitnami/redis/data
     networks:
       - ps2alerts
-  ps2alerts_prometheus:
+  ps2alerts-prometheus:
     container_name: ps2alerts-prometheus
     image: prom/prometheus
     restart: unless-stopped
+    user: root
+    ports:
+      - 9090:9090
     volumes:
       - ./files/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./volumes/prometheus:/prometheus
     networks:
       - ps2alerts
-
+  ps2alerts-grafana:
+    container_name: ps2alerts-grafana
+    image: grafana/grafana
+    restart: unless-stopped
+    user: root
+    ports:
+      - 9091:3000
+    volumes:
+      - ./files/grafana/provisioning:/etc/grafana/provisioning
+      - ./volumes/grafana:/var/lib/grafana
+    networks:
+      - ps2alerts
 networks:
   ps2alerts:
     external: true
