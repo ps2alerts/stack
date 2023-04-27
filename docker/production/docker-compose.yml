@@ -184,6 +184,15 @@ services:
       - ./volumes/redis:/bitnami/redis/data
     networks:
       - ps2alerts
+  ps2alerts_prometheus:
+    container_name: ps2alerts-prometheus
+    image: prom/prometheus
+    restart: unless-stopped
+    volumes:
+      - ./files/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./volumes/prometheus:/prometheus
+    networks:
+      - ps2alerts
 
 networks:
   ps2alerts:
