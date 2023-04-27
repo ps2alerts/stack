@@ -26,17 +26,7 @@
         name: ps2alerts-prom
         state: stopped
 
-    - name: Stop Pushgateway
-      docker_container:
-        name: ps2alerts-pushgateway
-        state: stopped
-
     - name: Stop Grafana
       docker_container:
         name: ps2alerts-grafana
-        state: stopped
-
-    - name: Stop Alertmanager
-      docker_container:
-        name: ps2alerts-alertmanager
         state: stopped
