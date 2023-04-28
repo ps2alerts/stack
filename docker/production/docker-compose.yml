@@ -63,6 +63,7 @@ services:
     container_name: ps2alerts-assets
     image: maelstromeous/ps2alerts:assets-latest
     restart: unless-stopped
+    env_file: ../docker-collector.env
     ports:
       - 8020:80
     labels:
