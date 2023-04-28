@@ -13,13 +13,13 @@ services:
     image: maelstromeous/ps2alerts:api-production-latest
     depends_on:
       - ps2alerts-db
-      - ps2alerts-rabbitmq
+      - ps2alerts-mq
       - ps2alerts-redis
     env_file: ../docker-api.env
     restart: unless-stopped
     environment:
       AGGREGATOR_ENABLED: "true"
-      RABBITMQ_HOST: ps2alerts-rabbitmq
+      RABBITMQ_HOST: ps2alerts-mq
       RABBITMQ_USER: REDACTED
       RABBITMQ_PASS: "REDACTED"
       RABBITMQ_QUEUE: api-queue-production
@@ -72,7 +72,7 @@ services:
     image: ghcr.io/nanite-systems/stream-collector:1.3.2
     restart: unless-stopped
     depends_on:
-      - ps2alerts-rabbitmq
+      - ps2alerts-mq
     env_file: ../docker-collector.env
     environment:
       PS2_ENVIRONMENT: ps2
@@ -83,7 +83,7 @@ services:
     image: ghcr.io/nanite-systems/stream-collector:1.3.2
     restart: unless-stopped
     depends_on:
-      - ps2alerts-rabbitmq
+      - ps2alerts-mq
     env_file: ../docker-collector.env
     environment:
       PS2_ENVIRONMENT: ps2ps4eu
@@ -94,7 +94,7 @@ services:
     image: ghcr.io/nanite-systems/stream-collector:1.3.2
     restart: unless-stopped
     depends_on:
-      - ps2alerts-rabbitmq
+      - ps2alerts-mq
     env_file: ../docker-collector.env
     environment:
       PS2_ENVIRONMENT: ps2ps4us
@@ -105,7 +105,7 @@ services:
     image: maelstromeous/ps2alerts:aggregator-production-latest
     restart: unless-stopped
     depends_on:
-      - ps2alerts-rabbitmq
+      - ps2alerts-mq
       - ps2alerts-redis
     env_file: ../docker-aggregator.env
     environment:
@@ -119,7 +119,7 @@ services:
     image: maelstromeous/ps2alerts:aggregator-production-latest
     restart: unless-stopped
     depends_on:
-      - ps2alerts-rabbitmq
+      - ps2alerts-mq
       - ps2alerts-redis
     env_file: ../docker-aggregator.env
     environment:
@@ -133,7 +133,7 @@ services:
     image: maelstromeous/ps2alerts:aggregator-production-latest
     restart: unless-stopped
     depends_on:
-      - ps2alerts-rabbitmq
+      - ps2alerts-mq
       - ps2alerts-redis
     env_file: ../docker-aggregator.env
     environment:
@@ -157,8 +157,8 @@ services:
       - ./volumes/db:/bitnami
     networks:
       - ps2alerts
-  ps2alerts-rabbitmq:
-    container_name: ps2alerts-rabbitmq
+  ps2alerts-mq:
+    container_name: ps2alerts-mq
     image: bitnami/rabbitmq:3.10.13
     restart: unless-stopped
     environment:
