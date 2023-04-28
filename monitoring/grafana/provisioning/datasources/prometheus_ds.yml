@@ -4,3 +4,4 @@ datasources:
     type: prometheus
     url: http://ps2alerts-prom:9090
     isDefault: true
+    uid: PBFA97CFB590B2093

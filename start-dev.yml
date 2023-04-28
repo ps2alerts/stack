@@ -106,6 +106,7 @@
           - 9091:3000
         volumes:
           - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+          - ./monitoring/grafana/lib:/var/lib/grafana_docker
           - "{{ monitoring_dir }}/grafana:/var/lib/grafana"
         networks:
           - name: "ps2alerts"
