@@ -193,7 +193,7 @@ services:
     networks:
       - ps2alerts
   ps2alerts-prometheus:
-    container_name: ps2alerts-prometheus
+    container_name: ps2alerts-prom
     image: prom/prometheus
     restart: unless-stopped
     user: "1001"
