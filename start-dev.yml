@@ -104,9 +104,12 @@
         state: started
         ports:
           - 9091:3000
+        # We purposefully don't provision the alerts as you cannot edit them once they are provisioned!
         volumes:
-          - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
-          - ./monitoring/grafana/lib:/var/lib/grafana_docker
+          # - ./monitoring/grafana/provisioning/alerting:/etc/grafana/provisioning/alerting
+          - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+          - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+          - ./monitoring/grafana/lib/dashboards:/var/lib/grafana_docker/dashboards
           - "{{ monitoring_dir }}/grafana:/var/lib/grafana"
         networks:
           - name: "ps2alerts"

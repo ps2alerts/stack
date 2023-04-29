@@ -1,11 +1,273 @@
 apiVersion: 1
 groups:
   - orgId: 1
-    name: Aggregator
-    folder: Alerts - Aggregator
-    interval: 30s
+    name: 1m
+    folder: Aggregator
+    interval: 1m
     rules:
-      - uid: FPR6bfPVz
+      - uid: d7f77f84-aefb-4496-afab-068b8c2b940a
+        title: Cache misses high
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              datasource:
+                type: prometheus
+                uid: PBFA97CFB590B2093
+              editorMode: builder
+              expr: increase(aggregator_cache_hitmiss_count{environment="ps2", result="cache_miss"}[$__rate_interval])
+              interval: ""
+              intervalMs: 15000
+              legendFormat: '{{type}}'
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [ ]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: [ ]
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              hide: false
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              settings:
+                mode: dropNN
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 50
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: [ ]
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              hide: false
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: 1v3LFaP4z
+        panelId: 48
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          __dashboardUid__: 1v3LFaP4z
+          __panelId__: "48"
+        labels:
+          app: aggregator
+        isPaused: false
+      - uid: f071a63a-abe9-42fb-9ccf-04038327ca1d
+        title: Unknown facilities / items
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 21600
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              datasource:
+                type: prometheus
+                uid: PBFA97CFB590B2093
+              editorMode: builder
+              expr: aggregator_cache_gauge{type=~"unknown_facilities|unknown_items"}
+              interval: ""
+              intervalMs: 15000
+              legendFormat: '{{type}}'
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [ ]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: [ ]
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              hide: false
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              settings:
+                mode: dropNN
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: [ ]
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              hide: false
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: 1v3LFaP4z
+        panelId: 40
+        noDataState: OK
+        execErrState: Error
+        for: 5m
+        annotations:
+          __dashboardUid__: 1v3LFaP4z
+          __panelId__: "40"
+        labels:
+          app: aggregator
+        isPaused: false
+      - uid: c926f03d-77aa-4fa2-8dca-a2dd4e0b1f3b
+        title: Failed messages by types
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              datasource:
+                type: prometheus
+                uid: PBFA97CFB590B2093
+              editorMode: builder
+              expr: sum by(type, event_type) (increase(aggregator_queue_messages_count{environment="ps2", type!~"instance_mismatch|success"}[$__rate_interval]))
+              interval: ""
+              intervalMs: 15000
+              legendFormat: '{{type}}: {{event_type}}'
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: B
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [ ]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: [ ]
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              hide: false
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              settings:
+                mode: dropNN
+              type: reduce
+          - refId: C
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 10
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: [ ]
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              hide: false
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: 1v3LFaP4z
+        panelId: 49
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          __dashboardUid__: 1v3LFaP4z
+          __panelId__: "49"
+        isPaused: false
+      - uid: fd208eea-0f69-4dc3-b2fc-16dcf5a41703
         title: Event Type processing time
         condition: C
         data:
@@ -91,7 +353,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: OXU9BfP4k
+      - uid: ae88a6bc-647a-4383-b406-dc6d48d756b3
         title: No active alerts for 2 hours
         condition: C
         data:
@@ -181,7 +443,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: Ne1qBBEVk
+      - uid: d0e9a95f-3a93-4e84-aadc-e9df4f2385b6
         title: Active Alerts - Overdue
         condition: C
         data:
@@ -271,7 +533,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: gLYGYfEVk
+      - uid: cdf3d874-5309-48d6-881b-4315e60348b6
         title: Fail messages - discards high
         condition: D
         data:
@@ -361,7 +623,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: 5AdeQBPVk
+      - uid: ba3239f4-aaae-4674-aeca-318153228d63
         title: PS2Alerts API roundtimes
         condition: C
         data:
@@ -416,7 +678,7 @@ groups:
               conditions:
                 - evaluator:
                     params:
-                      - 0.05
+                      - 0.25
                     type: gt
                   operator:
                     type: and
@@ -447,7 +709,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: 0BuSlfP4z
+      - uid: b1a238ae-688a-41d7-8c28-caae0edddd4c
         title: External endpoint unsuccessful requests
         condition: C
         data:
@@ -462,7 +724,7 @@ groups:
                 uid: PBFA97CFB590B2093
               editorMode: builder
               exemplar: false
-              expr: sum by(result, provider) (increase(aggregator_external_requests_count{environment="ps2", result!="success"}[$__rate_interval])) / 4
+              expr: sum by(result, provider) (increase(aggregator_external_requests_count{environment="ps2", result=~"error"}[$__rate_interval]))
               hide: false
               instant: false
               interval: ""
@@ -472,6 +734,9 @@ groups:
               range: true
               refId: A
           - refId: B
+            relativeTimeRange:
+              from: 900
+              to: 0
             datasourceUid: __expr__
             model:
               conditions:
@@ -500,12 +765,15 @@ groups:
                 mode: dropNN
               type: reduce
           - refId: C
+            relativeTimeRange:
+              from: 900
+              to: 0
             datasourceUid: __expr__
             model:
               conditions:
                 - evaluator:
                     params:
-                      - 1
+                      - 5
                     type: gt
                   operator:
                     type: and
@@ -536,7 +804,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: 0Ge8_BE4k
+      - uid: b5349715-3b1f-4c22-8df7-86a6d2fb7648
         title: Census errors / retries
         condition: C
         data:
@@ -628,7 +896,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: gAfulfP4z
+      - uid: a6c64449-7a04-4f68-8b38-3f4dfbee23d3
         title: PS2Alerts API errors / retries
         condition: C
         data:
@@ -714,7 +982,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: fzymXBP4k
+      - uid: a3112b87-9361-4594-bfcb-5be1e92bc713
         title: Census endpoint roundtimes
         condition: C
         data:
@@ -800,7 +1068,7 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: snTfjfPVz
+      - uid: baf4eff1-e896-4ea9-a9cb-ea4de4d23c11
         title: Broker cache rates
         condition: thresholds
         data:
@@ -876,42 +1144,6 @@ groups:
               maxDataPoints: 43200
               range: true
               refId: E
-          - refId: F
-            relativeTimeRange:
-              from: 21600
-              to: 0
-            datasourceUid: PBFA97CFB590B2093
-            model:
-              datasource:
-                type: prometheus
-                uid: PBFA97CFB590B2093
-              editorMode: builder
-              expr: sum(rate(aggregator_broker_count{environment="ps2", result="cache_hit", broker="facility_data"}[$__rate_interval]))
-              hide: false
-              interval: ""
-              intervalMs: 15000
-              legendFormat: '{{broker}}: {{result}}'
-              maxDataPoints: 43200
-              range: true
-              refId: F
-          - refId: G
-            relativeTimeRange:
-              from: 21600
-              to: 0
-            datasourceUid: PBFA97CFB590B2093
-            model:
-              datasource:
-                type: prometheus
-                uid: PBFA97CFB590B2093
-              editorMode: builder
-              expr: sum(rate(aggregator_broker_count{environment="ps2", result="cache_miss", broker="facility_data"}[$__rate_interval]))
-              hide: false
-              interval: ""
-              intervalMs: 15000
-              legendFormat: '{{broker}}: {{result}}'
-              maxDataPoints: 43200
-              range: true
-              refId: G
           - refId: character
             relativeTimeRange:
               from: 600
@@ -948,7 +1180,7 @@ groups:
               window: ""
           - refId: char_rate
             relativeTimeRange:
-              from: 21600
+              from: 600
               to: 0
             datasourceUid: __expr__
             model:
@@ -980,7 +1212,7 @@ groups:
               type: reduce
           - refId: item_rate
             relativeTimeRange:
-              from: 21600
+              from: 600
               to: 0
             datasourceUid: __expr__
             model:
@@ -1010,7 +1242,7 @@ groups:
               settings:
                 mode: dropNN
               type: reduce
-          - refId: facility
+          - refId: thresholds
             relativeTimeRange:
               from: 600
               to: 0
@@ -1034,63 +1266,7 @@ groups:
                 name: Expression
                 type: __expr__
                 uid: __expr__
-              expression: $F/($F+$G)*100
-              hide: false
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: facility
-              type: math
-          - refId: facility_rate
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0
-                      - 0
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: avg
-                  type: query
-              datasource:
-                name: Expression
-                type: __expr__
-                uid: __expr__
-              expression: facility
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: facility_rate
-              settings:
-                mode: dropNN
-              type: reduce
-          - refId: thresholds
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0
-                      - 0
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: avg
-                  type: query
-              datasource:
-                name: Expression
-                type: __expr__
-                uid: __expr__
-              expression: $char_rate < 80 || $item_rate < 80 || $facility_rate < 80
+              expression: $char_rate < 80 || $item_rate < 80
               hide: false
               intervalMs: 1000
               maxDataPoints: 43200
@@ -1107,13 +1283,13 @@ groups:
         labels:
           app: aggregator
         isPaused: false
-      - uid: ka2bRYPVk
-        title: Unknown facilities / items
+      - uid: c6250ba0-9543-41f6-9a34-6255d5c4f6ab
+        title: Aggregators online
         condition: C
         data:
           - refId: A
             relativeTimeRange:
-              from: 21600
+              from: 1800
               to: 0
             datasourceUid: PBFA97CFB590B2093
             model:
@@ -1121,10 +1297,10 @@ groups:
                 type: prometheus
                 uid: PBFA97CFB590B2093
               editorMode: builder
-              expr: aggregator_cache_gauge{type=~"unknown_facilities|unknown_items"}
+              expr: sum by(instance) (up{job="ps2alerts_aggregator"})
               interval: ""
               intervalMs: 15000
-              legendFormat: '{{type}}'
+              legendFormat: __auto
               maxDataPoints: 43200
               range: true
               refId: A
@@ -1153,8 +1329,6 @@ groups:
               maxDataPoints: 43200
               reducer: last
               refId: B
-              settings:
-                mode: dropNN
               type: reduce
           - refId: C
             datasourceUid: __expr__
@@ -1162,8 +1336,8 @@ groups:
               conditions:
                 - evaluator:
                     params:
-                      - 0
-                    type: gt
+                      - 1
+                    type: lt
                   operator:
                     type: and
                   query:
@@ -1183,99 +1357,11 @@ groups:
               refId: C
               type: threshold
         dashboardUid: 1v3LFaP4z
-        panelId: 40
-        noDataState: OK
-        execErrState: Error
-        for: 5m
-        annotations:
-          __dashboardUid__: 1v3LFaP4z
-          __panelId__: "40"
-        labels:
-          app: aggregator
-        isPaused: false
-      - uid: k1-84nsVz
-        title: Cache misses high
-        condition: C
-        data:
-          - refId: A
-            relativeTimeRange:
-              from: 900
-              to: 0
-            datasourceUid: PBFA97CFB590B2093
-            model:
-              datasource:
-                type: prometheus
-                uid: PBFA97CFB590B2093
-              editorMode: builder
-              expr: increase(aggregator_cache_hitmiss_count{environment="ps2", result="cache_miss"}[$__rate_interval])
-              interval: ""
-              intervalMs: 15000
-              legendFormat: '{{type}}'
-              maxDataPoints: 43200
-              range: true
-              refId: A
-          - refId: B
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params: []
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - B
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              hide: false
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: B
-              settings:
-                mode: dropNN
-              type: reduce
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 30
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - C
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: B
-              hide: false
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        dashboardUid: 1v3LFaP4z
-        panelId: 48
+        panelId: 46
         noDataState: NoData
         execErrState: Error
-        for: 5m
+        for: 2m
         annotations:
           __dashboardUid__: 1v3LFaP4z
-          __panelId__: "48"
-        labels:
-          app: aggregator
+          __panelId__: "46"
         isPaused: false
