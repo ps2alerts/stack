@@ -129,3 +129,34 @@ Below describes our queue topics:
 #### Rabbit won't start
 
 Chances are Rabbit is toppling due to a massive message backlog. To fix this, simply wipe the data partition for Rabbit's volume in Docker. On Mac, this is `rm -rf ~/ps2alerts/mq/*`, should be similar for linux. Restart Rabbit.
+
+### Grafana
+
+We use grafana to monitor metrics from within the applications.
+
+#### Development lifecycle
+
+1. Create / update dashboards, alerts and other matters on Grafana.
+   1. **NOTE**: If you plan to edit alerts, you should be aware that Alert provisioning in Grafana is currently quite tedious. You are able to use the file provisioner to create the alerts, however after they are created you cannot edit them without copying them first. Unfortunately, this will mean you have two versions of the same alert (with one of them slightly tweaked).
+   2. You will also need to export the alerts to the YML file and replace your new alert with the old one then commit that corrected file.
+   3. It is recommended you do the following:
+      1. Provision the usual set of alerts by uncommenting the line in `start-dev.yml`.
+      2. Create a copy of your alert
+      3. Edit the alert
+      4. Export the alert list
+      5. Merge the alert into the `alerts.yml` under `monitoring/provisioning/alerting/alerts.yml`
+      6. Delete your "new" alert
+      6. Restart the grafana container
+      7. If you're finding that the alerts are being duplicated, you need to blow away your grafana instance. `sudo rm -rf ~/ps2alerts/monitoring/grafana && docker restart ps2alerts-grafana`
+      8. This is not ideal, but unfortunately it is the faff that presents itself with grafana alerts right now.
+   4. Alternatively, you may wish to simply create the alert you have in question and merge that with the `alerts.yml`. This will mean you don't have all alerts, but at least you won't have alerts you cannot control.
+2. Export Dashboards / Alerts to their JSON models 
+   1. Dashboards
+      1. Go to the dashboard's settings and look under JSON model. Copy and paste this model to `monitoring/lib/dashboards/<folder>/<dashboard>.json`
+   2. Alerts
+      1. Go to the alert settings, click on Export, save the file to `monitoring/provisioning/alerting/alerts.yml`
+3. Commit these files
+
+#### Deployment
+
+Deployment is currently manually done by Maelstromeous. Upon merge into `master`, command is `scp -r grafana server@10.0.5.2:/home/server/docker/ps2alerts/production/files`
