@@ -25,7 +25,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 8,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -77,7 +76,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -687,8 +686,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -842,8 +840,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1023,8 +1020,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2954,8 +2950,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Aggregator Status v1.1",
+  "title": "Aggregator Status v1.1.1",
   "uid": "1v3LFaP4z",
-  "version": 12,
+  "version": 6,
   "weekStart": ""
 }
