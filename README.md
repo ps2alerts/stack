@@ -159,4 +159,7 @@ We use grafana to monitor metrics from within the applications.
 
 #### Deployment
 
-Deployment is currently manually done by Maelstromeous. Upon merge into `master`, command is `scp -r grafana server@10.0.5.2:/home/server/docker/ps2alerts/production/files`
+Deployment is currently manually done by Maelstromeous. Upon merge into `master`, commands are:
+
+- Grafana: `scp -r monitoring/grafana/ server@10.0.5.2:/home/server/docker/ps2alerts/production/files`
+- Prometheus: `scp -r monitoring/prometheus/ server@10.0.5.2:/home/server/docker/ps2alerts/production/files/prometheus`
