@@ -69,7 +69,7 @@
     - name: Start RabbitMQ
       docker_container:
         name: ps2alerts-mq
-        image: rabbitmq:3.8-management
+        image: rabbitmq:3.10-management
         ports:
           - 4369:4369
           - 5672:5672
@@ -148,9 +148,33 @@
         exchange_type: topic
         durable: yes
 
-    - name: Create RabbitMQ census->topic exchange binding
-      rabbitmq_binding:
-        name: ps2alerts-census
-        destination: ps2alerts-topic
-        destination_type: exchange
-
+#    - name: Create RabbitMQ ps2alerts Exchange
+#      rabbitmq_exchange:
+#        name: ps2alerts
+#        vhost: /
+#        login_user: guest
+#        login_password: "guest"
+#
+#    - name: Create RabbitMQ ps2alerts-census Exchange
+#      rabbitmq_exchange:
+#        name: ps2alerts-census
+#        vhost: /
+#        login_user: guest
+#        login_password: "guest"
+#        exchange_type: fanout
+#        durable: no
+#
+#    - name: Create RabbitMQ ps2alerts-topic Exchange
+#      rabbitmq_exchange:
+#        name: ps2alerts-topic
+#        vhost: /
+#        login_user: guest
+#        login_password: "guest"
+#        exchange_type: topic
+#        durable: yes
+#
+#    - name: Create RabbitMQ census->topic exchange binding
+#      rabbitmq_binding:
+#        name: ps2alerts-census
+#        destination: ps2alerts-topic
+#        destination_type: exchange
