@@ -3,64 +3,39 @@
 container_name="ps2alerts-mq"
 username="guest"
 password="guest"
-count=0
-logfile="$HOME/rabbitmq-setup.log"
 
-# Initialize log file
-echo "$(date) - Started!" > $logfile
-
-execute_after_start() {
-  # Try to connect to RabbitMQ until it's online
-  until $(curl --output /dev/null --silent --head --fail http://${username}:${password}@localhost:15672); do
-    printf "Waiting for RabbitMQ to fully start...\n"
-    sleep 1
-  done
-
-  # Create 'ps2alerts' direct exchange
+execute_after_start () {
+  # Create the standard 'ps2alerts' exchange if it doesn't exist
   curl -i -u ${username}:${password} -H "content-type:application/json" -XPUT -d'{"type":"direct","auto_delete":false,"durable":true,"internal":false,"arguments":{}}' http://localhost:15672/api/exchanges/%2f/ps2alerts
 
-  # Create 'ps2alerts-topic' topic exchange
+  # Create the 'ps2alerts-topic' topic exchange if it doesn't exist
   curl -i -u ${username}:${password} -H "content-type:application/json" -XPUT -d'{"type":"topic","auto_delete":false,"durable":true,"internal":false,"arguments":{}}' http://localhost:15672/api/exchanges/%2f/ps2alerts-topic
 
-  # Check for existence of a fanout exchange named 'ps2alerts-census' in a loop
-  while true; do
-    response_census=$(curl --silent --write-out "HTTPSTATUS:%{http_code}" -u ${username}:${password} http://localhost:15672/api/exchanges/%2f/ps2alerts-census)
-
-    body_census=${response_census%HTTPSTATUS:*}
-    http_status_census=${response_census#*HTTPSTATUS:}
-
-    if [ $http_status_census == 200 ]; then
-      echo "'ps2alerts-census' exchange exists"
-      break
-    elif [ $http_status_census == 404 ]; then
-      echo "'ps2alerts-census' exchange does not exist, checking again after 5 seconds"
-      sleep 1
-    else
-      echo "Unknown error, response body: $body_census"
-      exit 1
-    fi
-  done
-
-  # Create a binding from 'ps2alerts-census' to 'ps2alerts-topic' with routing key 'my-routing-key'
+  # Create the binding from 'ps2alerts-census' to 'ps2alerts-topic' with no routing key
   curl -i -u ${username}:${password} -H "content-type:application/json" -XPOST -d'{"routing_key":"","arguments":{}}' http://localhost:15672/api/bindings/%2f/e/ps2alerts-census/e/ps2alerts-topic
-
-  echo "$(date) - RabbitMQ set up" >> $logfile
 }
 
 while true; do
-  count=$((count + 1))
-  echo "Run count: $count"
+  # Check if the Docker container is running
+  if [ "$(docker inspect -f {{.State.Running}} $container_name)" == "true" ]; then
 
-  docker events --format "{{json .}}" --filter type=container --since 5s --until 0s |
-  while read -r line ; do
-    event_container_name=$(echo $line | jq -r ".Actor.Attributes.name")
-    status=$(echo $line | jq -r ".status")
+    # Retrieve the bindings
+    response=$(curl --silent -u ${username}:${password} http://localhost:15672/api/bindings)
 
-    if [ "${status}" == "start" ] && [ "${event_container_name}" == "${container_name}" ]; then
-      echo "Container $event_container_name changed state to $status"
+    # Check if the required binding exists
+    binding_exists=$(echo $response | jq '.[] | select(.source == "ps2alerts-census" and .destination == "ps2alerts-topic")')
+
+    if [ -z "$binding_exists" ]; then
+      echo "$(date) - Binding does not exist, creating..."
       execute_after_start
+      echo "$(date) - Binding created"
+    else
+      echo "$(date) - Binding exists"
     fi
-  done
 
-  sleep 5
+  else
+    echo "$(date) - Docker container is not running"
+  fi
+
+  sleep 15
 done
