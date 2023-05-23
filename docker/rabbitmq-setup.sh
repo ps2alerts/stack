@@ -4,6 +4,10 @@ container_name="ps2alerts-mq"
 username="guest"
 password="guest"
 count=0
+logfile="$HOME/rabbitmq-setup.log"
+
+# Initialize log file
+echo "$(date) - Started!" > $logfile
 
 execute_after_start() {
   # Try to connect to RabbitMQ until it's online
@@ -40,7 +44,7 @@ execute_after_start() {
   # Create a binding from 'ps2alerts-census' to 'ps2alerts-topic' with routing key 'my-routing-key'
   curl -i -u ${username}:${password} -H "content-type:application/json" -XPOST -d'{"routing_key":"","arguments":{}}' http://localhost:15672/api/bindings/%2f/e/ps2alerts-census/e/ps2alerts-topic
 
-  echo "Setup complete!"
+  echo "$(date) - RabbitMQ set up" >> $logfile
 }
 
 while true; do
