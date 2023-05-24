@@ -702,7 +702,7 @@ groups:
         panelId: 33
         noDataState: OK
         execErrState: Error
-        for: 1m
+        for: 5m
         annotations:
           __dashboardUid__: 1v3LFaP4z
           __panelId__: "33"
