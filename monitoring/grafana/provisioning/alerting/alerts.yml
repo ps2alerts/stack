@@ -678,7 +678,7 @@ groups:
               conditions:
                 - evaluator:
                     params:
-                      - 0.25
+                      - 0.50
                     type: gt
                   operator:
                     type: and
