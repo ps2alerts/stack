@@ -686,7 +686,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -840,7 +841,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -1020,7 +1022,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1128,7 +1131,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1257,7 +1261,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -1380,7 +1385,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1569,7 +1575,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red"
+                "color": "red",
+                "value": null
               },
               {
                 "color": "transparent",
@@ -1777,7 +1784,7 @@
             "uid": "__expr__"
           },
           "expression": "$F/($F+$G)*100",
-          "hide": false,
+          "hide": true,
           "refId": "facility_data",
           "type": "math"
         }
@@ -1843,7 +1850,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2020,7 +2028,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2135,11 +2144,11 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(result, provider) (increase(aggregator_external_requests_count{environment=\"$environment\", result=~\"error|retry|empty\"}[$__rate_interval]))",
+          "expr": "sum by(endpoint) (increase(aggregator_external_requests_count{environment=\"$environment\", result=~\"error|retry|empty\"}[$__rate_interval]))",
           "hide": false,
           "instant": false,
           "interval": "",
-          "legendFormat": "{{provider}}: {{result}}",
+          "legendFormat": "{{provider}}: {{endpoint}}",
           "range": true,
           "refId": "A"
         }
@@ -2192,7 +2201,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2316,7 +2326,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2440,7 +2451,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2453,13 +2465,73 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "error"
+              "options": "/character: error"
             },
             "properties": [
               {
                 "id": "color",
                 "value": {
-                  "fixedColor": "red",
+                  "fixedColor": "dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/item: error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/item: retry"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/map: error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/map: retry"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
                   "mode": "fixed"
                 }
               }
@@ -2493,8 +2565,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "builder",
-          "expr": "sum by(result) (increase(aggregator_external_requests_count{environment=\"$environment\", result=~\"error|retry\", provider=\"census\"}[$__rate_interval]))",
-          "legendFormat": "__auto",
+          "expr": "sum by(endpoint, result) (increase(aggregator_external_requests_count{environment=\"$environment\", result=~\"error|retry\", provider=\"census\"}[$__rate_interval]))",
+          "legendFormat": "{{endpoint}}: {{result}}",
           "range": true,
           "refId": "A"
         }
@@ -2547,7 +2619,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2640,7 +2713,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2732,7 +2806,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2853,7 +2928,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2950,8 +3026,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Aggregator Status v1.1.1",
+  "title": "Aggregator Status v1.1.2",
   "uid": "1v3LFaP4z",
-  "version": 6,
+  "version": 7,
   "weekStart": ""
 }
