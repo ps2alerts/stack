@@ -13,16 +13,24 @@ urlencode() {
 done
 }
 
-echo "Database password, please!"
-read password
-passwordSafe=$(urlencode $password)
+if [ ! -d "dumps" ]; then
+    mkdir dumps
+fi
+
+if [ ! $DBURL ]; then
+    echo "Database password, please!"
+    read password
+    passwordSafe=$(urlencode $password)
+    DBURL="mongodb://ps2alerts:${passwordSafe}@10.0.5.2:27017/ps2alerts?authMechanism=SCRAM-SHA-1&readPreference=primary&ssl=false&directConnection=true"
+    exit 1
+fi
 
 # Change the username and hostname to suit you, I'm not doing everything for you. This is based off a local tunnel to the mongodb pod directly.
 for i in ${!collections[@]};
 do
     collection=${collections[$i]}
     echo "Exporting collection ${collection}..."
-    mongoexport --uri="mongodb://ps2alerts:${passwordSafe}@localhost:27018/ps2alerts?authSource=admin" --collection=$collection --out=dumps/temp/$collection.json
+    mongoexport --uri=$DBURL --collection=$collection --out=dumps/temp/$collection.json
     echo "Collection ${collection} exported!"
 done
 
