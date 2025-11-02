@@ -12,15 +12,14 @@ services:
       - db
       - rabbit
       - redis
-    env_file: api.env
+    env_file:
+      - api.env
+      - rabbit.env
+      - redis.env
     restart: unless-stopped
     environment:
       AGGREGATOR_ENABLED: "true"
-      RABBITMQ_HOST: rabbit
-      RABBITMQ_USER: REDACTED
-      RABBITMQ_PASS: "REDACTED"
       RABBITMQ_QUEUE: api-queue-production
-      RABBITMQ_PREFETCH: "100"
       DB_POOL_SIZE: 50
     networks:
       - ps2alerts
@@ -31,7 +30,9 @@ services:
     depends_on:
       - db
       - redis
-    env_file: api.env
+    env_file:
+      - api.env
+      - redis.env
     environment:
       CRON_ENABLED: "true"
     networks:
@@ -45,7 +46,9 @@ services:
       - redis
     ports:
       - "81:3000"
-    env_file: api.env
+    env_file:
+      - api.env
+      - redis.env
     environment:
       REST_ENABLED: "true"
     networks:
@@ -54,18 +57,18 @@ services:
     container_name: assets
     image: maelstromeous/ps2alerts:assets-latest
     restart: unless-stopped
-    env_file: collector.env
+    env_file:
+      - collector.env
     ports:
       - "82:80"
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
   collector-pc:
     container_name: collector-pc
     image: ghcr.io/nanite-systems/stream-collector:1.3.2
     restart: unless-stopped
     depends_on:
       - rabbit
-    env_file: collector.env
+    env_file:
+      - collector.env
     environment:
       PS2_ENVIRONMENT: ps2
     networks:
@@ -76,7 +79,8 @@ services:
     restart: unless-stopped
     depends_on:
       - rabbit
-    env_file: collector.env
+    env_file:
+      - collector.env
     environment:
       PS2_ENVIRONMENT: ps2ps4eu
     networks:
@@ -87,7 +91,8 @@ services:
     restart: unless-stopped
     depends_on:
       - rabbit
-    env_file: collector.env
+    env_file:
+      - collector.env
     environment:
       PS2_ENVIRONMENT: ps2ps4us
     networks:
@@ -99,7 +104,9 @@ services:
     depends_on:
       - rabbit
       - redis
-    env_file: aggregator.env
+    env_file:
+      - aggregator.env
+      - redis.env
     ports:
       - "1337:1337"
     environment:
@@ -113,7 +120,9 @@ services:
     depends_on:
       - rabbit
       - redis
-    env_file: aggregator.env
+    env_file:
+      - aggregator.env
+      - redis.env
     ports:
       - "1338:1337"
     environment:
@@ -128,7 +137,9 @@ services:
     depends_on:
       - rabbit
       - redis
-    env_file: aggregator.env
+    env_file:
+      - aggregator.env
+      - redis.env
     ports:
       - "1339:1337"
     environment:
@@ -140,11 +151,8 @@ services:
     container_name: db
     image: bitnami/mongodb:5.0.14-debian-11-r13
     restart: unless-stopped
-    environment:
-      MONGODB_DATABASE: ps2alerts
-      MONGODB_USERNAME: REDACTED
-      MONGODB_PASSWORD: "REDACTED"
-      MONGODB_ROOT_PASSWORD: "HELLA REDACTED"
+    env_file:
+      - db.env
     ports:
       - "27017:27017"
     volumes:
@@ -155,9 +163,9 @@ services:
     container_name: rabbit
     image: bitnami/rabbitmq:3.10.13
     restart: unless-stopped
+    env_file:
+      - rabbit.env
     environment:
-      RABBITMQ_USERNAME: REDACTED
-      RABBITMQ_PASSWORD: "REDACTED"
       RABBITMQ_ERL_COOKIE: "REDACTED"
     ports:
       - "5672:5672"
@@ -168,10 +176,10 @@ services:
       - ps2alerts
   redis:
     container_name: redis
-    image: bitnami/redis:6.2
+    image: bitnamilegacy/redis:6.2
     restart: unless-stopped
-    environment:
-      REDIS_PASSWORD: "REDACTED"
+    env_file:
+      - redis.env
     ports:
       - "6379:6379"
     volumes:
