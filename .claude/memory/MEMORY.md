@@ -1,0 +1,2 @@
+- [Rabbit dead while container Up](rabbit-dead-while-container-up.md) — corrupt queue index after an unclean reboot; symptoms, the one-directory fix, the clean-up, and what monitors it now
+- [Aggregator /health is broken](aggregator-health-endpoint-broken.md) — HealthModule lacks HttpModule, so compose checks /metrics for now
