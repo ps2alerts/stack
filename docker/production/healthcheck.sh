@@ -13,6 +13,9 @@ MIN_FREE_GB=10
 MIN_FREE_BOOT_MB=50
 EXCLUDE_REGEX='^/(sys|run|dev|proc)'
 DOCKER_TIMEOUT=30
+MAX_ALERT_GAP_HOURS=12               # PS2 never goes this long without an alert on some world
+ALERT_GAP_NOTIFY_INTERVAL=21600      # seconds between repeat Pushover pings for the same gap
+ALERT_GAP_STAMP=/var/tmp/healthcheck.alert-gap-notified
 CONTAINERS=(
   website assets
   api-rest api-cron api-aggregator
@@ -162,6 +165,28 @@ if [[ $(container_status rabbit) == "running" ]]; then
   else
     add_failure "rabbit: rabbitmqctl list_queues failed"
   fi
+fi
+
+# = LAST RECORDED ALERT =========================
+# state 0 is an alert that failed to record, so it does not count as evidence the pipeline works.
+last_alert=$(dk exec db sh -c 'mongosh --quiet -u "$MONGODB_USERNAME" -p "$MONGODB_PASSWORD" \
+  --authenticationDatabase "$MONGODB_DATABASE" "$MONGODB_DATABASE" --eval \
+  "const d = db.instance_metagame_territories.find({state:{\$ne:0}},{timeStarted:1}).sort({timeStarted:-1}).limit(1).next(); print(d ? d.timeStarted.getTime() : 0)"' 2>/dev/null || echo error)
+if [[ "$last_alert" =~ ^[0-9]+$ ]]; then
+  gap_hours=$(( ( $(date +%s) - last_alert / 1000 ) / 3600 ))
+  if (( gap_hours >= MAX_ALERT_GAP_HOURS )); then
+    add_failure "no alert recorded for ${gap_hours}h (last: $(date -u -d @$(( last_alert / 1000 )) +%FT%TZ))"
+    last_notified=$(cat "$ALERT_GAP_STAMP" 2>/dev/null || echo 0)
+    if (( $(date +%s) - last_notified >= ALERT_GAP_NOTIFY_INTERVAL )); then
+      notify_pushover "PS2Alerts: no alerts for ${gap_hours}h" \
+        "Last recorded alert started $(date -u -d @$(( last_alert / 1000 )) +%FT%TZ). Collectors, rabbit or the aggregators are probably wedged.\nHost: $(hostname)"
+      date +%s > "$ALERT_GAP_STAMP"
+    fi
+  else
+    rm -f "$ALERT_GAP_STAMP"
+  fi
+else
+  add_failure "db: could not read last alert time (${last_alert})"
 fi
 
 # = PUBLISHED PORTS =============================
