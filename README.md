@@ -159,4 +159,9 @@ We use grafana to monitor metrics from within the applications.
 
 #### Deployment
 
-Deployment is currently manually done by Maelstromeous. Upon merge into `master`, run `./sync-to-ceres.sh`
+Deployment is manual. After merging into `master`, run `./deploy.sh` with an ssh alias named
+`ps2alerts` pointing at the production host. It copies the compose file, the Grafana and
+Prometheus config and the host healthcheck to the box, splices the host's Erlang cookie into the
+compose file, validates it with `docker compose config`, keeps `.bak` copies of what it replaces,
+then runs `docker compose up -d`. Secrets (`*.env`, the cookie, `/root/healthcheck.env`) live only
+on the host and are never overwritten by the deploy.

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Pushes the production compose, monitoring config and host healthcheck to the ps2alerts box.
+# Deploys the production compose, monitoring config and host healthcheck to the ps2alerts box.
 # Secrets never live in this repo: env files and the Erlang cookie stay on the host.
 set -euo pipefail
 HOST=ps2alerts
